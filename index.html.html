@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Character & Personality Studio - SEN English Learning</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for High Readability & Accessibility -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Lexend:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        lexend: ['Lexend', 'sans-serif'],
+                        sans: ['Lexend', 'sans-serif'],
+                    },
+                    colors: {
+                        senYellow: '#FFE066',
+                        senBlue: '#4D96FF',
+                        senGreen: '#6BCB77',
+                        senPink: '#FF6B6B',
+                        senPurple: '#9D4EDD',
+                        senBg: '#F0F4F8',
+                    },
+                    boxShadow: {
+                        'fun': '0 6px 0px 0px rgba(0, 0, 0, 0.15)',
+                        'fun-pressed': '0 2px 0px 0px rgba(0, 0, 0, 0.15)',
+                    },
+                    keyframes: {
+                        shake: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '20%, 60%': { transform: 'translateX(-8px)' },
+                            '40%, 80%': { transform: 'translateX(8px)' },
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' },
+                        }
+                    },
+                    animation: {
+                        shake: 'shake 0.4s ease-in-out',
+                        bounceGentle: 'bounceGentle 2s infinite ease-in-out',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Fredoka', 'Lexend', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .bounce-gentle {
+            animation: bounceGentle 2s infinite ease-in-out;
+        }
+
+        #marioCanvas {
+            border-radius: 1rem;
+            display: block;
+            width: 100%;
+            height: auto;
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        ::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+        }
+
+        .touch-btn {
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .crossed-letter {
+            position: relative;
+            color: #ef4444;
+        }
+        .crossed-letter::after {
+            content: '';
+            position: absolute;
+            left: -10%;
+            top: 50%;
+            width: 120%;
+            height: 3px;
+            background-color: #dc2626;
+            transform: rotate(-15deg);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Compact Top Header -->
+    <header class="bg-slate-900 border-b-4 border-amber-400 sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-3 py-1.5 flex flex-wrap items-center justify-between gap-2">
+            <!-- App Title -->
+            <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="switchTab('learn')">
+                <span class="text-2xl bounce-gentle">🌟</span>
+                <div>
+                    <h1 class="text-base sm:text-lg font-black text-amber-300 leading-tight">Character & Personality Studio</h1>
+                    <p class="text-[10px] sm:text-xs font-extrabold text-sky-400 leading-tight">SEN Interactive Vocabulary & Grammar</p>
+                </div>
+            </div>
+
+            <!-- Speech Speed Control -->
+            <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 gap-1 text-xs font-extrabold">
+                <span class="hidden md:inline text-slate-400 px-1">Speed:</span>
+                <button onclick="setSpeechRate(0.5)" id="speed-05" class="px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">🐢 0.5x</button>
+                <button onclick="setSpeechRate(0.75)" id="speed-075" class="px-2 py-0.5 rounded-lg bg-amber-400 font-black text-slate-950 shadow">🚶 0.75x</button>
+                <button onclick="setSpeechRate(1.0)" id="speed-10" class="px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">🐇 1.0x</button>
+            </div>
+
+            <!-- Topic Category Filter -->
+            <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-extrabold">
+                <span class="hidden sm:inline text-slate-400 px-1">Topic:</span>
+                <select id="category-select" onchange="changeCategory(this.value)" class="bg-slate-900 text-amber-300 font-black px-2 py-0.5 rounded-lg border border-slate-700 focus:outline-none cursor-pointer">
+                    <option value="all">🌟 All Vocabulary (10)</option>
+                    <option value="caring">💖 Caring & Social (5)</option>
+                    <option value="work">💼 Work & Smart (5)</option>
+                </select>
+            </div>
+
+            <!-- Difficulty Selector -->
+            <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
+                <button id="diff-1" onclick="setDifficulty(1)" class="diff-btn px-2 py-0.5 text-xs rounded-lg font-bold transition bg-amber-400 text-slate-950 shadow">⭐ Easy</button>
+                <button id="diff-2" onclick="setDifficulty(2)" class="diff-btn px-2 py-0.5 text-xs rounded-lg font-bold transition text-slate-400 hover:bg-slate-800">⭐⭐ Med</button>
+                <button id="diff-3" onclick="setDifficulty(3)" class="diff-btn px-2 py-0.5 text-xs rounded-lg font-bold transition text-slate-400 hover:bg-slate-800">⭐⭐⭐ Hard</button>
+            </div>
+
+            <!-- Star Score & Audio Controls -->
+            <div class="flex items-center gap-2">
+                <div class="flex items-center bg-amber-400/20 px-2.5 py-1 rounded-full border border-amber-400 gap-1 shadow-inner shrink-0">
+                    <span class="text-base">⭐</span>
+                    <span id="star-count" class="text-base font-black text-amber-300">0</span>
+                </div>
+                <button id="btn-audio-toggle" onclick="toggleAudio()" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 transition border border-slate-700 shadow shrink-0" title="Toggle Sound">
+                    🔊
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav class="bg-slate-950 px-2 py-1 border-t border-slate-800 overflow-x-auto">
+            <div class="max-w-7xl mx-auto flex gap-1.5 min-w-max justify-start md:justify-center">
+                <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold bg-amber-400 text-slate-950 shadow flex items-center gap-1">
+                    📖 1. flashcards
+                </button>
+                <button onclick="switchTab('match')" id="tab-match" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-slate-300 hover:text-white flex items-center gap-1">
+                    🧩 2. matching
+                </button>
+                <button onclick="switchTab('blanks')" id="tab-blanks" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-slate-300 hover:text-white flex items-center gap-1">
+                    ✏️ 3. word blanks
+                </button>
+                <button onclick="switchTab('unscramble')" id="tab-unscramble" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-slate-300 hover:text-white flex items-center gap-1">
+                    🔤 4. unscramble
+                </button>
+                <button onclick="switchTab('listen')" id="tab-listen" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-slate-300 hover:text-white flex items-center gap-1">
+                    🎧 5. listening
+                </button>
+                <button onclick="switchTab('seq')" id="tab-seq" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-sky-300 hover:text-white flex items-center gap-1">
+                    💬 6. dialogue seq
+                </button>
+                <button onclick="switchTab('dialfill')" id="tab-dialfill" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-emerald-300 hover:text-white flex items-center gap-1">
+                    📝 7. dialogue blanks
+                </button>
+                <button onclick="switchTab('arcade')" id="tab-arcade" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-pink-300 hover:text-white flex items-center gap-1">
+                    🎈 8. bubble rush
+                </button>
+                <button onclick="switchTab('conveyor')" id="tab-conveyor" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-teal-300 hover:text-white flex items-center gap-1">
+                    🚜 9. conveyor
+                </button>
+                <button onclick="switchTab('mario')" id="tab-mario" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-amber-300 hover:text-white flex items-center gap-1">
+                    🍄 10. super mario
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto p-2 sm:p-4 flex-grow w-full">
+
+        <!-- MODULE 1: Learn Vocabulary & Flashcards -->
+        <section id="view-learn" class="tab-view space-y-3">
+            <div class="bg-slate-900 p-3 rounded-2xl border-2 border-slate-800 shadow flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl bounce-gentle">🧑‍🎓</span>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-black text-amber-300">Character & Personality Flashcards</h2>
+                        <p class="text-xs text-slate-400">Tap any word card to enlarge, listen to pronunciation, and read example sentences!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcards Grid -->
+            <div id="flashcard-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3"></div>
+        </section>
+
+        <!-- MODULE 2: Picture & Word Matching Game -->
+        <section id="view-match" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-slate-800 p-3 rounded-2xl flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-black text-amber-300">🧩 Personality Matching Challenge</h2>
+                    <p class="text-xs text-slate-400">Look at the character illustration and choose the matching personality word!</p>
+                </div>
+                <button onclick="initMatchGame()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-3 py-1 rounded-xl text-xs shadow">↻ Next Word</button>
+            </div>
+
+            <div class="bg-slate-900 border-4 border-slate-800 p-4 sm:p-6 rounded-3xl shadow-lg text-center space-y-4">
+                <div class="inline-block bg-slate-950 border-4 border-slate-800 p-4 rounded-3xl shadow-inner max-w-xs w-full">
+                    <div id="match-target-svg" class="w-36 h-36 mx-auto mb-1 flex items-center justify-center filter drop-shadow-lg"></div>
+                    <div class="text-[11px] font-black text-slate-400 tracking-wider uppercase">Find the Personality Trait</div>
+                </div>
+
+                <div id="match-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto"></div>
+            </div>
+        </section>
+
+        <!-- MODULE 3: Word Fill in Blanks Game -->
+        <section id="view-blanks" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-slate-800 p-3 rounded-2xl flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-black text-amber-300">✏️ word blanks</h2>
+                    <p class="text-xs text-slate-400">Fill in the missing letters to spell the target personality word!</p>
+                </div>
+                <button onclick="initBlanksGame()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-3 py-1 rounded-xl text-xs shadow">↻ Next Word</button>
+            </div>
+
+            <div class="bg-slate-900 border-4 border-slate-800 p-4 sm:p-6 rounded-3xl shadow-lg text-center space-y-4">
+                <div id="blanks-svg-container" class="w-28 h-28 mx-auto flex items-center justify-center"></div>
+
+                <div id="blanks-letters-container" class="my-3 flex flex-wrap justify-center gap-x-2 gap-y-2 w-full"></div>
+
+                <p class="text-xs text-slate-400 font-bold tracking-wider">Tap the correct missing letters (or type on keyboard):</p>
+                <div id="blanks-letter-options" class="flex flex-wrap justify-center gap-2 w-full max-w-lg mx-auto min-h-[50px]"></div>
+            </div>
+        </section>
+
+        <!-- MODULE 4: Unscramble Word Game -->
+        <section id="view-unscramble" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-slate-800 p-3 rounded-2xl flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-black text-amber-300">🔤 unscramble</h2>
+                    <p class="text-xs text-slate-400">Rearrange scrambled letters to form the correct personality adjective.</p>
+                </div>
+                <button onclick="initUnscrambleGame()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-3 py-1 rounded-xl text-xs shadow">↻ Next Word</button>
+            </div>
+
+            <div class="bg-slate-900 border-4 border-slate-800 p-4 sm:p-6 rounded-3xl shadow-lg text-center space-y-4">
+                <div id="unscramble-svg-hint" class="w-20 h-20 mx-auto flex items-center justify-center"></div>
+
+                <div class="bg-slate-950 border-2 border-slate-800 rounded-2xl p-4 my-2 flex items-center justify-center min-h-[70px]">
+                    <div id="unscramble-pool-container" class="flex flex-wrap justify-center items-center gap-3 md:gap-5 text-2xl md:text-3xl font-serif tracking-widest"></div>
+                </div>
+
+                <div id="unscramble-slots-container" class="flex flex-wrap items-center justify-center gap-2 text-xl md:text-2xl font-black text-slate-100 tracking-wider"></div>
+
+                <p class="text-xs text-slate-400 font-bold tracking-wider">Tap letters below or use keyboard to unscramble:</p>
+                <div id="unscramble-keyboard-container" class="flex flex-wrap justify-center gap-2 w-full max-w-lg mx-auto min-h-[50px]"></div>
+            </div>
+        </section>
+
+        <!-- MODULE 5: Listen & Choose Game -->
+        <section id="view-listen" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-slate-800 p-3 rounded-2xl flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-black text-amber-300">🎧 Listen & Choose</h2>
+                    <p class="text-xs text-slate-400">Listen to the spoken audio and select the correct personality word!</p>
+                </div>
+                <button onclick="initListenGame()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-3 py-1 rounded-xl text-xs shadow">↻ Next Word</button>
+            </div>
+
+            <div class="bg-slate-900 border-4 border-slate-800 p-4 sm:p-6 rounded-3xl shadow-lg text-center space-y-5">
+                <button onclick="playListenAudio()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xl px-6 py-4 rounded-2xl shadow-fun active:translate-y-1 transition flex items-center justify-center gap-2 mx-auto border-2 border-amber-600">
+                    <span class="text-3xl">🔊</span> Press To Listen
+                </button>
+
+                <div id="listen-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto"></div>
+            </div>
+        </section>
+
+        <!-- MODULE 6: Dialogue Sequencing Game -->
+        <section id="view-seq" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-slate-800 p-3 rounded-2xl flex flex-wrap justify-between items-center gap-2">
+                <div>
+                    <h2 class="text-lg font-black text-sky-300">💬 Dialogue Sequencing (Classmate Role Models)</h2>
+                    <p class="text-xs text-slate-400">Move the sentences up or down to arrange the conversation in logical order!</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="readAloudDialogueSeq()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3 py-1 rounded-xl text-xs shadow flex items-center gap-1">
+                        🔊 Read Aloud (2 Voices)
+                    </button>
+                    <button onclick="checkDialogueSeqOrder()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-1 rounded-xl text-xs shadow">
+                        ✅ Check Sequence
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border-4 border-slate-800 p-4 rounded-3xl shadow-lg space-y-4">
+                <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                    <span class="text-4xl">👭</span>
+                    <div class="text-xs text-slate-300">
+                        <p class="font-extrabold text-amber-300">Classmate Character Conversation</p>
+                        <p class="text-slate-400">Two classmates talking about their helpful, cheerful, and hardworking friends.</p>
+                    </div>
+                </div>
+
+                <div id="seq-sentence-list" class="space-y-2"></div>
+            </div>
+        </section>
+
+        <!-- MODULE 7: Dialogue Fill-in-the-Blanks Game (15 SCENES) -->
+        <section id="view-dialfill" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-slate-800 p-3 rounded-2xl flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-black text-emerald-300">📝 Complete Dialogue Blanks (15 Scenes)</h2>
+                    <p class="text-xs text-slate-400">Fill in the character traits and grammar blanks across 15 dialogue scenarios!</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="dialfill-counter" class="text-xs font-black text-amber-300 bg-slate-950 px-2.5 py-1 rounded-xl border border-slate-800">1/15</span>
+                    <button onclick="nextDialogueFillScene()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-1 rounded-xl text-xs shadow">↻ Next Scene</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border-4 border-slate-800 p-4 sm:p-6 rounded-3xl shadow-lg space-y-5">
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span id="dialfill-title" class="text-sm font-black text-amber-300">Scene 1: Helping the Teacher</span>
+                        <button onclick="readAloudCurrentDialogueFill()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 px-2.5 py-1 rounded-xl font-bold flex items-center gap-1">
+                            🔊 Read Dialogue
+                        </button>
+                    </div>
+
+                    <div id="dialfill-bubbles-container" class="space-y-3 text-sm md:text-base font-extrabold text-slate-100"></div>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-400 font-bold mb-2 text-center">Tap the correct word to fill the blanks:</p>
+                    <div id="dialfill-choices-container" class="flex flex-wrap justify-center gap-2 max-w-xl mx-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 8: Bubble Rush Arcade Game -->
+        <section id="view-arcade" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-pink-500/40 p-2.5 rounded-2xl flex justify-between items-center px-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs text-slate-400 font-bold">Target:</span>
+                    <span id="arcade-target-text" class="text-amber-300 font-black text-sm md:text-lg bg-slate-950 px-3 py-0.5 rounded-lg border border-amber-500/40 tracking-wider">---</span>
+                    <button onclick="speakTargetWord()" class="p-1 bg-sky-600 text-white rounded-lg text-xs">🔊</button>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="text-xs text-slate-300 font-bold">⏳ <span id="arcade-timer" class="text-emerald-400 text-base font-black">30</span>s</span>
+                    <button id="btn-arcade-start" onclick="startArcadeGame()" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black px-3 py-1 rounded-xl text-xs shadow">▶️ START</button>
+                </div>
+            </div>
+
+            <div id="arcade-playfield" class="relative bg-slate-950 border-4 border-slate-800 rounded-3xl h-[420px] overflow-hidden cursor-crosshair">
+                <div id="arcade-overlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center z-20">
+                    <div class="text-5xl mb-2 bounce-gentle">🎈</div>
+                    <h2 class="text-2xl font-black text-white mb-1">Arcade Bubble Rush!</h2>
+                    <p class="text-xs text-slate-300 max-w-md mb-4">Bubbles float up from the bottom! Tap the correct personality illustration matching the target word before time runs out!</p>
+                    <button onclick="startArcadeGame()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-base px-6 py-2.5 rounded-2xl shadow-xl">🚀 START PLAYING</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 9: Conveyor Belt Rush Game -->
+        <section id="view-conveyor" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-teal-500/40 p-2.5 rounded-2xl flex justify-between items-center px-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs text-slate-400 font-bold">Target:</span>
+                    <span id="conveyor-target-text" class="text-teal-300 font-black text-sm md:text-lg bg-slate-950 px-3 py-0.5 rounded-lg border border-teal-500/40 tracking-wider">---</span>
+                    <button onclick="speakTargetWord()" class="p-1 bg-teal-600 text-white rounded-lg text-xs">🔊</button>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="text-xs text-slate-300 font-bold">⏳ <span id="conveyor-timer" class="text-amber-400 text-base font-black">30</span>s</span>
+                    <button id="btn-conveyor-start" onclick="startConveyorGame()" class="bg-gradient-to-r from-amber-400 to-teal-400 text-slate-950 font-black px-3 py-1 rounded-xl text-xs shadow">▶️ START</button>
+                </div>
+            </div>
+
+            <div id="conveyor-playfield" class="relative bg-slate-950 border-4 border-slate-800 rounded-3xl h-[420px] overflow-hidden">
+                <div class="absolute bottom-6 left-0 right-0 h-10 bg-slate-900 border-y-2 border-slate-700 flex items-center overflow-hidden">
+                    <div class="w-full h-full bg-[linear-gradient(90deg,#1e293b_50%,#0f172a_50%)] bg-[length:30px_100%] animate-[pulse_1s_infinite]"></div>
+                </div>
+
+                <div id="conveyor-overlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center z-20">
+                    <div class="text-5xl mb-2 bounce-gentle">🚜</div>
+                    <h2 class="text-2xl font-black text-white mb-1">Conveyor Belt Rush!</h2>
+                    <p class="text-xs text-slate-300 max-w-md mb-4">Crates carrying character illustrations travel across the conveyor belt! Tap the target crate before it leaves!</p>
+                    <button onclick="startConveyorGame()" class="bg-teal-400 hover:bg-teal-300 text-slate-950 font-black text-base px-6 py-2.5 rounded-2xl shadow-xl">🚀 START CONVEYOR</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 10: SUPER MARIO PLATFORMER ENGINE -->
+        <section id="view-mario" class="tab-view hidden space-y-2">
+            <div class="bg-slate-900 border-2 border-amber-400/50 p-2.5 rounded-2xl flex flex-wrap justify-between items-center gap-2">
+                <div>
+                    <h2 class="text-base font-black text-amber-300 flex items-center gap-1">
+                        <span>🍄 Classic Super Mario Personality Adventure</span>
+                        <span id="mario-form-hud" class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-full font-black border border-red-300 shadow-sm ml-2">
+                            State: Small Mario
+                        </span>
+                    </h2>
+                    <p id="mario-level-subtitle" class="text-xs font-bold text-slate-400">World 1-1: Meadow (~1400px)</p>
+                </div>
+
+                <!-- HUD Status Stats -->
+                <div class="flex items-center gap-2 bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-xs font-black">
+                    <span class="text-red-400">❤️ Lives: <span id="mario-lives-val">3</span></span>
+                    <span class="text-amber-300">⭐ Stars: <span id="mario-stars-val">0</span></span>
+                    <button onclick="restartMarioLevel()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-2 py-0.5 rounded-lg text-xs shadow ml-1">
+                        🎮 Restart
+                    </button>
+                </div>
+            </div>
+
+            <!-- Level Selector Tabs -->
+            <div class="flex gap-1 overflow-x-auto pb-1">
+                <button id="mario-tab-1" onclick="selectMarioLevel(1)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-amber-500 text-slate-950">🌱 W1-1 Meadow</button>
+                <button id="mario-tab-2" onclick="selectMarioLevel(2)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">🏖️ W1-2 Beach</button>
+                <button id="mario-tab-3" onclick="selectMarioLevel(3)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">🌲 W2-1 Forest</button>
+                <button id="mario-tab-4" onclick="selectMarioLevel(4)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">🏰 W2-2 Castle</button>
+                <button id="mario-tab-5" onclick="selectMarioLevel(5)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">☁️ W3-1 Cloud</button>
+                <button id="mario-tab-6" onclick="selectMarioLevel(6)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">⛏️ W3-2 Cave</button>
+                <button id="mario-tab-7" onclick="selectMarioLevel(7)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">🔥 W4-1 Lava</button>
+                <button id="mario-tab-8" onclick="selectMarioLevel(8)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">🏜️ W4-2 Desert</button>
+                <button id="mario-tab-9" onclick="selectMarioLevel(9)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">❄️ W5-1 Ice</button>
+                <button id="mario-tab-10" onclick="selectMarioLevel(10)" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300">🐲 W8-4 Bowser</button>
+                <button id="mario-tab-endless" onclick="selectMarioLevel('endless')" class="mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-purple-600 text-white">♾️ Endless</button>
+            </div>
+
+            <!-- Canvas Viewport -->
+            <div class="relative w-full overflow-hidden bg-slate-950 rounded-2xl p-1 shadow-xl border-4 border-amber-400">
+                <canvas id="marioCanvas" width="800" height="380" class="border border-slate-800 rounded-xl block"></canvas>
+
+                <!-- On-Screen Touch Controls -->
+                <div class="flex justify-between items-center mt-2 px-2 gap-2">
+                    <div class="flex gap-2">
+                        <button id="btn-left" class="bg-slate-800 active:bg-slate-600 text-white text-xl font-black p-3 w-12 h-12 rounded-full shadow flex items-center justify-center border-2 border-slate-600 touch-btn">◀</button>
+                        <button id="btn-right" class="bg-slate-800 active:bg-slate-600 text-white text-xl font-black p-3 w-12 h-12 rounded-full shadow flex items-center justify-center border-2 border-slate-600 touch-btn">▶</button>
+                    </div>
+                    <div class="text-[11px] text-slate-400 font-bold hidden sm:block text-center">
+                        Keyboard: A/D Walk | Shift Run | Space/W Jump | F Fireball 💥
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btn-run" class="bg-amber-500 active:bg-amber-600 text-slate-950 text-xs font-black px-3 py-3 rounded-full shadow border-2 border-amber-300 flex items-center justify-center touch-btn">RUN 🏃</button>
+                        <button id="btn-attack" class="bg-orange-500 active:bg-orange-600 text-white text-xs font-black px-3 py-3 rounded-full shadow border-2 border-orange-300 flex items-center justify-center touch-btn">FIRE 💥</button>
+                        <button id="btn-jump" class="bg-red-500 active:bg-red-600 text-white text-xs font-black px-4 py-3 rounded-full shadow border-2 border-red-300 flex items-center justify-center touch-btn">JUMP ⬆</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ENLARGE WORD CARD MODAL -->
+    <div id="enlarge-card-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
+        <div class="bg-slate-900 border-8 border-amber-400 rounded-3xl p-5 max-w-lg w-full text-center shadow-2xl space-y-4 relative">
+            <button onclick="closeEnlargeModal()" class="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white font-black text-base w-10 h-10 rounded-full flex items-center justify-center shadow">
+                ✖
+            </button>
+
+            <div id="modal-svg-container" class="w-40 h-40 mx-auto"></div>
+            <div id="modal-word-display" class="text-3xl font-black text-amber-300 tracking-wider"></div>
+
+            <div class="bg-slate-950 border-2 border-slate-800 p-3 rounded-2xl">
+                <p id="modal-sentence" class="text-base font-extrabold text-slate-200"></p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button id="modal-btn-word" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-extrabold py-3 rounded-xl text-base shadow active:scale-95 transition">
+                    🔊 Speak Pronunciation
+                </button>
+                <button id="modal-btn-sentence" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold py-3 rounded-xl text-base shadow active:scale-95 transition">
+                    💬 Speak Sentence
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Praise Modal -->
+    <div id="praise-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
+        <div class="bg-slate-900 border-8 border-amber-400 rounded-3xl p-5 max-w-md w-full text-center shadow-2xl space-y-3">
+            <div id="praise-emoji" class="text-7xl bounce-gentle">🎉</div>
+            <h3 id="praise-title" class="text-2xl font-black text-amber-300">Super Star!</h3>
+            <p id="praise-desc" class="text-base font-extrabold text-slate-200">You answered correctly!</p>
+            
+            <button onclick="closePraiseModal()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xl py-3 rounded-xl shadow active:translate-y-1 transition">
+                Next Challenge ▶
+            </button>
+        </div>
+    </div>
+
+    <!-- Mario Question Overlay Modal -->
+    <div id="mario-question-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-3 hidden">
+        <div class="bg-slate-900 border-8 border-amber-400 rounded-3xl p-5 max-w-lg w-full text-center shadow-2xl space-y-4">
+            <div class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-1 rounded-full inline-block">
+                ❓ Personality Question Block
+            </div>
+
+            <div id="mario-q-prompt" class="text-xl font-extrabold text-slate-100">
+                What personality word matches this picture?
+            </div>
+            <div id="mario-q-svg" class="w-32 h-32 mx-auto"></div>
+
+            <div id="mario-q-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        </div>
+    </div>
+
+    <script>
+        /* -------------------------------------------------------------
+           1. VOCABULARY DATABASE (10 CHARACTER & PERSONALITY ADJECTIVES)
+        ------------------------------------------------------------- */
+        const GAME_DATA = [
+            {
+                id: 'helpful',
+                term: 'helpful',
+                category: 'caring',
+                sentence: 'Tom is very helpful because he carries heavy books for his teacher.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#1e293b"/>
+                    <!-- Floating Heart -->
+                    <path d="M50 18 C50 14, 44 12, 41 15 C38 12, 32 14, 32 18 C32 23, 41 28, 50 33 C59 28, 68 23, 68 18 C68 14, 62 12, 59 15 C56 14, 50 14, 50 18 Z" fill="#f43f5e"/>
+                    <!-- Smiling Student Head -->
+                    <circle cx="32" cy="48" r="13" fill="#fed7aa"/>
+                    <path d="M20 44 C20 34, 44 34, 44 44 C40 40, 24 40, 20 44 Z" fill="#78350f"/>
+                    <circle cx="28" cy="47" r="1.6" fill="#1e293b"/>
+                    <circle cx="36" cy="47" r="1.6" fill="#1e293b"/>
+                    <path d="M28 52 Q32 56 36 52" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <!-- Student Torso -->
+                    <path d="M18 85 C18 65, 46 65, 46 85 Z" fill="#38bdf8"/>
+                    <!-- Stack of Books -->
+                    <rect x="44" y="66" width="38" height="8" rx="2" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+                    <rect x="46" y="57" width="36" height="8" rx="2" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+                    <rect x="43" y="48" width="38" height="8" rx="2" fill="#facc15" stroke="#ca8a04" stroke-width="1.5"/>
+                    <!-- Helping Arm -->
+                    <path d="M36 72 Q46 76 58 74" stroke="#fed7aa" stroke-width="6" stroke-linecap="round" fill="none"/>
+                </svg>`
+            },
+            {
+                id: 'cheerful',
+                term: 'cheerful',
+                category: 'caring',
+                sentence: 'Lily is always cheerful and greets everyone with a bright smile.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#1e1b4b"/>
+                    <!-- Golden Sunbeams -->
+                    <g stroke="#fbbf24" stroke-width="4" stroke-linecap="round">
+                        <line x1="50" y1="8" x2="50" y2="17"/>
+                        <line x1="50" y1="83" x2="50" y2="92"/>
+                        <line x1="8" y1="50" x2="17" y2="50"/>
+                        <line x1="83" y1="50" x2="92" y2="50"/>
+                        <line x1="20" y1="20" x2="27" y2="27"/>
+                        <line x1="73" y1="73" x2="80" y2="80"/>
+                        <line x1="80" y1="20" x2="73" y2="27"/>
+                        <line x1="27" y1="73" x2="20" y2="80"/>
+                    </g>
+                    <!-- Beaming Happy Face -->
+                    <circle cx="50" cy="50" r="27" fill="#fde047" stroke="#f59e0b" stroke-width="3"/>
+                    <!-- Happy Arched Eyes -->
+                    <path d="M36 44 Q41 38 46 44" stroke="#78350f" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M54 44 Q59 38 64 44" stroke="#78350f" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <!-- Rosy Cheeks -->
+                    <circle cx="34" cy="53" r="4" fill="#fb7185" opacity="0.7"/>
+                    <circle cx="66" cy="53" r="4" fill="#fb7185" opacity="0.7"/>
+                    <!-- Wide Joyful Smile -->
+                    <path d="M37 55 Q50 70 63 55 Z" fill="#ef4444" stroke="#78350f" stroke-width="2"/>
+                </svg>`
+            },
+            {
+                id: 'loyal',
+                term: 'loyal',
+                category: 'caring',
+                sentence: 'A loyal friend always stands by you and keeps promises.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#0f172a"/>
+                    <!-- Friend 1 (Left) -->
+                    <circle cx="30" cy="30" r="10" fill="#fed7aa"/>
+                    <path d="M18 55 C18 42, 42 42, 42 55 Z" fill="#38bdf8"/>
+                    <!-- Friend 2 (Right) -->
+                    <circle cx="70" cy="30" r="10" fill="#fde68a"/>
+                    <path d="M58 55 C58 42, 82 42, 82 55 Z" fill="#a855f7"/>
+                    <!-- Golden Friendship Shield -->
+                    <path d="M30 42 L70 42 L67 68 C65 78, 50 88, 50 88 C50 88, 35 78, 33 68 Z" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
+                    <path d="M35 46 L65 46 L63 66 C61 74, 50 82, 50 82 C50 82, 39 74, 37 66 Z" fill="#fef08a"/>
+                    <!-- Heart Emblem on Shield -->
+                    <path d="M50 58 C50 54, 45 52, 42 55 C39 52, 34 54, 34 58 C34 63, 42 68, 50 73 C58 68, 66 63, 66 58 C66 54, 61 52, 58 55 C55 52, 50 54, 50 58 Z" fill="#ef4444"/>
+                </svg>`
+            },
+            {
+                id: 'humble',
+                term: 'humble',
+                category: 'caring',
+                sentence: 'Even after winning first prize, Sam stays humble and thanks his team.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#1e293b"/>
+                    <!-- Modest Bowing Student -->
+                    <circle cx="36" cy="38" r="12" fill="#fed7aa"/>
+                    <path d="M25 34 C26 24, 46 24, 47 34 Z" fill="#334155"/>
+                    <path d="M32 38 Q35 40 38 38" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M40 43 Q43 46 46 43" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <!-- Bowing Torso -->
+                    <path d="M22 82 C22 58, 50 55, 56 76 L46 84 Z" fill="#22c55e"/>
+                    <!-- Open Hands Sharing Trophy/Star -->
+                    <path d="M44 64 Q58 68 68 62" stroke="#fed7aa" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <!-- Shared Trophy & Star -->
+                    <path d="M62 34 L82 34 L79 48 C79 53, 72 55, 72 55 C72 55, 65 53, 65 48 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+                    <rect x="66" y="55" width="12" height="5" rx="1" fill="#92400e"/>
+                    <polygon points="72,16 74,22 80,22 75,26 77,31 72,28 67,31 69,26 64,22 70,22" fill="#fde047"/>
+                </svg>`
+            },
+            {
+                id: 'generous',
+                term: 'generous',
+                category: 'caring',
+                sentence: 'Maya is generous and shares her snacks and pencils with classmates.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#0f172a"/>
+                    <!-- Shiny Stars Above -->
+                    <polygon points="30,18 32,23 37,23 33,26 34,31 30,28 26,31 27,26 23,23 28,23" fill="#fde047"/>
+                    <polygon points="70,15 72,21 78,21 73,25 75,30 70,27 65,30 67,25 62,21 68,21" fill="#fbbf24"/>
+                    <polygon points="50,12 52,16 56,16 53,19 54,23 50,20 46,23 47,19 44,16 48,16" fill="#fef08a"/>
+                    <!-- Wrapped Gift Box -->
+                    <rect x="30" y="38" width="40" height="32" rx="4" fill="#38bdf8" stroke="#0284c7" stroke-width="2.5"/>
+                    <rect x="27" y="33" width="46" height="8" rx="2" fill="#7dd3fc" stroke="#0284c7" stroke-width="2"/>
+                    <!-- Ribbon -->
+                    <rect x="46" y="33" width="8" height="37" fill="#f43f5e"/>
+                    <path d="M50 33 C42 24, 34 30, 46 33" fill="none" stroke="#f43f5e" stroke-width="3"/>
+                    <path d="M50 33 C58 24, 66 30, 54 33" fill="none" stroke="#f43f5e" stroke-width="3"/>
+                    <!-- Giving Hands -->
+                    <path d="M16 74 Q32 82 46 74" stroke="#fed7aa" stroke-width="7" stroke-linecap="round" fill="none"/>
+                    <path d="M84 74 Q68 82 54 74" stroke="#fed7aa" stroke-width="7" stroke-linecap="round" fill="none"/>
+                </svg>`
+            },
+            {
+                id: 'responsible',
+                term: 'responsible',
+                category: 'work',
+                sentence: 'Being responsible means completing your class duties on time.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#1e293b"/>
+                    <!-- Clipboard Board -->
+                    <rect x="24" y="20" width="46" height="64" rx="5" fill="#b45309" stroke="#78350f" stroke-width="2.5"/>
+                    <!-- Paper -->
+                    <rect x="29" y="26" width="36" height="52" rx="2" fill="#f8fafc"/>
+                    <!-- Clip -->
+                    <rect x="38" y="15" width="18" height="10" rx="3" fill="#94a3b8" stroke="#475569" stroke-width="2"/>
+                    <!-- Green Checkmarks -->
+                    <path d="M34 38 L38 42 L45 34" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="49" y1="39" x2="60" y2="39" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M34 52 L38 56 L45 48" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="49" y1="53" x2="60" y2="53" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M34 66 L38 70 L45 62" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="49" y1="67" x2="60" y2="67" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- Duty Star Badge -->
+                    <circle cx="72" cy="70" r="14" fill="#fbbf24" stroke="#d97706" stroke-width="2.5"/>
+                    <polygon points="72,61 74,67 80,67 75,71 77,77 72,73 67,77 69,71 64,67 70,67" fill="#ffffff"/>
+                </svg>`
+            },
+            {
+                id: 'hardworking',
+                term: 'hardworking',
+                category: 'work',
+                sentence: 'Ken is hardworking and practices his reading every evening.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#0f172a"/>
+                    <!-- Desk Lamp -->
+                    <path d="M74 68 L74 34 L60 26" stroke="#94a3b8" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                    <polygon points="54,28 65,20 69,32" fill="#facc15"/>
+                    <polygon points="56,30 67,32 45,66 32,66" fill="#fef08a" opacity="0.22"/>
+                    <!-- Studying Student -->
+                    <circle cx="38" cy="40" r="11" fill="#fed7aa"/>
+                    <path d="M27 37 C27 27, 49 27, 49 37 Z" fill="#1e293b"/>
+                    <path d="M25 68 C25 53, 51 53, 51 68 Z" fill="#6366f1"/>
+                    <!-- Stacked Books -->
+                    <rect x="56" y="60" width="22" height="6" rx="1.5" fill="#ef4444"/>
+                    <rect x="58" y="53" width="20" height="6" rx="1.5" fill="#22c55e"/>
+                    <!-- Open Book -->
+                    <path d="M30 66 Q40 62 45 66 Q50 62 60 66 L58 70 Q49 67 45 70 Q41 67 32 70 Z" fill="#ffffff"/>
+                    <!-- Wooden Desk -->
+                    <rect x="14" y="68" width="72" height="8" rx="3" fill="#d97706"/>
+                </svg>`
+            },
+            {
+                id: 'diligent',
+                term: 'diligent',
+                category: 'work',
+                sentence: 'A diligent student checks every detail carefully to do neat work.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#1e293b"/>
+                    <!-- Neat A+ Paper -->
+                    <rect x="22" y="18" width="48" height="62" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+                    <text x="38" y="38" font-size="16" font-weight="900" fill="#ef4444" text-anchor="middle">A+</text>
+                    <line x1="30" y1="48" x2="60" y2="48" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="30" y1="57" x2="56" y2="57" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="30" y1="66" x2="50" y2="66" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- Magnifying Glass -->
+                    <circle cx="58" cy="55" r="16" fill="#bae6fd" fill-opacity="0.45" stroke="#0284c7" stroke-width="4"/>
+                    <line x1="70" y1="67" x2="84" y2="81" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+                    <!-- Precision Stars -->
+                    <polygon points="78,24 80,29 85,29 81,32 82,37 78,34 74,37 75,32 71,29 76,29" fill="#fde047"/>
+                    <polygon points="18,65 19,68 22,68 20,70 21,73 18,71 15,73 16,70 14,68 17,68" fill="#fbbf24"/>
+                </svg>`
+            },
+            {
+                id: 'punctual',
+                term: 'punctual',
+                category: 'work',
+                sentence: 'Sarah is always punctual and arrives at school before the bell rings.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#0f172a"/>
+                    <!-- Alarm Bells -->
+                    <circle cx="28" cy="24" r="9" fill="#f59e0b"/>
+                    <circle cx="72" cy="24" r="9" fill="#f59e0b"/>
+                    <!-- Bright Clock Body -->
+                    <circle cx="50" cy="52" r="30" fill="#ffffff" stroke="#38bdf8" stroke-width="5"/>
+                    <!-- Clock Ticks -->
+                    <line x1="50" y1="27" x2="50" y2="31" stroke="#334155" stroke-width="2.5"/>
+                    <line x1="50" y1="73" x2="50" y2="77" stroke="#334155" stroke-width="2.5"/>
+                    <line x1="25" y1="52" x2="29" y2="52" stroke="#334155" stroke-width="2.5"/>
+                    <line x1="71" y1="52" x2="75" y2="52" stroke="#334155" stroke-width="2.5"/>
+                    <!-- On-Time Hands (8:00) -->
+                    <line x1="50" y1="52" x2="50" y2="34" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="50" y1="52" x2="36" y2="58" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="50" cy="52" r="3" fill="#0284c7"/>
+                    <!-- Green Checkmark Badge -->
+                    <circle cx="74" cy="74" r="14" fill="#22c55e" stroke="#ffffff" stroke-width="2.5"/>
+                    <path d="M68 74 L72 78 L81 69" stroke="#ffffff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>`
+            },
+            {
+                id: 'clever',
+                term: 'clever',
+                category: 'work',
+                sentence: 'Leo is clever and solves tricky puzzles very quickly.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#1e1b4b"/>
+                    <!-- Lightbulb Rays -->
+                    <g stroke="#fde047" stroke-width="3" stroke-linecap="round">
+                        <line x1="50" y1="8" x2="50" y2="14"/>
+                        <line x1="26" y1="18" x2="31" y2="22"/>
+                        <line x1="74" y1="18" x2="69" y2="22"/>
+                        <line x1="22" y1="34" x2="28" y2="34"/>
+                        <line x1="78" y1="34" x2="72" y2="34"/>
+                    </g>
+                    <!-- Glowing Yellow Lightbulb -->
+                    <path d="M36 34 C36 22, 64 22, 64 34 C64 42, 57 46, 56 52 L44 52 C43 46, 36 42, 36 34 Z" fill="#fde047" stroke="#f59e0b" stroke-width="2"/>
+                    <rect x="44" y="52" width="12" height="6" rx="2" fill="#94a3b8"/>
+                    <!-- Interlocking Puzzle Pieces -->
+                    <rect x="24" y="64" width="24" height="20" rx="3" fill="#38bdf8"/>
+                    <circle cx="50" cy="74" r="5" fill="#38bdf8"/>
+                    <rect x="52" y="64" width="24" height="20" rx="3" fill="#22c55e"/>
+                    <circle cx="50" cy="74" r="4.5" fill="#38bdf8"/>
+                </svg>`
+            }
+        ];
+
+        /* Dialogue Sequencing Dataset (6 Lines) */
+        const dialogueSeqSentences = [
+            { id: 's1', speaker: 'Girl 1', text: 'Good morning! Who is your role model in our class?', correctOrder: 1 },
+            { id: 's2', speaker: 'Girl 2', text: 'I admire Lily because she is always cheerful and helpful.', correctOrder: 2 },
+            { id: 's3', speaker: 'Girl 1', text: 'Yes! She shares her notes and is very generous too.', correctOrder: 3 },
+            { id: 's4', speaker: 'Girl 2', text: 'What about Ken? He is so hardworking and diligent.', correctOrder: 4 },
+            { id: 's5', speaker: 'Girl 1', text: 'True, and he is always punctual before the morning bell!', correctOrder: 5 },
+            { id: 's6', speaker: 'Girl 2', text: 'We have such loyal and responsible friends in class!', correctOrder: 6 }
+        ];
+
+        /* Dialogue Fill-in-Blanks Dataset (15 SCENES COVERING ALL 10 PERSONALITY WORDS) */
+        const dialogueFillScenes = [
+            {
+                title: 'Scene 1: Helping the Teacher',
+                bubbles: [
+                    { speaker: 'Girl 1', text: 'Why is Tom carrying all those heavy books?' },
+                    { speaker: 'Boy 1', text: 'He is very (a) (b) he likes assisting our teacher.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'helpful', options: ['helpful', 'punctual', 'clever'] },
+                    { key: '(b)', correct: 'because', options: ['because', 'before', 'always'] }
+                ]
+            },
+            {
+                title: 'Scene 2: Morning Greetings',
+                bubbles: [
+                    { speaker: 'Boy 1', text: 'Lily greets everyone with a big smile every morning!' },
+                    { speaker: 'Girl 1', text: 'Yes, she is (a) very (b) and friendly.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'always', options: ['always', 'never', 'before'] },
+                    { key: '(b)', correct: 'cheerful', options: ['cheerful', 'humble', 'diligent'] }
+                ]
+            },
+            {
+                title: 'Scene 3: True Friendship',
+                bubbles: [
+                    { speaker: 'Girl 1', text: 'Who stands by you when you need support?' },
+                    { speaker: 'Girl 2', text: 'My best friend Sam! He (a) a (b) friend.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'is', options: ['is', 'are', 'am'] },
+                    { key: '(b)', correct: 'loyal', options: ['loyal', 'punctual', 'clever'] }
+                ]
+            },
+            {
+                title: 'Scene 4: Class Monitor Duties',
+                bubbles: [
+                    { speaker: 'Teacher', text: 'Who will lock the classroom door after school?' },
+                    { speaker: 'Student', text: 'I will! Being (a) means finishing class duties (b).' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'responsible', options: ['responsible', 'cheerful', 'generous'] },
+                    { key: '(b)', correct: 'on time', options: ['on time', 'too late', 'never'] }
+                ]
+            },
+            {
+                title: 'Scene 5: Evening Reading Practice',
+                bubbles: [
+                    { speaker: 'Boy 1', text: 'Ken improves his English reading so fast!' },
+                    { speaker: 'Girl 1', text: 'That is because he is (a) and practices (b) evening.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'hardworking', options: ['hardworking', 'generous', 'loyal'] },
+                    { key: '(b)', correct: 'every', options: ['every', 'no', 'never'] }
+                ]
+            },
+            {
+                title: 'Scene 6: Checking Homework Details',
+                bubbles: [
+                    { speaker: 'Teacher', text: 'Maya never makes careless spelling mistakes.' },
+                    { speaker: 'Student', text: 'She is a (a) student who checks every detail (b).' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'diligent', options: ['diligent', 'cheerful', 'humble'] },
+                    { key: '(b)', correct: 'carefully', options: ['carefully', 'loudly', 'quickly'] }
+                ]
+            },
+            {
+                title: 'Scene 7: Winning First Prize',
+                bubbles: [
+                    { speaker: 'Boy 1', text: 'Sam won first prize, yet he does not boast at all.' },
+                    { speaker: 'Girl 1', text: 'He stays (a) and always (b) his teammates.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'humble', options: ['humble', 'punctual', 'clever'] },
+                    { key: '(b)', correct: 'thanks', options: ['thanks', 'forgets', 'ignores'] }
+                ]
+            },
+            {
+                title: 'Scene 8: Arriving Before the Bell',
+                bubbles: [
+                    { speaker: 'Girl 1', text: 'Sarah is already sitting at her desk at 7:50 AM!' },
+                    { speaker: 'Boy 1', text: 'She is always (a) and arrives (b) the bell rings.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'punctual', options: ['punctual', 'generous', 'loyal'] },
+                    { key: '(b)', correct: 'before', options: ['before', 'after', 'during'] }
+                ]
+            },
+            {
+                title: 'Scene 9: Solving Tricky Puzzles',
+                bubbles: [
+                    { speaker: 'Boy 1', text: 'How did Leo finish that hard math puzzle so fast?' },
+                    { speaker: 'Girl 1', text: 'Leo is very (a) and thinks (b)!' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'clever', options: ['clever', 'humble', 'punctual'] },
+                    { key: '(b)', correct: 'quickly', options: ['quickly', 'slowly', 'sleepily'] }
+                ]
+            },
+            {
+                title: 'Scene 10: Sharing School Supplies',
+                bubbles: [
+                    { speaker: 'Girl 1', text: 'I forgot my colored pencils today.' },
+                    { speaker: 'Girl 2', text: 'Ask Maya! She is (a) and happily (b) her pencils.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'generous', options: ['generous', 'diligent', 'punctual'] },
+                    { key: '(b)', correct: 'shares', options: ['shares', 'hides', 'breaks'] }
+                ]
+            },
+            {
+                title: 'Scene 11: Group Project Teamwork',
+                bubbles: [
+                    { speaker: 'Teacher', text: 'Your group poster looks wonderful!' },
+                    { speaker: 'Student', text: 'Everyone was (a) and (b) to finish our parts.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'responsible', options: ['responsible', 'cheerful', 'clever'] },
+                    { key: '(b)', correct: 'helpful', options: ['helpful', 'punctual', 'humble'] }
+                ]
+            },
+            {
+                title: 'Scene 12: Math Quiz Champion',
+                bubbles: [
+                    { speaker: 'Boy 1', text: 'You got 100 marks on the quiz! You are so (a)!' },
+                    { speaker: 'Girl 1', text: 'Thank you, I try to stay (b) and keep learning.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'clever', options: ['clever', 'generous', 'loyal'] },
+                    { key: '(b)', correct: 'humble', options: ['humble', 'punctual', 'cheerful'] }
+                ]
+            },
+            {
+                title: 'Scene 13: Study Buddies',
+                bubbles: [
+                    { speaker: 'Girl 1', text: 'Why are Ken and Maya still in the library?' },
+                    { speaker: 'Boy 1', text: 'They are (a) and (b) students preparing for exams.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'diligent', options: ['diligent', 'cheerful', 'generous'] },
+                    { key: '(b)', correct: 'hardworking', options: ['hardworking', 'punctual', 'loyal'] }
+                ]
+            },
+            {
+                title: 'Scene 14: Best Friends Forever',
+                bubbles: [
+                    { speaker: 'Boy 1', text: 'You and Tom always cheer each other up.' },
+                    { speaker: 'Boy 2', text: 'Yes! A (a) friend keeps you (b) even on rainy days.' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'loyal', options: ['loyal', 'diligent', 'punctual'] },
+                    { key: '(b)', correct: 'cheerful', options: ['cheerful', 'clever', 'humble'] }
+                ]
+            },
+            {
+                title: 'Scene 15: Class Charity Drive',
+                bubbles: [
+                    { speaker: 'Teacher', text: 'Thank you for bringing donations right at 8:00 AM!' },
+                    { speaker: 'Student', text: 'Our class loves being (a) and (b) for charity!' }
+                ],
+                blanks: [
+                    { key: '(a)', correct: 'generous', options: ['generous', 'clever', 'diligent'] },
+                    { key: '(b)', correct: 'punctual', options: ['punctual', 'humble', 'loyal'] }
+                ]
+            }
+        ];
+
+        /* -------------------------------------------------------------
+           2. GLOBAL STATE & SYNTHESIZER
+        ------------------------------------------------------------- */
+        let currentDifficulty = 1;
+        let globalSpeechRate = 0.75;
+        let starScore = 0;
+        let currentTab = 'learn';
+        let currentCategory = 'all';
+        let vocabList = [...GAME_DATA];
+        let currentIndex = 0;
+
+        let audioCtx = null;
+        let isMuted = false;
+
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playSFX(type) {
+            if (isMuted) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.linearRampToValueAtTime(140, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now); osc.stop(now + 0.25);
+                } else if (type === 'jump') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.exponentialRampToValueAtTime(520, now + 0.15);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                } else if (type === 'coin') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(987.77, now);
+                    osc.frequency.setValueAtTime(1318.51, now + 0.08);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                } else if (type === 'spring') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(900, now + 0.25);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now); osc.stop(now + 0.25);
+                } else if (type === 'fanfare') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const o = ctx.createOscillator(); const g = ctx.createGain();
+                        o.type = 'triangle'; o.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        g.gain.setValueAtTime(0.15, now + idx * 0.08);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.25);
+                        o.connect(g); g.connect(ctx.destination);
+                        o.start(now + idx * 0.08); o.stop(now + idx * 0.08 + 0.25);
+                    });
+                } else if (type === 'fireball') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(150, now + 0.12);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+                    osc.start(now); osc.stop(now + 0.12);
+                }
+            } catch (e) {}
+        }
+
+        function setSpeechRate(rate) {
+            globalSpeechRate = rate;
+            [0.5, 0.75, 1.0].forEach(r => {
+                const btn = document.getElementById(`speed-${r.toString().replace('.', '')}`);
+                if (btn) btn.className = r === rate
+                    ? "px-2 py-0.5 rounded-lg bg-amber-400 font-black text-slate-950 shadow"
+                    : "px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700";
+            });
+        }
+
+        function toggleAudio() {
+            isMuted = !isMuted;
+            document.getElementById('btn-audio-toggle').innerText = isMuted ? '🔇' : '🔊';
+        }
+
+        function speakText(text, overrideRate, pitch = 1.0) {
+            if (isMuted) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = overrideRate || globalSpeechRate;
+                utterance.pitch = pitch;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function speakTargetWord() {
+            const target = vocabList[currentIndex] || GAME_DATA[0];
+            speakText(target.term);
+        }
+
+        function setDifficulty(level) {
+            currentDifficulty = level;
+            [1, 2, 3].forEach(l => {
+                const btn = document.getElementById(`diff-${l}`);
+                if (btn) btn.className = l === level
+                    ? "diff-btn px-2 py-0.5 text-xs rounded-lg font-bold transition bg-amber-400 text-slate-950 shadow"
+                    : "diff-btn px-2 py-0.5 text-xs rounded-lg font-bold transition text-slate-400 hover:bg-slate-800";
+            });
+            playSFX('coin');
+            loadCurrentQuestion();
+        }
+
+        function changeCategory(cat) {
+            currentCategory = cat;
+            if (cat === 'all') vocabList = [...GAME_DATA];
+            else vocabList = GAME_DATA.filter(item => item.category === cat);
+            currentIndex = 0;
+            renderFlashcards();
+            loadCurrentQuestion();
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            const tabs = ['learn', 'match', 'blanks', 'unscramble', 'listen', 'seq', 'dialfill', 'arcade', 'conveyor', 'mario'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const view = document.getElementById(`view-${t}`);
+                if (t === tabId) {
+                    btn.className = "tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold bg-amber-400 text-slate-950 shadow flex items-center gap-1";
+                    view.classList.remove('hidden');
+                } else {
+                    btn.className = "tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-slate-300 hover:text-white flex items-center gap-1";
+                    view.classList.add('hidden');
+                }
+            });
+
+            if (tabId !== 'arcade') stopArcadeGame();
+            if (tabId !== 'conveyor') stopConveyorGame();
+
+            if (tabId === 'learn') renderFlashcards();
+            else if (tabId === 'seq') initDialogueSeqGame();
+            else if (tabId === 'dialfill') initDialogueFillGame();
+            else if (tabId === 'mario') setTimeout(() => initMarioGame(currentMarioLevel), 100);
+            else loadCurrentQuestion();
+        }
+
+        function addStarScore(num = 1) {
+            starScore += num;
+            document.getElementById('star-count').innerText = starScore;
+            document.getElementById('mario-stars-val').innerText = starScore;
+        }
+
+        function getMultipleChoiceOptions(correctObj) {
+            const count = currentDifficulty + 1;
+            const options = [correctObj];
+            const remaining = GAME_DATA.filter(w => w.id !== correctObj.id);
+            remaining.sort(() => 0.5 - Math.random());
+            for (let i = 0; i < count - 1; i++) {
+                if (remaining[i]) options.push(remaining[i]);
+            }
+            return options.sort(() => 0.5 - Math.random());
+        }
+
+        function loadCurrentQuestion() {
+            if (currentIndex >= vocabList.length) currentIndex = 0;
+            if (currentTab === 'match') initMatchGame();
+            if (currentTab === 'blanks') initBlanksGame();
+            if (currentTab === 'unscramble') initUnscrambleGame();
+            if (currentTab === 'listen') initListenGame();
+            if (currentTab === 'arcade') setupArcadeMode();
+            if (currentTab === 'conveyor') setupConveyorMode();
+        }
+
+        /* -------------------------------------------------------------
+           3. MODULE 1: FLASHCARDS
+        ------------------------------------------------------------- */
+        function renderFlashcards() {
+            const grid = document.getElementById('flashcard-grid');
+            grid.innerHTML = '';
+            vocabList.forEach(item => {
+                grid.innerHTML += `
+                    <div onclick="openEnlargeModal('${item.id}')" class="bg-slate-900 border-2 border-slate-800 hover:border-amber-400 p-3 rounded-2xl shadow transition cursor-pointer flex flex-col justify-between">
+                        <div class="w-20 h-20 mx-auto my-1">${item.svg}</div>
+                        <div class="text-base font-black text-center text-amber-300 my-1">${item.term}</div>
+                        <button onclick="event.stopPropagation(); speakText('${item.term}')" class="mt-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-1 rounded-xl text-xs shadow">🔊 Speak</button>
+                    </div>`;
+            });
+        }
+
+        function openEnlargeModal(wordId) {
+            const item = GAME_DATA.find(w => w.id === wordId);
+            if (!item) return;
+            document.getElementById('modal-svg-container').innerHTML = item.svg;
+            document.getElementById('modal-word-display').innerText = item.term;
+            document.getElementById('modal-sentence').innerText = item.sentence;
+            document.getElementById('modal-btn-word').onclick = () => speakText(item.term);
+            document.getElementById('modal-btn-sentence').onclick = () => speakText(item.sentence);
+            document.getElementById('enlarge-card-modal').classList.remove('hidden');
+            speakText(item.term);
+        }
+
+        function closeEnlargeModal() {
+            document.getElementById('enlarge-card-modal').classList.add('hidden');
+        }
+
+        /* -------------------------------------------------------------
+           4. MODULE 2, 3, 4, 5: MATCHING, BLANKS, UNSCRAMBLE, LISTEN
+        ------------------------------------------------------------- */
+        let currentMatchQuestion = null;
+        function initMatchGame() {
+            currentMatchQuestion = vocabList[currentIndex] || vocabList[0];
+            document.getElementById('match-target-svg').innerHTML = currentMatchQuestion.svg;
+            const options = getMultipleChoiceOptions(currentMatchQuestion);
+            const container = document.getElementById('match-options');
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-slate-950 hover:bg-slate-800 border-2 border-slate-700 text-slate-100 font-black text-lg py-3 rounded-2xl shadow active:scale-95 transition";
+                btn.innerText = opt.term;
+                btn.onclick = () => {
+                    if (opt.id === currentMatchQuestion.id) {
+                        playSFX('correct');
+                        speakText(`Well done! ${opt.term}`);
+                        showPraiseModal("Super Star!", `Correct! The personality trait is "${opt.term}"!`);
+                        addStarScore(1);
+                        currentIndex++;
+                    } else {
+                        playSFX('wrong');
+                        btn.classList.add('animate-shake', 'border-red-500');
+                        setTimeout(() => btn.classList.remove('animate-shake', 'border-red-500'), 450);
+                        speakText("Try again!");
+                    }
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        let blanksMissingSeq = [], blanksStep = 0, blanksButtons = [];
+        function initBlanksGame() {
+            const target = vocabList[currentIndex] || vocabList[0];
+            document.getElementById('blanks-svg-container').innerHTML = target.svg;
+            const word = target.term.toLowerCase();
+            const letterIndices = [];
+            for (let i = 0; i < word.length; i++) {
+                if (/[a-z]/.test(word[i])) letterIndices.push(i);
+            }
+            letterIndices.sort(() => 0.5 - Math.random());
+            const ratio = currentDifficulty === 1 ? 0.3 : (currentDifficulty === 2 ? 0.48 : 0.65);
+            const hideCount = Math.max(1, Math.round(letterIndices.length * ratio));
+            const hiddenSet = new Set(letterIndices.slice(0, hideCount));
+
+            blanksMissingSeq = [];
+            blanksStep = 0;
+            blanksButtons = [];
+            const lettersContainer = document.getElementById('blanks-letters-container');
+            lettersContainer.innerHTML = '';
+            for (let i = 0; i < word.length; i++) {
+                if (word[i] === ' ') {
+                    lettersContainer.innerHTML += `<div class="w-4"></div>`;
+                } else if (hiddenSet.has(i)) {
+                    blanksMissingSeq.push({ idx: i, char: word[i] });
+                    lettersContainer.innerHTML += `<div id="blank-slot-${i}" class="w-8 sm:w-9 h-11 border-b-4 border-amber-400 bg-slate-950 rounded-lg flex items-center justify-center text-amber-300 font-black text-xl uppercase">_</div>`;
+                } else {
+                    lettersContainer.innerHTML += `<div class="w-8 sm:w-9 h-11 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-200 font-black text-xl uppercase">${word[i]}</div>`;
+                }
+            }
+
+            const required = blanksMissingSeq.map(b => b.char);
+            const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+            const totalChoices = Math.max(8, required.length + 3);
+            while (required.length < totalChoices) {
+                required.push(alphabet[Math.floor(Math.random() * 26)]);
+            }
+            required.sort(() => 0.5 - Math.random());
+
+            const optionsContainer = document.getElementById('blanks-letter-options');
+            optionsContainer.innerHTML = '';
+            required.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = "w-10 h-11 bg-slate-800 hover:bg-sky-600 border-2 border-slate-700 text-amber-300 font-black text-lg rounded-xl shadow uppercase transition";
+                btn.innerText = c;
+                btn.dataset.char = c;
+                btn.onclick = () => handleBlanksLetterInput(c, btn);
+                optionsContainer.appendChild(btn);
+                blanksButtons.push(btn);
+            });
+        }
+
+        function handleBlanksLetterInput(char, specificBtn = null) {
+            const target = vocabList[currentIndex] || vocabList[0];
+            if (blanksStep < blanksMissingSeq.length && char === blanksMissingSeq[blanksStep].char) {
+                const btn = specificBtn || blanksButtons.find(b => !b.disabled && b.dataset.char === char);
+                if (!btn) return;
+                playSFX('correct');
+                document.getElementById(`blank-slot-${blanksMissingSeq[blanksStep].idx}`).innerText = char;
+                btn.disabled = true;
+                btn.className = "w-10 h-11 bg-slate-950 border border-slate-800 text-slate-600 font-bold rounded-xl opacity-40";
+                blanksStep++;
+                if (blanksStep >= blanksMissingSeq.length) {
+                    speakText(target.term);
+                    showPraiseModal("Great Reader!", `Spelled correctly: "${target.term}"`);
+                    addStarScore(1);
+                    currentIndex++;
+                }
+            } else {
+                playSFX('wrong');
+            }
+        }
+
+        let unscramblePool = [], unscrambleStep = 0, unscrambleTarget = null, unscrambleMissingChars = [];
+        function initUnscrambleGame() {
+            unscrambleTarget = vocabList[currentIndex] || vocabList[0];
+            document.getElementById('unscramble-svg-hint').innerHTML = unscrambleTarget.svg;
+            const fullWord = unscrambleTarget.term.toLowerCase();
+            const prefixLen = currentDifficulty === 1 ? 3 : (currentDifficulty === 2 ? 2 : 1);
+            
+            unscrambleMissingChars = [];
+            for (let i = 0; i < fullWord.length; i++) {
+                if (i >= prefixLen && fullWord[i] !== ' ') {
+                    unscrambleMissingChars.push({ idx: i, char: fullWord[i] });
+                }
+            }
+            unscrambleStep = 0;
+            unscramblePool = unscrambleMissingChars.map((item, id) => ({ id, char: item.char, crossed: false }));
+            unscramblePool.sort(() => 0.5 - Math.random());
+
+            renderUnscramblePool();
+            renderUnscrambleSlots(fullWord, prefixLen, unscrambleMissingChars);
+            renderUnscrambleKeyboard(unscrambleMissingChars);
+        }
+
+        function renderUnscramblePool() {
+            const poolContainer = document.getElementById('unscramble-pool-container');
+            poolContainer.innerHTML = unscramblePool.map(i =>
+                `<span class="${i.crossed ? 'crossed-letter opacity-70' : 'text-amber-300'} font-bold inline-block">${i.char}</span>`
+            ).join(' ');
+        }
+
+        function renderUnscrambleSlots(fullWord, prefixLen, missingChars) {
+            const container = document.getElementById('unscramble-slots-container');
+            container.innerHTML = '';
+            let mIdx = 0;
+            for (let i = 0; i < fullWord.length; i++) {
+                if (fullWord[i] === ' ') {
+                    container.innerHTML += `<span class="w-4"></span>`;
+                } else if (i < prefixLen) {
+                    container.innerHTML += `<span class="font-black text-amber-300 text-2xl">${fullWord[i]}</span>`;
+                } else {
+                    container.innerHTML += `<span id="unscramble-slot-${mIdx}" class="border-b-4 border-slate-500 min-w-[22px] text-center text-slate-400 font-black text-2xl uppercase">_</span>`;
+                    mIdx++;
+                }
+            }
+        }
+
+        function renderUnscrambleKeyboard(missingChars) {
+            const container = document.getElementById('unscramble-keyboard-container');
+            container.innerHTML = '';
+            const unique = [...new Set(unscramblePool.map(i => i.char))].sort(() => 0.5 - Math.random());
+            unique.forEach(char => {
+                const btn = document.createElement('button');
+                btn.className = "w-11 h-12 bg-slate-800 hover:bg-sky-600 border-2 border-slate-700 text-amber-300 font-black text-xl uppercase rounded-xl shadow active:scale-95 transition";
+                btn.innerText = char;
+                btn.onclick = () => handleUnscrambleLetterInput(char);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleUnscrambleLetterInput(char) {
+            if (unscrambleStep < unscrambleMissingChars.length && char === unscrambleMissingChars[unscrambleStep].char) {
+                playSFX('correct');
+                const pItem = unscramblePool.find(i => i.char === char && !i.crossed);
+                if (pItem) pItem.crossed = true;
+                renderUnscramblePool();
+                const slotEl = document.getElementById(`unscramble-slot-${unscrambleStep}`);
+                if (slotEl) {
+                    slotEl.innerText = char;
+                    slotEl.classList.remove('text-slate-400', 'border-slate-500');
+                    slotEl.classList.add('text-emerald-300', 'border-emerald-400');
+                }
+                unscrambleStep++;
+                if (unscrambleStep >= unscrambleMissingChars.length) {
+                    speakText(unscrambleTarget.term);
+                    showPraiseModal("Unscramble Master!", `Completed: "${unscrambleTarget.term}"`);
+                    addStarScore(1);
+                    currentIndex++;
+                }
+            } else {
+                playSFX('wrong');
+            }
+        }
+
+        function initListenGame() {
+            const target = vocabList[currentIndex] || vocabList[0];
+            const options = getMultipleChoiceOptions(target);
+            const container = document.getElementById('listen-options');
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-slate-950 hover:bg-slate-800 border-2 border-slate-700 text-slate-100 font-black text-lg py-3 rounded-2xl shadow active:scale-95 transition";
+                btn.innerText = opt.term;
+                btn.onclick = () => {
+                    if (opt.id === target.id) {
+                        playSFX('correct');
+                        showPraiseModal("Great Listener!", `You heard "${opt.term}"!`);
+                        addStarScore(1);
+                        currentIndex++;
+                    } else {
+                        playSFX('wrong');
+                        btn.classList.add('animate-shake', 'border-red-500');
+                        setTimeout(() => btn.classList.remove('animate-shake', 'border-red-500'), 450);
+                    }
+                };
+                container.appendChild(btn);
+            });
+            setTimeout(playListenAudio, 300);
+        }
+
+        function playListenAudio() {
+            speakText((vocabList[currentIndex] || vocabList[0]).term);
+        }
+
+        /* -------------------------------------------------------------
+           5. MODULE 6: DIALOGUE SEQUENCING GAME
+        ------------------------------------------------------------- */
+        let activeSeqSentences = [];
+        function initDialogueSeqGame() {
+            activeSeqSentences = [...dialogueSeqSentences].sort(() => 0.5 - Math.random());
+            renderDialogueSeqList();
+        }
+
+        function renderDialogueSeqList() {
+            const container = document.getElementById('seq-sentence-list');
+            container.innerHTML = '';
+            activeSeqSentences.forEach((item, idx) => {
+                container.innerHTML += `
+                    <div id="seq-card-${idx}" class="bg-slate-950 border-2 border-slate-800 p-3 rounded-2xl flex items-center justify-between gap-2 shadow">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-slate-800 text-sky-300 font-black px-2.5 py-1 rounded-xl text-xs">${idx + 1}</span>
+                            <div>
+                                <span class="text-xs font-bold text-amber-300 block">${item.speaker}:</span>
+                                <span class="text-sm font-extrabold text-slate-100">"${item.text}"</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-1 shrink-0">
+                            <button onclick="moveDialogueSeqItem(${idx}, -1)" class="bg-slate-800 hover:bg-slate-700 text-white font-black px-2.5 py-1 rounded-lg text-xs">▲</button>
+                            <button onclick="moveDialogueSeqItem(${idx}, 1)" class="bg-slate-800 hover:bg-slate-700 text-white font-black px-2.5 py-1 rounded-lg text-xs">▼</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function moveDialogueSeqItem(index, dir) {
+            const targetIdx = index + dir;
+            if (targetIdx < 0 || targetIdx >= activeSeqSentences.length) return;
+            const temp = activeSeqSentences[index];
+            activeSeqSentences[index] = activeSeqSentences[targetIdx];
+            activeSeqSentences[targetIdx] = temp;
+            playSFX('coin');
+            renderDialogueSeqList();
+        }
+
+        function checkDialogueSeqOrder() {
+            let correct = true;
+            for (let i = 0; i < activeSeqSentences.length; i++) {
+                if (activeSeqSentences[i].correctOrder !== i + 1) {
+                    correct = false;
+                    break;
+                }
+            }
+            if (correct) {
+                playSFX('correct');
+                playSFX('fanfare');
+                showPraiseModal("Dialogue Complete! 🎉", "The conversation is in perfect logical sequence!");
+                addStarScore(3);
+            } else {
+                playSFX('wrong');
+                speakText("Not quite right yet. Try adjusting sentence order!");
+            }
+        }
+
+        function readAloudDialogueSeq() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                activeSeqSentences.forEach((item, idx) => {
+                    const card = document.getElementById(`seq-card-${idx}`);
+                    const pitch = item.speaker === 'Girl 1' ? 1.2 : 0.85;
+                    const utterance = new SpeechSynthesisUtterance(item.text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = globalSpeechRate;
+                    utterance.pitch = pitch;
+
+                    utterance.onstart = () => {
+                        if (card) card.className = "bg-amber-500/20 border-2 border-amber-400 p-3 rounded-2xl flex items-center justify-between gap-2 shadow";
+                    };
+                    utterance.onend = () => {
+                        if (card) card.className = "bg-slate-950 border-2 border-slate-800 p-3 rounded-2xl flex items-center justify-between gap-2 shadow";
+                    };
+                    window.speechSynthesis.speak(utterance);
+                });
+            }
+        }
+
+        /* -------------------------------------------------------------
+           6. MODULE 7: DIALOGUE FILL-IN-BLANKS GAME (15 SCENES)
+        ------------------------------------------------------------- */
+        let currentDialFillSceneIdx = 0;
+        let dialFillAnswers = {};
+
+        function nextDialogueFillScene() {
+            currentDialFillSceneIdx = (currentDialFillSceneIdx + 1) % dialogueFillScenes.length;
+            initDialogueFillGame();
+        }
+
+        function initDialogueFillGame() {
+            const scene = dialogueFillScenes[currentDialFillSceneIdx];
+            document.getElementById('dialfill-title').innerText = scene.title;
+            document.getElementById('dialfill-counter').innerText = `${currentDialFillSceneIdx + 1}/${dialogueFillScenes.length}`;
+            dialFillAnswers = {};
+
+            const container = document.getElementById('dialfill-bubbles-container');
+            container.innerHTML = '';
+            scene.bubbles.forEach(b => {
+                let textHtml = b.text.replace(/\[.*?\]/g, '');
+                scene.blanks.forEach(blk => {
+                    textHtml = textHtml.replace(
+                        blk.key,
+                        `<span id="dialfill-blank-${blk.key}" class="inline-block border-b-4 border-amber-400 text-amber-300 font-black px-2 min-w-[70px] text-center">_____</span>`
+                    );
+                });
+                container.innerHTML += `
+                    <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                        <span class="text-xs font-extrabold text-sky-400 block">${b.speaker}:</span>
+                        <span>${textHtml}</span>
+                    </div>`;
+            });
+
+            const choicesContainer = document.getElementById('dialfill-choices-container');
+            choicesContainer.innerHTML = '';
+            const allOptions = [];
+            scene.blanks.forEach(b => allOptions.push(...b.options));
+            const uniqueOptions = [...new Set(allOptions)].sort(() => 0.5 - Math.random());
+
+            uniqueOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-sm px-4 py-2 rounded-xl shadow active:scale-95 transition";
+                btn.innerText = opt;
+                btn.onclick = () => handleDialogueFillChoice(opt);
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        function handleDialogueFillChoice(choice) {
+            const scene = dialogueFillScenes[currentDialFillSceneIdx];
+            let filledAny = false;
+
+            for (let i = 0; i < scene.blanks.length; i++) {
+                const blk = scene.blanks[i];
+                if (!dialFillAnswers[blk.key] && blk.correct === choice) {
+                    dialFillAnswers[blk.key] = choice;
+                    const elem = document.getElementById(`dialfill-blank-${blk.key}`);
+                    if (elem) elem.innerText = choice;
+                    filledAny = true;
+                    break;
+                }
+            }
+
+            if (filledAny) {
+                playSFX('correct');
+                if (Object.keys(dialFillAnswers).length === scene.blanks.length) {
+                    showPraiseModal("Dialogue Completed! 🎉", `Completed ${scene.title}!`);
+                    addStarScore(3);
+                }
+            } else {
+                playSFX('wrong');
+            }
+        }
+
+        function readAloudCurrentDialogueFill() {
+            const scene = dialogueFillScenes[currentDialFillSceneIdx];
+            if (!('speechSynthesis' in window) || isMuted) return;
+            window.speechSynthesis.cancel();
+            scene.bubbles.forEach(b => {
+                let fullText = b.text.replace(/\[.*?\]/g, '');
+                scene.blanks.forEach(blk => {
+                    fullText = fullText.replace(blk.key, dialFillAnswers[blk.key] || 'blank');
+                });
+                const utterance = new SpeechSynthesisUtterance(fullText);
+                utterance.lang = 'en-US';
+                utterance.rate = globalSpeechRate;
+                utterance.pitch = b.speaker.includes('1') ? 1.15 : 0.9;
+                window.speechSynthesis.speak(utterance);
+            });
+        }
+
+        /* -------------------------------------------------------------
+           7. MODULE 8 & 9: ARCADE BUBBLE & CONVEYOR RUSH
+        ------------------------------------------------------------- */
+        let arcadeTimer = null, arcadeInterval = null, arcadeActive = false;
+        function setupArcadeMode() {
+            document.getElementById('arcade-overlay').classList.remove('hidden');
+            const target = vocabList[currentIndex] || GAME_DATA[0];
+            document.getElementById('arcade-target-text').innerText = target.term;
+        }
+
+        function startArcadeGame() {
+            document.getElementById('arcade-overlay').classList.add('hidden');
+            arcadeActive = true;
+            let timeLeft = 30;
+            document.getElementById('arcade-timer').innerText = timeLeft;
+            const target = vocabList[currentIndex] || GAME_DATA[0];
+            document.getElementById('arcade-target-text').innerText = target.term;
+            speakText(`Tap ${target.term}`);
+
+            clearInterval(arcadeTimer);
+            arcadeTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('arcade-timer').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    stopArcadeGame();
+                    playSFX('fanfare');
+                    showPraiseModal("Arcade Clear!", "Awesome bubble popping!");
+                    addStarScore(3);
+                    currentIndex++;
+                }
+            }, 1000);
+
+            clearInterval(arcadeInterval);
+            arcadeInterval = setInterval(spawnArcadeBubble, 850);
+        }
+
+        function stopArcadeGame() {
+            arcadeActive = false;
+            clearInterval(arcadeTimer);
+            clearInterval(arcadeInterval);
+            document.querySelectorAll('.arcade-bubble').forEach(b => b.remove());
+        }
+
+        function spawnArcadeBubble() {
+            if (!arcadeActive) return;
+            const playfield = document.getElementById('arcade-playfield');
+            const target = vocabList[currentIndex] || GAME_DATA[0];
+            const item = Math.random() < 0.45 ? target : GAME_DATA[Math.floor(Math.random() * GAME_DATA.length)];
+
+            const bubble = document.createElement('div');
+            bubble.className = "arcade-bubble absolute bg-slate-900 border-2 border-sky-400 rounded-full p-2 shadow-xl cursor-pointer flex items-center justify-center w-16 h-16 hover:scale-110 transition-transform";
+            bubble.style.left = `${Math.random() * Math.max(40, playfield.clientWidth - 80) + 10}px`;
+            bubble.style.bottom = `-70px`;
+            bubble.innerHTML = `<div class="w-11 h-11 pointer-events-none">${item.svg}</div>`;
+            playfield.appendChild(bubble);
+
+            let bottomPos = -70;
+            const floatAnim = setInterval(() => {
+                if (!arcadeActive || !bubble.parentElement) {
+                    clearInterval(floatAnim);
+                    return;
+                }
+                bottomPos += 2;
+                bubble.style.bottom = `${bottomPos}px`;
+                if (bottomPos > playfield.clientHeight + 70) {
+                    clearInterval(floatAnim);
+                    if (bubble.parentElement) bubble.remove();
+                }
+            }, 20);
+
+            bubble.onclick = () => {
+                if (item.id === target.id) {
+                    playSFX('correct');
+                    addStarScore(1);
+                    bubble.remove();
+                } else {
+                    playSFX('wrong');
+                }
+            };
+        }
+
+        let conveyorTimer = null, conveyorInterval = null, conveyorActive = false;
+        function setupConveyorMode() {
+            document.getElementById('conveyor-overlay').classList.remove('hidden');
+            const target = vocabList[currentIndex] || GAME_DATA[0];
+            document.getElementById('conveyor-target-text').innerText = target.term;
+        }
+
+        function startConveyorGame() {
+            document.getElementById('conveyor-overlay').classList.add('hidden');
+            conveyorActive = true;
+            let timeLeft = 30;
+            document.getElementById('conveyor-timer').innerText = timeLeft;
+            const target = vocabList[currentIndex] || GAME_DATA[0];
+            document.getElementById('conveyor-target-text').innerText = target.term;
+            speakText(`Catch ${target.term}`);
+
+            clearInterval(conveyorTimer);
+            conveyorTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('conveyor-timer').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    stopConveyorGame();
+                    playSFX('fanfare');
+                    showPraiseModal("Conveyor Clear!", "Great factory work!");
+                    addStarScore(3);
+                    currentIndex++;
+                }
+            }, 1000);
+
+            clearInterval(conveyorInterval);
+            conveyorInterval = setInterval(spawnConveyorItem, 1100);
+        }
+
+        function stopConveyorGame() {
+            conveyorActive = false;
+            clearInterval(conveyorTimer);
+            clearInterval(conveyorInterval);
+            document.querySelectorAll('.conveyor-crate').forEach(c => c.remove());
+        }
+
+        function spawnConveyorItem() {
+            if (!conveyorActive) return;
+            const playfield = document.getElementById('conveyor-playfield');
+            const target = vocabList[currentIndex] || GAME_DATA[0];
+            const item = Math.random() < 0.5 ? target : GAME_DATA[Math.floor(Math.random() * GAME_DATA.length)];
+
+            const crate = document.createElement('div');
+            crate.className = "conveyor-crate absolute bg-slate-900 border-2 border-teal-400 rounded-2xl p-2 shadow-2xl cursor-pointer flex items-center justify-center w-16 h-16 hover:scale-110 transition-transform";
+            crate.style.left = `-80px`;
+            crate.style.bottom = `44px`;
+            crate.innerHTML = `<div class="w-11 h-11 pointer-events-none">${item.svg}</div>`;
+            playfield.appendChild(crate);
+
+            let leftPos = -80;
+            const moveAnim = setInterval(() => {
+                if (!conveyorActive || !crate.parentElement) {
+                    clearInterval(moveAnim);
+                    return;
+                }
+                leftPos += 2.2;
+                crate.style.left = `${leftPos}px`;
+                if (leftPos > playfield.clientWidth + 80) {
+                    clearInterval(moveAnim);
+                    if (crate.parentElement) crate.remove();
+                }
+            }, 20);
+
+            crate.onclick = () => {
+                if (item.id === target.id) {
+                    playSFX('correct');
+                    addStarScore(1);
+                    crate.remove();
+                } else {
+                    playSFX('wrong');
+                }
+            };
+        }
+
+        /* -------------------------------------------------------------
+           8. MODULE 10: SUPER MARIO PLATFORMER ENGINE
+        ------------------------------------------------------------- */
+        let currentMarioLevel = 1;
+        let marioCanvas, marioCtx, marioGameRunning = false, marioAnimId = null;
+
+        const mario = {
+            x: 40, y: 200, width: 28, height: 36, vx: 0, vy: 0,
+            accel: 0.5, maxWalkSpeed: 4.5, maxRunSpeed: 7.0, friction: 0.82,
+            jumpPower: -12.8, gravity: 0.58, grounded: false, facing: 'right', state: 'small',
+            invincibleTimer: 0, attackCooldown: 0, lives: 3, coyoteTimer: 0
+        };
+
+        let marioKeys = { left: false, right: false, up: false, run: false };
+        let marioPlatforms = [], marioBlocks = [], marioCoins = [], marioMonsters = [], marioProjectiles = [];
+        let marioPipes = [], marioFireBars = [], marioSprings = [], marioSpikes = [];
+        let marioFlag = { x: 1200, y: 150, width: 25, height: 160 };
+
+        const marioThemes = {
+            1: { name: "World 1-1: Meadow", width: 1400, sky: '#0284c7', top: '#16a34a', base: '#854d0e', pit: 'ground' },
+            2: { name: "World 1-2: Beach", width: 1800, sky: '#38bdf8', top: '#fde047', base: '#d97706', pit: 'water' },
+            3: { name: "World 2-1: Forest", width: 2200, sky: '#064e3b', top: '#22c55e', base: '#14532d', pit: 'forest' },
+            4: { name: "World 2-2: Castle", width: 2600, sky: '#18181b', top: '#64748b', base: '#334155', pit: 'lava' },
+            5: { name: "World 3-1: Cloud", width: 3000, sky: '#020617', top: '#f8fafc', base: '#cbd5e1', pit: 'space' },
+            6: { name: "World 3-2: Cave", width: 3400, sky: '#0f172a', top: '#475569', base: '#1e293b', pit: 'abyss' },
+            7: { name: "World 4-1: Lava Fortress", width: 3800, sky: '#451a03', top: '#f97316', base: '#78350f', pit: 'lava' },
+            8: { name: "World 4-2: Desert Oasis", width: 4200, sky: '#fef08a', top: '#eab308', base: '#a16207', pit: 'sand' },
+            9: { name: "World 5-1: Ice Summit", width: 4600, sky: '#bae6fd', top: '#e0f2fe', base: '#0284c7', pit: 'water' },
+            10: { name: "World 8-4: Bowser Lair", width: 5200, sky: '#2e1065', top: '#7c3aed', base: '#4c1d95', pit: 'lava' }
+        };
+
+        function updateMarioSize() {
+            if (mario.state === 'small') {
+                mario.width = 28;
+                mario.height = 36;
+            } else {
+                mario.width = 30;
+                mario.height = 52;
+            }
+        }
+
+        function updateMarioHUD() {
+            const hud = document.getElementById('mario-form-hud');
+            if (hud) {
+                if (mario.state === 'fire') hud.innerText = "State: Fire Mario 🔥 (Press F/Fire)";
+                else if (mario.state === 'super') hud.innerText = "State: Super Mario 🍄";
+                else hud.innerText = "State: Small Mario";
+            }
+            document.getElementById('mario-lives-val').innerText = mario.lives;
+        }
+
+        function selectMarioLevel(lvl) {
+            currentMarioLevel = lvl;
+            const btnList = document.querySelectorAll('.mario-lvl-btn');
+            btnList.forEach(b => b.className = "mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300");
+            const activeBtn = document.getElementById(lvl === 'endless' ? 'mario-tab-endless' : `mario-tab-${lvl}`);
+            if (activeBtn) activeBtn.className = "mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-amber-500 text-slate-950";
+            initMarioGame(lvl);
+        }
+
+        function restartMarioLevel() {
+            mario.lives = 3;
+            initMarioGame(currentMarioLevel);
+        }
+
+        function triggerMarioJump() {
+            if (mario.grounded || mario.coyoteTimer > 0) {
+                mario.vy = mario.jumpPower;
+                mario.grounded = false;
+                mario.coyoteTimer = 0;
+                playSFX('jump');
+            }
+        }
+
+        function initMarioGame(lvl = 1) {
+            marioCanvas = document.getElementById('marioCanvas');
+            if (!marioCanvas) return;
+            marioCtx = marioCanvas.getContext('2d');
+            mario.x = 40;
+            mario.y = 200;
+            mario.vx = 0;
+            mario.vy = 0;
+            mario.state = 'small';
+            mario.coyoteTimer = 0;
+            marioProjectiles = [];
+            updateMarioSize();
+            updateMarioHUD();
+
+            let theme = marioThemes[lvl] || {
+                name: "Endless Adventure Quest",
+                width: 3400 + Math.random() * 2000,
+                sky: '#0f172a',
+                top: '#16a34a',
+                base: '#854d0e',
+                pit: 'lava'
+            };
+            document.getElementById('mario-level-subtitle').innerText = `${theme.name} (~${Math.round(theme.width)}px Length)`;
+
+            // Procedural Platforms & Gaps
+            marioPlatforms = [
+                { x: 0, y: 320, width: 320 + Math.random() * 100, height: 60 }
+            ];
+
+            let pX = marioPlatforms[0].width + 45 + Math.random() * 50;
+            while (pX < theme.width - 250) {
+                const pW = 200 + Math.random() * 260;
+                marioPlatforms.push({ x: pX, y: 320, width: pW, height: 60 });
+
+                if (Math.random() < 0.6) {
+                    const elevAxis = Math.random() < 0.5 ? 'y' : 'x';
+                    marioPlatforms.push({
+                        x: pX - 20 + Math.random() * pW,
+                        y: 170 + Math.random() * 50,
+                        width: 100 + Math.random() * 40,
+                        height: 18,
+                        moving: true,
+                        axis: elevAxis,
+                        min: elevAxis === 'y' ? 140 + Math.random() * 30 : pX - 30,
+                        max: elevAxis === 'y' ? 230 + Math.random() * 30 : pX + pW - 20,
+                        speed: 0.8 + Math.random() * 0.8,
+                        dir: Math.random() < 0.5 ? 1 : -1
+                    });
+                }
+                pX += pW + 45 + Math.random() * 55;
+            }
+
+            const isSolidGround = (x, w) => marioPlatforms.some(p => !p.moving && x >= p.x + 10 && (x + w) <= (p.x + p.width - 10));
+
+            // Green Pipes with Animated Piranha Plants
+            marioPipes = [];
+            for (let px = 260; px < theme.width - 350; px += 200 + Math.random() * 240) {
+                if (isSolidGround(px, 46)) {
+                    const pH = 35 + Math.floor(Math.random() * 3) * 12;
+                    marioPipes.push({
+                        x: px, y: 320 - pH, w: 46, h: pH,
+                        hasPlant: Math.random() < 0.5,
+                        plantY: 0,
+                        plantDir: Math.random() < 0.5 ? 1 : -1
+                    });
+                }
+            }
+
+            // Question Blocks (?) holding Vocabulary Items
+            marioBlocks = [];
+            for (let bx = 160; bx < theme.width - 300; bx += 90 + Math.random() * 130) {
+                if (Math.random() < 0.85) {
+                    const isHigh = Math.random() < 0.35;
+                    const blockY = isHigh ? 160 + Math.random() * 20 : 215 + Math.random() * 25;
+                    const count = Math.random() < 0.4 ? (Math.random() < 0.5 ? 2 : 3) : 1;
+                    for (let c = 0; c < count; c++) {
+                        marioBlocks.push({
+                            x: bx + c * 38, y: blockY, w: 36, h: 36,
+                            type: 'question', hit: false,
+                            wordObj: GAME_DATA[Math.floor(Math.random() * GAME_DATA.length)]
+                        });
+                    }
+                }
+            }
+
+            // Rotating Fire Bars
+            marioFireBars = [];
+            for (let fbx = 420; fbx < theme.width - 400; fbx += 380 + Math.random() * 380) {
+                if (Math.random() < 0.45) {
+                    marioFireBars.push({
+                        cx: fbx,
+                        cy: 165 + Math.random() * 55,
+                        angle: Math.random() * Math.PI * 2,
+                        speed: (0.018 + Math.random() * 0.02) * (Math.random() < 0.5 ? 1 : -1)
+                    });
+                }
+            }
+
+            // Springboards
+            marioSprings = [];
+            for (let sx = 280; sx < theme.width - 450; sx += 380 + Math.random() * 380) {
+                if (isSolidGround(sx, 28) && Math.random() < 0.65) {
+                    marioSprings.push({ x: sx, y: 300, w: 28, h: 20 });
+                }
+            }
+
+            // Spikes
+            marioSpikes = [];
+            for (let spkx = 500; spkx < theme.width - 500; spkx += 380 + Math.random() * 380) {
+                if (isSolidGround(spkx, 32) && Math.random() < 0.4) {
+                    marioSpikes.push({ x: spkx, y: 305, w: 32, h: 15 });
+                }
+            }
+
+            // Coins
+            marioCoins = [];
+            for (let cx = 100; cx < theme.width - 200; cx += 65 + Math.random() * 55) {
+                marioCoins.push({ x: cx, y: 250 - Math.random() * 110, collected: false });
+            }
+
+            // Patrolling Enemies
+            marioMonsters = [];
+            const emojis = ['🍄', '🐢', '🦔', '🐲'];
+            for (let mx = 320; mx < theme.width - 350; mx += 220 + Math.random() * 220) {
+                if (isSolidGround(mx, 30)) {
+                    const em = emojis[Math.floor(Math.random() * emojis.length)];
+                    marioMonsters.push({
+                        x: mx, y: 292, width: 30, height: 28,
+                        minX: mx - 45 - Math.random() * 25,
+                        maxX: mx + 45 + Math.random() * 35,
+                        speed: 0.7 + Math.random() * 0.9,
+                        dir: Math.random() < 0.5 ? 1 : -1,
+                        emoji: em,
+                        alive: true
+                    });
+                }
+            }
+
+            marioFlag = { x: theme.width - 120, y: 150, width: 25, height: 160 };
+
+            setupMarioTouchControls();
+            marioGameRunning = true;
+            if (marioAnimId) cancelAnimationFrame(marioAnimId);
+            marioLoop();
+        }
+
+        function shootMarioFireball() {
+            if (mario.state !== 'fire' || mario.attackCooldown > 0) return;
+            mario.attackCooldown = 16;
+            marioProjectiles.push({
+                x: mario.facing === 'right' ? mario.x + mario.width + 2 : mario.x - 14,
+                y: mario.y + 16,
+                vx: (mario.facing === 'right' ? 1 : -1) * 7.5,
+                vy: 1.5,
+                emoji: '🔥'
+            });
+            playSFX('fireball');
+        }
+
+        function setupMarioTouchControls() {
+            const bindTouch = (id, press, release) => {
+                const btn = document.getElementById(id);
+                if (!btn) return;
+                btn.onpointerdown = (e) => { e.preventDefault(); press(); };
+                btn.onpointerup = (e) => { e.preventDefault(); release(); };
+                btn.onpointerleave = (e) => { e.preventDefault(); release(); };
+            };
+
+            bindTouch('btn-left', () => marioKeys.left = true, () => marioKeys.left = false);
+            bindTouch('btn-right', () => marioKeys.right = true, () => marioKeys.right = false);
+            bindTouch('btn-run', () => marioKeys.run = true, () => marioKeys.run = false);
+            bindTouch('btn-jump', () => triggerMarioJump(), () => {});
+            bindTouch('btn-attack', () => shootMarioFireball(), () => {});
+        }
+
+        /* Global Keyboard Listener across Mario, Unscramble, and Word Blanks */
+        window.addEventListener('keydown', (e) => {
+            if (currentTab === 'mario') {
+                if (['ArrowLeft', 'a', 'A'].includes(e.key)) marioKeys.left = true;
+                if (['ArrowRight', 'd', 'D'].includes(e.key)) marioKeys.right = true;
+                if (['Shift'].includes(e.key)) marioKeys.run = true;
+                if (['ArrowUp', ' ', 'w', 'W'].includes(e.key)) {
+                    if (e.key === ' ' || e.key === 'ArrowUp') e.preventDefault();
+                    triggerMarioJump();
+                }
+                if (['f', 'F', 'x', 'X'].includes(e.key)) shootMarioFireball();
+            } else if (currentTab === 'unscramble') {
+                if (/^[a-zA-Z]$/.test(e.key)) {
+                    handleUnscrambleLetterInput(e.key.toLowerCase());
+                }
+            } else if (currentTab === 'blanks') {
+                if (/^[a-zA-Z]$/.test(e.key)) {
+                    handleBlanksLetterInput(e.key.toLowerCase());
+                }
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (currentTab === 'mario') {
+                if (['ArrowLeft', 'a', 'A'].includes(e.key)) marioKeys.left = false;
+                if (['ArrowRight', 'd', 'D'].includes(e.key)) marioKeys.right = false;
+                if (['Shift'].includes(e.key)) marioKeys.run = false;
+            }
+        });
+
+        function marioLoop() {
+            if (!marioGameRunning) return;
+            updateMario();
+            renderMario();
+            marioAnimId = requestAnimationFrame(marioLoop);
+        }
+
+        function takeMarioDamage() {
+            if (mario.invincibleTimer > 0) return;
+            if (mario.state !== 'small') {
+                mario.state = 'small';
+                updateMarioSize();
+                mario.invincibleTimer = 90;
+                updateMarioHUD();
+                playSFX('wrong');
+            } else {
+                mario.lives--;
+                updateMarioHUD();
+                playSFX('wrong');
+                if (mario.lives <= 0) {
+                    showPraiseModal("Game Over! 💔", "Out of lives! Restarting level.");
+                    mario.lives = 3;
+                }
+                mario.x = 40;
+                mario.y = 200;
+                mario.vx = 0;
+                mario.vy = 0;
+                mario.state = 'small';
+                updateMarioSize();
+                updateMarioHUD();
+            }
+        }
+
+        function updateMario() {
+            if (mario.attackCooldown > 0) mario.attackCooldown--;
+            if (mario.invincibleTimer > 0) mario.invincibleTimer--;
+
+            if (mario.grounded) {
+                mario.coyoteTimer = 6;
+            } else if (mario.coyoteTimer > 0) {
+                mario.coyoteTimer--;
+            }
+
+            const targetMaxSpeed = marioKeys.run ? mario.maxRunSpeed : mario.maxWalkSpeed;
+            if (marioKeys.left) {
+                mario.vx -= mario.accel;
+                if (mario.vx < -targetMaxSpeed) mario.vx = -targetMaxSpeed;
+                mario.facing = 'left';
+            } else if (marioKeys.right) {
+                mario.vx += mario.accel;
+                if (mario.vx > targetMaxSpeed) mario.vx = targetMaxSpeed;
+                mario.facing = 'right';
+            } else {
+                mario.vx *= mario.friction;
+            }
+
+            mario.vy += mario.gravity;
+            mario.x += mario.vx;
+            mario.y += mario.vy;
+
+            if (mario.x < 0) {
+                mario.x = 0;
+                mario.vx = 0;
+            }
+
+            // Moving Platforms
+            marioPlatforms.forEach(p => {
+                if (p.moving) {
+                    if (p.axis === 'x') {
+                        p.x += p.speed * p.dir;
+                        if (p.x >= p.max || p.x <= p.min) p.dir *= -1;
+                    } else if (p.axis === 'y') {
+                        p.y += p.speed * p.dir;
+                        if (p.y >= p.max || p.y <= p.min) p.dir *= -1;
+                    }
+                }
+            });
+
+            // Fall into Pit Hazard
+            if (mario.y > 400) {
+                takeMarioDamage();
+                mario.x = 40;
+                mario.y = 200;
+                mario.vx = 0;
+                mario.vy = 0;
+            }
+
+            mario.grounded = false;
+
+            // Platform Collision
+            marioPlatforms.forEach(p => {
+                if (mario.x + mario.width > p.x && mario.x < p.x + p.width &&
+                    mario.y + mario.height >= p.y && mario.y + mario.height <= p.y + p.height + 8 && mario.vy >= 0) {
+                    mario.grounded = true;
+                    mario.vy = 0;
+                    mario.y = p.y - mario.height;
+                    if (p.moving) {
+                        if (p.axis === 'x') mario.x += p.speed * p.dir;
+                        if (p.axis === 'y') mario.y += p.speed * p.dir;
+                    }
+                }
+            });
+
+            // Pipe Collision & Piranha Plants
+            marioPipes.forEach(pipe => {
+                if (mario.x + mario.width > pipe.x && mario.x < pipe.x + pipe.w &&
+                    mario.y + mario.height > pipe.y && mario.y < pipe.y + pipe.h) {
+                    if (mario.vy >= 0 && (mario.y + mario.height - mario.vy) <= pipe.y + 12) {
+                        mario.grounded = true;
+                        mario.vy = 0;
+                        mario.y = pipe.y - mario.height;
+                    } else if (mario.x + mario.width / 2 < pipe.x + pipe.w / 2) {
+                        mario.x = pipe.x - mario.width;
+                        mario.vx = 0;
+                    } else {
+                        mario.x = pipe.x + pipe.w;
+                        mario.vx = 0;
+                    }
+                }
+
+                if (pipe.hasPlant) {
+                    pipe.plantY += 0.3 * pipe.plantDir;
+                    if (pipe.plantY > 26 || pipe.plantY < -10) pipe.plantDir *= -1;
+                    const plantBoxY = pipe.y - 20 + pipe.plantY;
+                    if (mario.x + mario.width > pipe.x + 8 && mario.x < pipe.x + pipe.w - 8 &&
+                        mario.y + mario.height > plantBoxY && mario.y < plantBoxY + 24) {
+                        takeMarioDamage();
+                    }
+                }
+            });
+
+            // Question Blocks Landing & Headbutt Collision
+            marioBlocks.forEach(b => {
+                if (mario.x + mario.width > b.x && mario.x < b.x + b.w &&
+                    mario.y + mario.height > b.y && mario.y < b.y + b.h) {
+                    
+                    const prevBottom = mario.y + mario.height - mario.vy;
+                    if (mario.vy >= 0 && prevBottom <= b.y + 12) {
+                        mario.y = b.y - mario.height;
+                        mario.vy = 0;
+                        mario.grounded = true;
+                    } else if (mario.vy < 0 && (mario.y - mario.vy) >= b.y + b.h - 10) {
+                        mario.y = b.y + b.h;
+                        mario.vy = Math.max(1, mario.vy * -0.5);
+                        if (b.type === 'question' && !b.hit) {
+                            b.hit = true;
+                            playSFX('coin');
+                            triggerMarioQuestion(b);
+                        }
+                    } else {
+                        let overlapX = (mario.x + mario.width / 2 < b.x + b.w / 2) ? (mario.x + mario.width - b.x) : (b.x + b.w - mario.x);
+                        let overlapY = (mario.y + mario.height / 2 < b.y + b.h / 2) ? (mario.y + mario.height - b.y) : (b.y + b.h - mario.y);
+
+                        if (overlapX < overlapY) {
+                            mario.x = (mario.x + mario.width / 2 < b.x + b.w / 2) ? (b.x - mario.width) : (b.x + b.w);
+                            mario.vx = 0;
+                        } else if (mario.y + mario.height / 2 < b.y + b.h / 2) {
+                            mario.y = b.y - mario.height;
+                            mario.vy = 0;
+                            mario.grounded = true;
+                        } else {
+                            mario.y = b.y + b.h;
+                            mario.vy = Math.max(1, mario.vy * -0.5);
+                            if (b.type === 'question' && !b.hit) {
+                                b.hit = true;
+                                playSFX('coin');
+                                triggerMarioQuestion(b);
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Springboards Bounce
+            marioSprings.forEach(s => {
+                if (mario.x + mario.width > s.x && mario.x < s.x + s.w &&
+                    mario.y + mario.height >= s.y && mario.y + mario.height <= s.y + s.h + 8 && mario.vy >= 0) {
+                    mario.vy = -16.5;
+                    mario.grounded = false;
+                    playSFX('spring');
+                }
+            });
+
+            // Rotating Fire Bars Collision
+            marioFireBars.forEach(fb => {
+                fb.angle += fb.speed;
+                for (let r = 14; r <= 65; r += 16) {
+                    const fx = fb.cx + 18 + Math.cos(fb.angle) * r;
+                    const fy = fb.cy + 18 + Math.sin(fb.angle) * r;
+                    if (Math.abs((mario.x + mario.width / 2) - fx) < 14 && Math.abs((mario.y + mario.height / 2) - fy) < 14) {
+                        takeMarioDamage();
+                    }
+                }
+            });
+
+            // Spikes Hazard
+            marioSpikes.forEach(spk => {
+                if (mario.x + mario.width > spk.x && mario.x < spk.x + spk.w &&
+                    mario.y + mario.height > spk.y && mario.y < spk.y + spk.h) {
+                    takeMarioDamage();
+                }
+            });
+
+            // Coins
+            marioCoins.forEach(c => {
+                if (!c.collected && Math.abs((mario.x + 15) - c.x) < 22 && Math.abs((mario.y + 20) - c.y) < 22) {
+                    c.collected = true;
+                    playSFX('coin');
+                    addStarScore(1);
+                }
+            });
+
+            // Monsters & Stomp / Hurt
+            marioMonsters.forEach(m => {
+                if (m.alive) {
+                    m.x += m.speed * m.dir;
+                    if (m.x >= m.maxX || m.x <= m.minX) m.dir *= -1;
+
+                    if (mario.x + mario.width > m.x && mario.x < m.x + m.width &&
+                        mario.y + mario.height >= m.y && mario.y < m.y + m.height) {
+                        if (mario.vy > 0 && mario.y + mario.height - mario.vy <= m.y + 12) {
+                            m.alive = false;
+                            mario.vy = -8.5;
+                            playSFX('coin');
+                            addStarScore(2);
+                        } else {
+                            takeMarioDamage();
+                        }
+                    }
+                }
+            });
+
+            // Fireball Projectiles
+            for (let i = marioProjectiles.length - 1; i >= 0; i--) {
+                const proj = marioProjectiles[i];
+                proj.x += proj.vx;
+                proj.y += proj.vy;
+                proj.vy += 0.35;
+                if (proj.y > 310) {
+                    proj.y = 310;
+                    proj.vy = -4.5;
+                }
+                marioMonsters.forEach(m => {
+                    if (m.alive && Math.abs(proj.x - m.x) < 25 && Math.abs(proj.y - m.y) < 25) {
+                        m.alive = false;
+                        marioProjectiles.splice(i, 1);
+                        playSFX('coin');
+                        addStarScore(2);
+                    }
+                });
+            }
+
+            // Flag Pole Victory
+            if (mario.x >= marioFlag.x) {
+                marioGameRunning = false;
+                playSFX('fanfare');
+                addStarScore(3);
+                if (typeof currentMarioLevel === 'number' && currentMarioLevel < 10) {
+                    const nextLvl = currentMarioLevel + 1;
+                    showPraiseModal("World Clear! 🎉", `Completed stage! Advancing to World ${nextLvl}.`, () => {
+                        selectMarioLevel(nextLvl);
+                    });
+                } else {
+                    showPraiseModal("Stage Clear! 🎉", "Amazing victory! Starting a fresh challenge.", () => {
+                        initMarioGame(currentMarioLevel);
+                    });
+                }
+            }
+        }
+
+        function triggerMarioQuestion(block) {
+            marioGameRunning = false;
+            const modal = document.getElementById('mario-question-modal');
+            const target = block.wordObj;
+            document.getElementById('mario-q-svg').innerHTML = target.svg;
+
+            const options = getMultipleChoiceOptions(target);
+            const container = document.getElementById('mario-q-options');
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-slate-950 border-2 border-slate-700 hover:border-amber-400 text-slate-100 font-black text-lg py-3 rounded-2xl shadow transition";
+                btn.innerText = opt.term;
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    if (opt.id === target.id) {
+                        playSFX('correct');
+                        speakText(`Great job! ${opt.term}`);
+                        if (mario.state === 'small') mario.state = 'super';
+                        else if (mario.state === 'super') mario.state = 'fire';
+                        updateMarioSize();
+                        updateMarioHUD();
+                        addStarScore(2);
+                    } else {
+                        playSFX('wrong');
+                        speakText("Keep trying!");
+                    }
+                    marioGameRunning = true;
+                    marioLoop();
+                };
+                container.appendChild(btn);
+            });
+            modal.classList.remove('hidden');
+        }
+
+        /* Classic Super Mario Vector Sprite Renderer */
+        function drawMarioSprite(ctx, x, y, width, height, facing, grounded, state) {
+            ctx.save();
+            ctx.translate(x + width / 2, y + height / 2);
+            if (facing === 'left') ctx.scale(-1, 1);
+
+            const scale = state === 'small' ? 0.8 : 1.15;
+            ctx.scale(scale, scale);
+
+            // 1. Hat (Red for Small/Super, White for Fire Mario)
+            ctx.fillStyle = state === 'fire' ? '#ffffff' : '#dc2626';
+            ctx.fillRect(-12, -22, 24, 10);
+            ctx.fillRect(-2, -14, 18, 5);
+
+            // 'M' Emblem
+            ctx.fillStyle = state === 'fire' ? '#dc2626' : '#ffffff';
+            ctx.beginPath();
+            ctx.arc(1, -16, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = state === 'fire' ? '#ffffff' : '#dc2626';
+            ctx.font = 'bold 6px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('M', 1, -14);
+
+            // Brown Hair, Peach Face, Blue Eye, Dark Mustache
+            ctx.fillStyle = '#542610';
+            ctx.fillRect(-13, -12, 5, 8);
+            ctx.fillStyle = '#fed7aa';
+            ctx.fillRect(-8, -12, 20, 11);
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.ellipse(5, -8, 2, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#2563eb';
+            ctx.beginPath();
+            ctx.ellipse(6, -8, 1, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#271206';
+            ctx.fillRect(1, -4, 14, 5);
+
+            // Shirt, Overalls & Yellow Buttons
+            ctx.fillStyle = state === 'fire' ? '#ffffff' : '#dc2626';
+            ctx.fillRect(-11, -1, 22, 10);
+            ctx.fillStyle = state === 'fire' ? '#dc2626' : '#1d4ed8';
+            ctx.fillRect(-9, 3, 18, 13);
+            ctx.fillStyle = '#facc15';
+            ctx.beginPath();
+            ctx.arc(-4, 5, 1.5, 0, Math.PI * 2);
+            ctx.arc(4, 5, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // White Gloves & Brown Boots
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(-11, 5, 3, 0, Math.PI * 2);
+            ctx.arc(11, 3, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#78350f';
+            ctx.fillRect(-12, 14, 10, 7);
+            ctx.fillRect(2, 14, 11, 7);
+
+            ctx.restore();
+        }
+
+        function renderMario() {
+            let theme = marioThemes[currentMarioLevel] || { width: 3500, sky: '#0f172a', top: '#16a34a', base: '#854d0e' };
+            marioCtx.clearRect(0, 0, marioCanvas.width, marioCanvas.height);
+            let cameraX = Math.max(0, mario.x - 180);
+            marioCtx.save();
+            marioCtx.translate(-cameraX, 0);
+
+            // Sky
+            marioCtx.fillStyle = theme.sky;
+            marioCtx.fillRect(cameraX, 0, marioCanvas.width, marioCanvas.height);
+
+            // Floors & Moving Platforms
+            marioPlatforms.forEach(p => {
+                marioCtx.fillStyle = p.moving ? '#f59e0b' : theme.top;
+                marioCtx.fillRect(p.x, p.y, p.width, 8);
+                marioCtx.fillStyle = p.moving ? '#b45309' : theme.base;
+                marioCtx.fillRect(p.x, p.y + 8, p.width, p.height - 8);
+            });
+
+            // Pipes & Piranha Plants
+            marioPipes.forEach(p => {
+                marioCtx.fillStyle = '#16a34a';
+                marioCtx.fillRect(p.x, p.y, p.w, p.h);
+                marioCtx.fillStyle = '#22c55e';
+                marioCtx.fillRect(p.x - 3, p.y, p.w + 6, 12);
+                if (p.hasPlant) {
+                    marioCtx.font = '22px sans-serif';
+                    marioCtx.fillText('🪴', p.x + 8, p.y - 4 + p.plantY);
+                }
+            });
+
+            // Question Blocks
+            marioBlocks.forEach(b => {
+                marioCtx.fillStyle = b.hit ? '#94a3b8' : '#f59e0b';
+                marioCtx.fillRect(b.x, b.y, b.w, b.h);
+                marioCtx.strokeStyle = '#78350f';
+                marioCtx.lineWidth = 2;
+                marioCtx.strokeRect(b.x, b.y, b.w, b.h);
+                marioCtx.fillStyle = '#ffffff';
+                marioCtx.font = 'bold 20px Fredoka';
+                marioCtx.fillText('?', b.x + 12, b.y + 25);
+            });
+
+            // Springboards
+            marioSprings.forEach(s => {
+                marioCtx.fillStyle = '#38bdf8';
+                marioCtx.fillRect(s.x, s.y, s.w, s.h);
+                marioCtx.fillStyle = '#ffffff';
+                marioCtx.fillRect(s.x, s.y + 6, s.w, 4);
+            });
+
+            // Spikes
+            marioSpikes.forEach(sp => {
+                marioCtx.fillStyle = '#ef4444';
+                for (let i = 0; i < sp.w; i += 10) {
+                    marioCtx.beginPath();
+                    marioCtx.moveTo(sp.x + i, sp.y + sp.h);
+                    marioCtx.lineTo(sp.x + i + 5, sp.y);
+                    marioCtx.lineTo(sp.x + i + 10, sp.y + sp.h);
+                    marioCtx.fill();
+                }
+            });
+
+            // Rotating Fire Bars
+            marioFireBars.forEach(fb => {
+                marioCtx.fillStyle = '#78350f';
+                marioCtx.fillRect(fb.cx, fb.cy, 36, 36);
+                for (let r = 14; r <= 65; r += 16) {
+                    const fx = fb.cx + 18 + Math.cos(fb.angle) * r;
+                    const fy = fb.cy + 18 + Math.sin(fb.angle) * r;
+                    marioCtx.font = '16px sans-serif';
+                    marioCtx.fillText('🔥', fx - 8, fy + 8);
+                }
+            });
+
+            // Coins
+            marioCoins.forEach(c => {
+                if (!c.collected) {
+                    marioCtx.fillStyle = '#facc15';
+                    marioCtx.beginPath();
+                    marioCtx.arc(c.x, c.y, 8, 0, Math.PI * 2);
+                    marioCtx.fill();
+                }
+            });
+
+            // Enemies
+            marioMonsters.forEach(m => {
+                if (m.alive) {
+                    marioCtx.font = '24px sans-serif';
+                    marioCtx.fillText(m.emoji, m.x, m.y + 24);
+                }
+            });
+
+            // Projectiles
+            marioProjectiles.forEach(p => {
+                marioCtx.font = '20px sans-serif';
+                marioCtx.fillText(p.emoji, p.x, p.y + 12);
+            });
+
+            // End-of-level Flagpole
+            marioCtx.fillStyle = '#cbd5e1';
+            marioCtx.fillRect(marioFlag.x, marioFlag.y, 6, marioFlag.height);
+            marioCtx.fillStyle = '#ef4444';
+            marioCtx.fillRect(marioFlag.x + 6, marioFlag.y, 30, 20);
+
+            // Draw Mario Character Sprite
+            if (mario.invincibleTimer % 4 < 2) {
+                drawMarioSprite(marioCtx, mario.x, mario.y, mario.width, mario.height, mario.facing, mario.grounded, mario.state);
+            }
+
+            marioCtx.restore();
+        }
+
+        let praiseCallback = null;
+        function showPraiseModal(title, desc, onClose = null) {
+            praiseCallback = onClose;
+            document.getElementById('praise-title').innerText = title;
+            document.getElementById('praise-desc').innerText = desc;
+            document.getElementById('praise-modal').classList.remove('hidden');
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
+            }
+        }
+
+        function closePraiseModal() {
+            document.getElementById('praise-modal').classList.add('hidden');
+            if (typeof praiseCallback === 'function') {
+                const cb = praiseCallback;
+                praiseCallback = null;
+                cb();
+            } else {
+                loadCurrentQuestion();
+            }
+        }
+
+        window.onload = function() {
+            renderFlashcards();
+        };
+    </script>
+</body>
+</html>
