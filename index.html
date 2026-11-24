@@ -476,23 +476,32 @@
             </div>
         </section>
 
-        <!-- MODULE 10: SUPER MARIO PLATFORMER ENGINE -->
+        <!-- MODULE 10: UPGRADED SUPER MARIO PLATFORMER ENGINE -->
         <section id="view-mario" class="tab-view hidden space-y-2">
             <div class="bg-slate-900 border-2 border-amber-400/50 p-2.5 rounded-2xl flex flex-wrap justify-between items-center gap-2">
                 <div>
-                    <h2 class="text-base font-black text-amber-300 flex items-center gap-1">
-                        <span>🍄 Classic Super Mario Personality Adventure</span>
-                        <span id="mario-form-hud" class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-full font-black border border-red-300 shadow-sm ml-2">
-                            State: Small Mario
+                    <h2 class="text-base font-black text-amber-300 flex flex-wrap items-center gap-1.5">
+                        <span>🍄 Super Mario Personality Adventure</span>
+                        <span id="mario-diff-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[11px] px-2 py-0.5 rounded-full font-black">
+                            ★☆☆☆☆ Easy
+                        </span>
+                        <span id="mario-form-hud" class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-full font-black border border-red-300 shadow-sm">
+                            Small Mario
                         </span>
                     </h2>
-                    <p id="mario-level-subtitle" class="text-xs font-bold text-slate-400">World 1-1: Meadow (~1400px)</p>
+                    <div class="flex flex-wrap items-center gap-2 mt-0.5">
+                        <p id="mario-level-subtitle" class="text-xs font-bold text-slate-300">World 1-1: Meadow</p>
+                        <span id="mario-obstacle-tip" class="text-[11px] font-extrabold text-sky-300 bg-slate-950 px-2 py-0.5 rounded-lg border border-slate-800">
+                            ✨ Jump under ? blocks & bounce on Springboards!
+                        </span>
+                    </div>
                 </div>
 
                 <!-- HUD Status Stats -->
                 <div class="flex items-center gap-2 bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-xs font-black">
-                    <span class="text-red-400">❤️ Lives: <span id="mario-lives-val">3</span></span>
-                    <span class="text-amber-300">⭐ Stars: <span id="mario-stars-val">0</span></span>
+                    <span class="text-red-400">❤️ <span id="mario-lives-val">3</span></span>
+                    <span class="text-amber-300">⭐ <span id="mario-stars-val">0</span></span>
+                    <span id="mario-checkpoint-hud" class="text-slate-500" title="Midway Checkpoint">🚩</span>
                     <button onclick="restartMarioLevel()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-2 py-0.5 rounded-lg text-xs shadow ml-1">
                         🎮 Restart
                     </button>
@@ -525,7 +534,7 @@
                         <button id="btn-right" class="bg-slate-800 active:bg-slate-600 text-white text-xl font-black p-3 w-12 h-12 rounded-full shadow flex items-center justify-center border-2 border-slate-600 touch-btn">▶</button>
                     </div>
                     <div class="text-[11px] text-slate-400 font-bold hidden sm:block text-center">
-                        Keyboard: A/D Walk | Shift Run | Space/W Jump | F Fireball 💥
+                        Keyboard: A/D Walk | Shift Run | Space/W Jump (Hold for higher) | F Fireball 💥
                     </div>
                     <div class="flex gap-2">
                         <button id="btn-run" class="bg-amber-500 active:bg-amber-600 text-slate-950 text-xs font-black px-3 py-3 rounded-full shadow border-2 border-amber-300 flex items-center justify-center touch-btn">RUN 🏃</button>
@@ -705,7 +714,7 @@
 
     <script>
         /* -------------------------------------------------------------
-           1. VOCABULARY DATABASE (10 CHARACTER & PERSONALITY ADJECTIVES)
+           1. VOCABULARY DATABASE (13 CHARACTER, PERSONALITY & FREQUENCY WORDS)
         ------------------------------------------------------------- */
         const GAME_DATA = [
             {
@@ -715,21 +724,16 @@
                 sentence: 'Tom is very helpful because he carries heavy books for his teacher.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#1e293b"/>
-                    <!-- Floating Heart -->
                     <path d="M50 18 C50 14, 44 12, 41 15 C38 12, 32 14, 32 18 C32 23, 41 28, 50 33 C59 28, 68 23, 68 18 C68 14, 62 12, 59 15 C56 14, 50 14, 50 18 Z" fill="#f43f5e"/>
-                    <!-- Smiling Student Head -->
                     <circle cx="32" cy="48" r="13" fill="#fed7aa"/>
                     <path d="M20 44 C20 34, 44 34, 44 44 C40 40, 24 40, 20 44 Z" fill="#78350f"/>
                     <circle cx="28" cy="47" r="1.6" fill="#1e293b"/>
                     <circle cx="36" cy="47" r="1.6" fill="#1e293b"/>
                     <path d="M28 52 Q32 56 36 52" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round"/>
-                    <!-- Student Torso -->
                     <path d="M18 85 C18 65, 46 65, 46 85 Z" fill="#38bdf8"/>
-                    <!-- Stack of Books -->
                     <rect x="44" y="66" width="38" height="8" rx="2" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
                     <rect x="46" y="57" width="36" height="8" rx="2" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
                     <rect x="43" y="48" width="38" height="8" rx="2" fill="#facc15" stroke="#ca8a04" stroke-width="1.5"/>
-                    <!-- Helping Arm -->
                     <path d="M36 72 Q46 76 58 74" stroke="#fed7aa" stroke-width="6" stroke-linecap="round" fill="none"/>
                 </svg>`
             },
@@ -740,7 +744,6 @@
                 sentence: 'Lily is always cheerful and greets everyone with a bright smile.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#1e1b4b"/>
-                    <!-- Golden Sunbeams -->
                     <g stroke="#fbbf24" stroke-width="4" stroke-linecap="round">
                         <line x1="50" y1="8" x2="50" y2="17"/>
                         <line x1="50" y1="83" x2="50" y2="92"/>
@@ -751,15 +754,11 @@
                         <line x1="80" y1="20" x2="73" y2="27"/>
                         <line x1="27" y1="73" x2="20" y2="80"/>
                     </g>
-                    <!-- Beaming Happy Face -->
                     <circle cx="50" cy="50" r="27" fill="#fde047" stroke="#f59e0b" stroke-width="3"/>
-                    <!-- Happy Arched Eyes -->
                     <path d="M36 44 Q41 38 46 44" stroke="#78350f" stroke-width="3" fill="none" stroke-linecap="round"/>
                     <path d="M54 44 Q59 38 64 44" stroke="#78350f" stroke-width="3" fill="none" stroke-linecap="round"/>
-                    <!-- Rosy Cheeks -->
                     <circle cx="34" cy="53" r="4" fill="#fb7185" opacity="0.7"/>
                     <circle cx="66" cy="53" r="4" fill="#fb7185" opacity="0.7"/>
-                    <!-- Wide Joyful Smile -->
                     <path d="M37 55 Q50 70 63 55 Z" fill="#ef4444" stroke="#78350f" stroke-width="2"/>
                 </svg>`
             },
@@ -770,16 +769,12 @@
                 sentence: 'A loyal friend always stands by you and keeps promises.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#0f172a"/>
-                    <!-- Friend 1 (Left) -->
                     <circle cx="30" cy="30" r="10" fill="#fed7aa"/>
                     <path d="M18 55 C18 42, 42 42, 42 55 Z" fill="#38bdf8"/>
-                    <!-- Friend 2 (Right) -->
                     <circle cx="70" cy="30" r="10" fill="#fde68a"/>
                     <path d="M58 55 C58 42, 82 42, 82 55 Z" fill="#a855f7"/>
-                    <!-- Golden Friendship Shield -->
                     <path d="M30 42 L70 42 L67 68 C65 78, 50 88, 50 88 C50 88, 35 78, 33 68 Z" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
                     <path d="M35 46 L65 46 L63 66 C61 74, 50 82, 50 82 C50 82, 39 74, 37 66 Z" fill="#fef08a"/>
-                    <!-- Heart Emblem on Shield -->
                     <path d="M50 58 C50 54, 45 52, 42 55 C39 52, 34 54, 34 58 C34 63, 42 68, 50 73 C58 68, 66 63, 66 58 C66 54, 61 52, 58 55 C55 52, 50 54, 50 58 Z" fill="#ef4444"/>
                 </svg>`
             },
@@ -790,16 +785,12 @@
                 sentence: 'Even after winning first prize, Sam stays humble and thanks his team.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#1e293b"/>
-                    <!-- Modest Bowing Student -->
                     <circle cx="36" cy="38" r="12" fill="#fed7aa"/>
                     <path d="M25 34 C26 24, 46 24, 47 34 Z" fill="#334155"/>
                     <path d="M32 38 Q35 40 38 38" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round"/>
                     <path d="M40 43 Q43 46 46 43" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round"/>
-                    <!-- Bowing Torso -->
                     <path d="M22 82 C22 58, 50 55, 56 76 L46 84 Z" fill="#22c55e"/>
-                    <!-- Open Hands Sharing Trophy/Star -->
                     <path d="M44 64 Q58 68 68 62" stroke="#fed7aa" stroke-width="5" stroke-linecap="round" fill="none"/>
-                    <!-- Shared Trophy & Star -->
                     <path d="M62 34 L82 34 L79 48 C79 53, 72 55, 72 55 C72 55, 65 53, 65 48 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
                     <rect x="66" y="55" width="12" height="5" rx="1" fill="#92400e"/>
                     <polygon points="72,16 74,22 80,22 75,26 77,31 72,28 67,31 69,26 64,22 70,22" fill="#fde047"/>
@@ -812,18 +803,14 @@
                 sentence: 'Maya is generous and shares her snacks and pencils with classmates.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#0f172a"/>
-                    <!-- Shiny Stars Above -->
                     <polygon points="30,18 32,23 37,23 33,26 34,31 30,28 26,31 27,26 23,23 28,23" fill="#fde047"/>
                     <polygon points="70,15 72,21 78,21 73,25 75,30 70,27 65,30 67,25 62,21 68,21" fill="#fbbf24"/>
                     <polygon points="50,12 52,16 56,16 53,19 54,23 50,20 46,23 47,19 44,16 48,16" fill="#fef08a"/>
-                    <!-- Wrapped Gift Box -->
                     <rect x="30" y="38" width="40" height="32" rx="4" fill="#38bdf8" stroke="#0284c7" stroke-width="2.5"/>
                     <rect x="27" y="33" width="46" height="8" rx="2" fill="#7dd3fc" stroke="#0284c7" stroke-width="2"/>
-                    <!-- Ribbon -->
                     <rect x="46" y="33" width="8" height="37" fill="#f43f5e"/>
                     <path d="M50 33 C42 24, 34 30, 46 33" fill="none" stroke="#f43f5e" stroke-width="3"/>
                     <path d="M50 33 C58 24, 66 30, 54 33" fill="none" stroke="#f43f5e" stroke-width="3"/>
-                    <!-- Giving Hands -->
                     <path d="M16 74 Q32 82 46 74" stroke="#fed7aa" stroke-width="7" stroke-linecap="round" fill="none"/>
                     <path d="M84 74 Q68 82 54 74" stroke="#fed7aa" stroke-width="7" stroke-linecap="round" fill="none"/>
                 </svg>`
@@ -835,20 +822,15 @@
                 sentence: 'Being responsible means completing your class duties on time.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#1e293b"/>
-                    <!-- Clipboard Board -->
                     <rect x="24" y="20" width="46" height="64" rx="5" fill="#b45309" stroke="#78350f" stroke-width="2.5"/>
-                    <!-- Paper -->
                     <rect x="29" y="26" width="36" height="52" rx="2" fill="#f8fafc"/>
-                    <!-- Clip -->
                     <rect x="38" y="15" width="18" height="10" rx="3" fill="#94a3b8" stroke="#475569" stroke-width="2"/>
-                    <!-- Green Checkmarks -->
                     <path d="M34 38 L38 42 L45 34" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     <line x1="49" y1="39" x2="60" y2="39" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
                     <path d="M34 52 L38 56 L45 48" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     <line x1="49" y1="53" x2="60" y2="53" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
                     <path d="M34 66 L38 70 L45 62" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     <line x1="49" y1="67" x2="60" y2="67" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-                    <!-- Duty Star Badge -->
                     <circle cx="72" cy="70" r="14" fill="#fbbf24" stroke="#d97706" stroke-width="2.5"/>
                     <polygon points="72,61 74,67 80,67 75,71 77,77 72,73 67,77 69,71 64,67 70,67" fill="#ffffff"/>
                 </svg>`
@@ -860,20 +842,15 @@
                 sentence: 'Ken is hardworking and practices his reading every evening.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#0f172a"/>
-                    <!-- Desk Lamp -->
                     <path d="M74 68 L74 34 L60 26" stroke="#94a3b8" stroke-width="3.5" fill="none" stroke-linecap="round"/>
                     <polygon points="54,28 65,20 69,32" fill="#facc15"/>
                     <polygon points="56,30 67,32 45,66 32,66" fill="#fef08a" opacity="0.22"/>
-                    <!-- Studying Student -->
                     <circle cx="38" cy="40" r="11" fill="#fed7aa"/>
                     <path d="M27 37 C27 27, 49 27, 49 37 Z" fill="#1e293b"/>
                     <path d="M25 68 C25 53, 51 53, 51 68 Z" fill="#6366f1"/>
-                    <!-- Stacked Books -->
                     <rect x="56" y="60" width="22" height="6" rx="1.5" fill="#ef4444"/>
                     <rect x="58" y="53" width="20" height="6" rx="1.5" fill="#22c55e"/>
-                    <!-- Open Book -->
                     <path d="M30 66 Q40 62 45 66 Q50 62 60 66 L58 70 Q49 67 45 70 Q41 67 32 70 Z" fill="#ffffff"/>
-                    <!-- Wooden Desk -->
                     <rect x="14" y="68" width="72" height="8" rx="3" fill="#d97706"/>
                 </svg>`
             },
@@ -884,16 +861,13 @@
                 sentence: 'A diligent student checks every detail carefully to do neat work.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#1e293b"/>
-                    <!-- Neat A+ Paper -->
                     <rect x="22" y="18" width="48" height="62" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
                     <text x="38" y="38" font-size="16" font-weight="900" fill="#ef4444" text-anchor="middle">A+</text>
                     <line x1="30" y1="48" x2="60" y2="48" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
                     <line x1="30" y1="57" x2="56" y2="57" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
                     <line x1="30" y1="66" x2="50" y2="66" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
-                    <!-- Magnifying Glass -->
                     <circle cx="58" cy="55" r="16" fill="#bae6fd" fill-opacity="0.45" stroke="#0284c7" stroke-width="4"/>
                     <line x1="70" y1="67" x2="84" y2="81" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
-                    <!-- Precision Stars -->
                     <polygon points="78,24 80,29 85,29 81,32 82,37 78,34 74,37 75,32 71,29 76,29" fill="#fde047"/>
                     <polygon points="18,65 19,68 22,68 20,70 21,73 18,71 15,73 16,70 14,68 17,68" fill="#fbbf24"/>
                 </svg>`
@@ -905,21 +879,16 @@
                 sentence: 'Sarah is always punctual and arrives at school before the bell rings.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#0f172a"/>
-                    <!-- Alarm Bells -->
                     <circle cx="28" cy="24" r="9" fill="#f59e0b"/>
                     <circle cx="72" cy="24" r="9" fill="#f59e0b"/>
-                    <!-- Bright Clock Body -->
                     <circle cx="50" cy="52" r="30" fill="#ffffff" stroke="#38bdf8" stroke-width="5"/>
-                    <!-- Clock Ticks -->
                     <line x1="50" y1="27" x2="50" y2="31" stroke="#334155" stroke-width="2.5"/>
                     <line x1="50" y1="73" x2="50" y2="77" stroke="#334155" stroke-width="2.5"/>
                     <line x1="25" y1="52" x2="29" y2="52" stroke="#334155" stroke-width="2.5"/>
                     <line x1="71" y1="52" x2="75" y2="52" stroke="#334155" stroke-width="2.5"/>
-                    <!-- On-Time Hands (8:00) -->
                     <line x1="50" y1="52" x2="50" y2="34" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
                     <line x1="50" y1="52" x2="36" y2="58" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
                     <circle cx="50" cy="52" r="3" fill="#0284c7"/>
-                    <!-- Green Checkmark Badge -->
                     <circle cx="74" cy="74" r="14" fill="#22c55e" stroke="#ffffff" stroke-width="2.5"/>
                     <path d="M68 74 L72 78 L81 69" stroke="#ffffff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>`
@@ -931,7 +900,6 @@
                 sentence: 'Leo is clever and solves tricky puzzles very quickly.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#1e1b4b"/>
-                    <!-- Lightbulb Rays -->
                     <g stroke="#fde047" stroke-width="3" stroke-linecap="round">
                         <line x1="50" y1="8" x2="50" y2="14"/>
                         <line x1="26" y1="18" x2="31" y2="22"/>
@@ -939,10 +907,8 @@
                         <line x1="22" y1="34" x2="28" y2="34"/>
                         <line x1="78" y1="34" x2="72" y2="34"/>
                     </g>
-                    <!-- Glowing Yellow Lightbulb -->
                     <path d="M36 34 C36 22, 64 22, 64 34 C64 42, 57 46, 56 52 L44 52 C43 46, 36 42, 36 34 Z" fill="#fde047" stroke="#f59e0b" stroke-width="2"/>
                     <rect x="44" y="52" width="12" height="6" rx="2" fill="#94a3b8"/>
-                    <!-- Interlocking Puzzle Pieces -->
                     <rect x="24" y="64" width="24" height="20" rx="3" fill="#38bdf8"/>
                     <circle cx="50" cy="74" r="5" fill="#38bdf8"/>
                     <rect x="52" y="64" width="24" height="20" rx="3" fill="#22c55e"/>
@@ -956,17 +922,14 @@
                 sentence: 'He never shouts at others.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#0f172a"/>
-                    <!-- 0% Frequency Gauge -->
                     <rect x="16" y="18" width="68" height="14" rx="7" fill="#1e293b" stroke="#bef264" stroke-width="2.5"/>
                     <circle cx="24" cy="25" r="5" fill="#d9f99d"/>
                     <text x="54" y="29" font-size="11" font-weight="900" fill="#d9f99d" text-anchor="middle">0% • LESS</text>
-                    <!-- Calm Polite Student -->
                     <circle cx="42" cy="58" r="16" fill="#fed7aa"/>
                     <path d="M27 54 C28 42, 56 42, 57 54 Z" fill="#78350f"/>
                     <circle cx="37" cy="57" r="2" fill="#1e293b"/>
                     <circle cx="47" cy="57" r="2" fill="#1e293b"/>
                     <path d="M37 64 Q42 68 47 64" stroke="#1e293b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-                    <!-- No-Shouting Badge -->
                     <circle cx="72" cy="64" r="14" fill="#1e293b" stroke="#ef4444" stroke-width="3.5"/>
                     <line x1="63" y1="55" x2="81" y2="73" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round"/>
                 </svg>`
@@ -978,11 +941,9 @@
                 sentence: 'He sometimes helps the teacher.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#0f172a"/>
-                    <!-- 50% Half-Filled Frequency Gauge -->
                     <rect x="16" y="18" width="68" height="14" rx="7" fill="#1e293b" stroke="#a3e635" stroke-width="2.5"/>
                     <rect x="18" y="20" width="32" height="10" rx="5" fill="#a3e635"/>
                     <text x="66" y="29" font-size="10" font-weight="900" fill="#bef264" text-anchor="middle">50%</text>
-                    <!-- 4-Day Mini Calendar (2 Checked, 2 Unchecked) -->
                     <rect x="20" y="42" width="26" height="20" rx="4" fill="#22c55e"/>
                     <path d="M28 52 L32 56 L39 48" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     <rect x="54" y="42" width="26" height="20" rx="4" fill="#334155" stroke="#64748b" stroke-width="2"/>
@@ -998,15 +959,12 @@
                 sentence: 'He is always cheerful.',
                 svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
                     <circle cx="50" cy="50" r="46" fill="#0f172a"/>
-                    <!-- 100% Full Green Frequency Gauge -->
                     <rect x="16" y="18" width="68" height="14" rx="7" fill="#10b981" stroke="#6ee7b7" stroke-width="2.5"/>
                     <text x="50" y="29" font-size="10.5" font-weight="900" fill="#ffffff" text-anchor="middle">100% • MORE</text>
-                    <!-- Bright Smiling Sun Face -->
                     <circle cx="50" cy="60" r="22" fill="#fde047" stroke="#f59e0b" stroke-width="3"/>
                     <path d="M39 55 Q43 50 47 55" stroke="#78350f" stroke-width="2.8" fill="none" stroke-linecap="round"/>
                     <path d="M53 55 Q57 50 61 55" stroke="#78350f" stroke-width="2.8" fill="none" stroke-linecap="round"/>
                     <path d="M40 64 Q50 75 60 64 Z" fill="#ef4444" stroke="#78350f" stroke-width="2"/>
-                    <!-- Sparkle Stars -->
                     <polygon points="22,42 24,47 29,47 25,50 26,55 22,52 18,55 19,50 15,47 20,47" fill="#34d399"/>
                     <polygon points="78,42 80,47 85,47 81,50 82,55 78,52 74,55 75,50 71,47 76,47" fill="#34d399"/>
                 </svg>`
@@ -1023,7 +981,7 @@
             { id: 's6', speaker: 'Girl 2', text: 'We have such loyal and responsible friends in class!', correctOrder: 6 }
         ];
 
-        /* Dialogue Fill-in-Blanks Dataset (15 SCENES COVERING ALL 10 PERSONALITY WORDS) */
+        /* Dialogue Fill-in-Blanks Dataset (15 SCENES) */
         const dialogueFillScenes = [
             {
                 title: 'Scene 1: Helping the Teacher',
@@ -1237,11 +1195,11 @@
                     osc.start(now); osc.stop(now + 0.25);
                 } else if (type === 'jump') {
                     osc.type = 'square';
-                    osc.frequency.setValueAtTime(160, now);
-                    osc.frequency.exponentialRampToValueAtTime(520, now + 0.15);
+                    osc.frequency.setValueAtTime(175, now);
+                    osc.frequency.exponentialRampToValueAtTime(540, now + 0.14);
                     gain.gain.setValueAtTime(0.1, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
-                    osc.start(now); osc.stop(now + 0.15);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.14);
+                    osc.start(now); osc.stop(now + 0.14);
                 } else if (type === 'coin') {
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(987.77, now);
@@ -1251,11 +1209,34 @@
                     osc.start(now); osc.stop(now + 0.3);
                 } else if (type === 'spring') {
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(300, now);
-                    osc.frequency.exponentialRampToValueAtTime(900, now + 0.25);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
-                    osc.start(now); osc.stop(now + 0.25);
+                    osc.frequency.setValueAtTime(280, now);
+                    osc.frequency.exponentialRampToValueAtTime(950, now + 0.26);
+                    gain.gain.setValueAtTime(0.22, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.26);
+                    osc.start(now); osc.stop(now + 0.26);
+                } else if (type === 'thwomp') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(130, now);
+                    osc.frequency.exponentialRampToValueAtTime(48, now + 0.22);
+                    gain.gain.setValueAtTime(0.28, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+                    osc.start(now); osc.stop(now + 0.22);
+                } else if (type === 'crumble') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.linearRampToValueAtTime(95, now + 0.16);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.16);
+                    osc.start(now); osc.stop(now + 0.16);
+                } else if (type === 'checkpoint') {
+                    [587.33, 880, 1174.66].forEach((freq, idx) => {
+                        const o = ctx.createOscillator(); const g = ctx.createGain();
+                        o.type = 'sine'; o.frequency.setValueAtTime(freq, now + idx * 0.07);
+                        g.gain.setValueAtTime(0.16, now + idx * 0.07);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.07 + 0.22);
+                        o.connect(g); g.connect(ctx.destination);
+                        o.start(now + idx * 0.07); o.stop(now + idx * 0.07 + 0.22);
+                    });
                 } else if (type === 'fanfare') {
                     [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
                         const o = ctx.createOscillator(); const g = ctx.createGain();
@@ -1346,11 +1327,12 @@
 
             if (tabId !== 'arcade') stopArcadeGame();
             if (tabId !== 'conveyor') stopConveyorGame();
+            if (tabId !== 'mario') stopMarioGame();
 
             if (tabId === 'learn') renderFlashcards();
             else if (tabId === 'seq') initDialogueSeqGame();
             else if (tabId === 'dialfill') initDialogueFillGame();
-            else if (tabId === 'mario') setTimeout(() => initMarioGame(currentMarioLevel), 100);
+            else if (tabId === 'mario') setTimeout(() => initMarioGame(currentMarioLevel), 80);
             else if (tabId === 'freqscale') initFreqScaleGame();
             else if (tabId === 'freqorder') initFreqOrderGame();
             else loadCurrentQuestion();
@@ -1964,62 +1946,215 @@
         }
 
         /* -------------------------------------------------------------
-           8. MODULE 10: SUPER MARIO PLATFORMER ENGINE
+           8. MODULE 10: UPGRADED SUPER MARIO PLATFORMER ENGINE
+              - Axis-separated X/Y swept collision + Corner Forgiveness
+              - 8-frame Coyote Time & Jump Buffering + Variable Jump Height
+              - Non-overlapping Segment Level Design with Progressive Difficulty
+              - SEN-Friendly Obstacles: Springboards, Crumbling Bridges,
+                Telegraphed Thwomps, Bubble/Wind Updrafts, Smart Piranha Pipes,
+                Anchored Fire Bars, Jumping Lava Bubbles, Flutter Bats,
+                Checkpoints, Safe-Ledge Pit Respawns & Mini-Bowser Boss!
         ------------------------------------------------------------- */
         let currentMarioLevel = 1;
         let marioCanvas, marioCtx, marioGameRunning = false, marioAnimId = null;
+        let marioFrameTick = 0;
 
         const mario = {
-            x: 40, y: 200, width: 28, height: 36, vx: 0, vy: 0,
-            accel: 0.5, maxWalkSpeed: 4.5, maxRunSpeed: 7.0, friction: 0.82,
-            jumpPower: -12.8, gravity: 0.58, grounded: false, facing: 'right', state: 'small',
-            invincibleTimer: 0, attackCooldown: 0, lives: 3, coyoteTimer: 0
+            x: 50, y: 240, width: 28, height: 36, vx: 0, vy: 0,
+            accel: 0.55, maxWalkSpeed: 4.5, maxRunSpeed: 6.8, friction: 0.82,
+            jumpPower: -13.2, gravity: 0.56, grounded: false, onIce: false,
+            facing: 'right', state: 'small',
+            invincibleTimer: 0, attackCooldown: 0, lives: 3,
+            coyoteTimer: 0, jumpBufferTimer: 0,
+            respawnX: 50, respawnY: 240, checkpointReached: false
         };
 
         let marioKeys = { left: false, right: false, up: false, run: false };
         let marioPlatforms = [], marioBlocks = [], marioCoins = [], marioMonsters = [], marioProjectiles = [];
         let marioPipes = [], marioFireBars = [], marioSprings = [], marioSpikes = [];
-        let marioFlag = { x: 1200, y: 150, width: 25, height: 160 };
+        let marioCrumbleBridges = [], marioThwomps = [], marioUpdrafts = [], marioLavaBubbles = [];
+        let marioPopups = [], marioParticles = [];
+        let marioCheckpoint = null;
+        let marioBoss = null;
+        let marioFlag = { x: 1320, y: 150, width: 25, height: 170 };
 
-        const marioThemes = {
-            1: { name: "World 1-1: Meadow", width: 1400, sky: '#0284c7', top: '#16a34a', base: '#854d0e', pit: 'ground' },
-            2: { name: "World 1-2: Beach", width: 1800, sky: '#38bdf8', top: '#fde047', base: '#d97706', pit: 'water' },
-            3: { name: "World 2-1: Forest", width: 2200, sky: '#064e3b', top: '#22c55e', base: '#14532d', pit: 'forest' },
-            4: { name: "World 2-2: Castle", width: 2600, sky: '#18181b', top: '#64748b', base: '#334155', pit: 'lava' },
-            5: { name: "World 3-1: Cloud", width: 3000, sky: '#020617', top: '#f8fafc', base: '#cbd5e1', pit: 'space' },
-            6: { name: "World 3-2: Cave", width: 3400, sky: '#0f172a', top: '#475569', base: '#1e293b', pit: 'abyss' },
-            7: { name: "World 4-1: Lava Fortress", width: 3800, sky: '#451a03', top: '#f97316', base: '#78350f', pit: 'lava' },
-            8: { name: "World 4-2: Desert Oasis", width: 4200, sky: '#fef08a', top: '#eab308', base: '#a16207', pit: 'sand' },
-            9: { name: "World 5-1: Ice Summit", width: 4600, sky: '#bae6fd', top: '#e0f2fe', base: '#0284c7', pit: 'water' },
-            10: { name: "World 8-4: Bowser Lair", width: 5200, sky: '#2e1065', top: '#7c3aed', base: '#4c1d95', pit: 'lava' }
+        const MARIO_WORLDS = {
+            1: {
+                name: "World 1-1: Sunny Meadow",
+                stars: "★☆☆☆☆",
+                tierLabel: "Tier 1 • Starter",
+                tip: "✨ Jump under ? blocks & bounce on Springboards!",
+                width: 1500, sky: '#0284c7', skyBottom: '#38bdf8', top: '#16a34a', base: '#854d0e',
+                pit: 'meadow', ice: false,
+                obstacles: ['spring', 'goomba'],
+                enemySpeed: 0.75, fireSpeed: 0.016, gapSize: 58, qDensity: 0.9
+            },
+            2: {
+                name: "World 1-2: Coral Beach",
+                stars: "★☆☆☆☆",
+                tierLabel: "Tier 1 • Water Currents",
+                tip: "🫧 Ride Rising Bubble Streams across water & watch Piranha Pipes!",
+                width: 1850, sky: '#0369a1', skyBottom: '#7dd3fc', top: '#fde047', base: '#d97706',
+                pit: 'water', ice: false,
+                obstacles: ['updraft_bubble', 'pipe_plant', 'goomba'],
+                enemySpeed: 0.85, fireSpeed: 0.017, gapSize: 78, qDensity: 0.85
+            },
+            3: {
+                name: "World 2-1: Whispering Forest",
+                stars: "★★☆☆☆",
+                tierLabel: "Tier 2 • Moving & Crumble",
+                tip: "🌉 Cross Crumbling Wood Bridges quickly & ride Moving Platforms!",
+                width: 2250, sky: '#064e3b', skyBottom: '#047857', top: '#22c55e', base: '#14532d',
+                pit: 'forest', ice: false,
+                obstacles: ['crumble_wood', 'moving_plat', 'koopa', 'spring'],
+                enemySpeed: 0.95, fireSpeed: 0.018, gapSize: 82, qDensity: 0.85
+            },
+            4: {
+                name: "World 2-2: Stone Castle",
+                stars: "★★☆☆☆",
+                tierLabel: "Tier 2 • Castle Traps",
+                tip: "🗿 Watch for ! before Stone Thwomps slam down & pass Fire Bars!",
+                width: 2650, sky: '#18181b', skyBottom: '#27272a', top: '#64748b', base: '#334155',
+                pit: 'lava', ice: false,
+                obstacles: ['thwomp', 'firebar', 'koopa'],
+                enemySpeed: 1.05, fireSpeed: 0.020, gapSize: 75, qDensity: 0.85
+            },
+            5: {
+                name: "World 3-1: Sky Cloud Kingdom",
+                stars: "★★★☆☆",
+                tierLabel: "Tier 3 • Sky Gliding",
+                tip: "🌪️ Float on Wind Gust Updrafts, Cloud Bridges & stomp Flutter Bats!",
+                width: 3000, sky: '#1e1b4b', skyBottom: '#312e81', top: '#f8fafc', base: '#94a3b8',
+                pit: 'cloud', ice: false,
+                obstacles: ['crumble_cloud', 'updraft_wind', 'bat', 'spring'],
+                enemySpeed: 1.15, fireSpeed: 0.022, gapSize: 95, qDensity: 0.85
+            },
+            6: {
+                name: "World 3-2: Crystal Cavern",
+                stars: "★★★☆☆",
+                tierLabel: "Tier 3 • Deep Cave",
+                tip: "⚠️ Jump over red Floor Spikes & ride Crystal Elevators!",
+                width: 3350, sky: '#090d16', skyBottom: '#1e293b', top: '#38bdf8', base: '#1e293b',
+                pit: 'abyss', ice: false,
+                obstacles: ['spikes', 'moving_plat', 'bat', 'pipe_plant'],
+                enemySpeed: 1.25, fireSpeed: 0.024, gapSize: 85, qDensity: 0.85
+            },
+            7: {
+                name: "World 4-1: Magma Fortress",
+                stars: "★★★★☆",
+                tierLabel: "Tier 4 • Lava Gauntlet",
+                tip: "🔥 Time your jumps past Jumping Lava Bubbles & Rotating Fire Bars!",
+                width: 3700, sky: '#450a0a', skyBottom: '#7f1d1d', top: '#f97316', base: '#7c2d12',
+                pit: 'lava', ice: false,
+                obstacles: ['lavabubble', 'firebar', 'thwomp', 'bat'],
+                enemySpeed: 1.35, fireSpeed: 0.026, gapSize: 88, qDensity: 0.85
+            },
+            8: {
+                name: "World 4-2: Pharaoh Desert",
+                stars: "★★★★☆",
+                tierLabel: "Tier 4 • Shifting Sands",
+                tip: "🏜️ Sprint over Quicksand Bridges & ride Desert Wind Updrafts!",
+                width: 4050, sky: '#78350f', skyBottom: '#f59e0b', top: '#fde047', base: '#b45309',
+                pit: 'sand', ice: false,
+                obstacles: ['crumble_sand', 'updraft_wind', 'spikes', 'koopa', 'spring'],
+                enemySpeed: 1.45, fireSpeed: 0.028, gapSize: 95, qDensity: 0.85
+            },
+            9: {
+                name: "World 5-1: Frostbite Summit",
+                stars: "★★★★★",
+                tierLabel: "Tier 5 • Ice Traction",
+                tip: "❄️ Careful on slippery Ice floors! Use Ice Updrafts & watch Thwomps!",
+                width: 4400, sky: '#0c4a6e', skyBottom: '#bae6fd', top: '#e0f2fe', base: '#0284c7',
+                pit: 'water', ice: true,
+                obstacles: ['updraft_bubble', 'thwomp', 'firebar', 'bat'],
+                enemySpeed: 1.5, fireSpeed: 0.030, gapSize: 92, qDensity: 0.85
+            },
+            10: {
+                name: "World 8-4: Bowser's Lair",
+                stars: "★★★★★",
+                tierLabel: "Tier 5 • Final Boss",
+                tip: "🐲 Survive the fortress & stomp Mini-Bowser 3 times (or use Fireballs)!",
+                width: 4850, sky: '#1e1035', skyBottom: '#4c1d95', top: '#8b5cf6', base: '#3b0764',
+                pit: 'lava', ice: false,
+                obstacles: ['firebar', 'lavabubble', 'thwomp', 'moving_plat', 'boss'],
+                enemySpeed: 1.55, fireSpeed: 0.031, gapSize: 90, qDensity: 0.9
+            }
         };
 
+        function stopMarioGame() {
+            marioGameRunning = false;
+            if (marioAnimId) {
+                cancelAnimationFrame(marioAnimId);
+                marioAnimId = null;
+            }
+            marioKeys = { left: false, right: false, up: false, run: false };
+        }
+
         function updateMarioSize() {
+            const oldBottom = mario.y + mario.height;
             if (mario.state === 'small') {
                 mario.width = 28;
                 mario.height = 36;
             } else {
                 mario.width = 30;
-                mario.height = 52;
+                mario.height = 48;
             }
+            mario.y = oldBottom - mario.height;
         }
 
         function updateMarioHUD() {
             const hud = document.getElementById('mario-form-hud');
             if (hud) {
-                if (mario.state === 'fire') hud.innerText = "State: Fire Mario 🔥 (Press F/Fire)";
-                else if (mario.state === 'super') hud.innerText = "State: Super Mario 🍄";
-                else hud.innerText = "State: Small Mario";
+                if (mario.state === 'fire') {
+                    hud.innerText = "Fire Mario 🔥";
+                    hud.className = "bg-orange-500 text-white text-[11px] px-2 py-0.5 rounded-full font-black border border-yellow-200 shadow-sm";
+                } else if (mario.state === 'super') {
+                    hud.innerText = "Super Mario 🍄";
+                    hud.className = "bg-emerald-500 text-slate-950 text-[11px] px-2 py-0.5 rounded-full font-black border border-emerald-200 shadow-sm";
+                } else {
+                    hud.innerText = "Small Mario";
+                    hud.className = "bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-full font-black border border-red-300 shadow-sm";
+                }
             }
             document.getElementById('mario-lives-val').innerText = mario.lives;
+            const cpHud = document.getElementById('mario-checkpoint-hud');
+            if (cpHud) {
+                cpHud.className = mario.checkpointReached ? "text-emerald-400" : "text-slate-600";
+                cpHud.innerText = mario.checkpointReached ? "🚩 Saved" : "🚩";
+            }
+        }
+
+        function addMarioPopup(x, y, text, color = '#fde047') {
+            marioPopups.push({ x, y, text, color, life: 55, vy: -1.1 });
+        }
+
+        function spawnMarioParticles(x, y, color, count = 8) {
+            for (let i = 0; i < count; i++) {
+                marioParticles.push({
+                    x, y,
+                    vx: (Math.random() - 0.5) * 5,
+                    vy: -1.5 - Math.random() * 4,
+                    size: 3 + Math.random() * 4,
+                    color,
+                    life: 24 + Math.random() * 14
+                });
+            }
         }
 
         function selectMarioLevel(lvl) {
             currentMarioLevel = lvl;
             const btnList = document.querySelectorAll('.mario-lvl-btn');
-            btnList.forEach(b => b.className = "mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300");
+            btnList.forEach(b => {
+                if (b.id === 'mario-tab-endless') {
+                    b.className = "mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-purple-900/70 text-purple-200 border-purple-500/40";
+                } else {
+                    b.className = "mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-slate-800 text-slate-300 border-slate-700";
+                }
+            });
             const activeBtn = document.getElementById(lvl === 'endless' ? 'mario-tab-endless' : `mario-tab-${lvl}`);
-            if (activeBtn) activeBtn.className = "mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-amber-500 text-slate-950";
+            if (activeBtn) {
+                activeBtn.className = "mario-lvl-btn px-2.5 py-1 rounded-xl font-black text-xs border bg-amber-400 text-slate-950 border-amber-200 shadow";
+            }
             initMarioGame(lvl);
         }
 
@@ -2029,153 +2164,419 @@
         }
 
         function triggerMarioJump() {
+            mario.jumpBufferTimer = 8;
             if (mario.grounded || mario.coyoteTimer > 0) {
-                mario.vy = mario.jumpPower;
-                mario.grounded = false;
-                mario.coyoteTimer = 0;
-                playSFX('jump');
+                executeMarioJump();
             }
+        }
+
+        function executeMarioJump() {
+            mario.vy = mario.jumpPower;
+            mario.grounded = false;
+            mario.coyoteTimer = 0;
+            mario.jumpBufferTimer = 0;
+            playSFX('jump');
+        }
+
+        function cutMarioJump() {
+            if (mario.vy < -5.2) {
+                mario.vy *= 0.65;
+            }
+        }
+
+        function rectsOverlap(a, b) {
+            return a.x < b.x + b.w && a.x + a.width > b.x &&
+                   a.y < b.y + b.h && a.y + a.height > b.y;
         }
 
         function initMarioGame(lvl = 1) {
             marioCanvas = document.getElementById('marioCanvas');
             if (!marioCanvas) return;
             marioCtx = marioCanvas.getContext('2d');
-            mario.x = 40;
-            mario.y = 200;
+
+            mario.x = 50;
+            mario.y = 240;
             mario.vx = 0;
             mario.vy = 0;
             mario.state = 'small';
             mario.coyoteTimer = 0;
+            mario.jumpBufferTimer = 0;
+            mario.invincibleTimer = 0;
+            mario.respawnX = 50;
+            mario.respawnY = 240;
+            mario.checkpointReached = false;
             marioProjectiles = [];
+            marioPopups = [];
+            marioParticles = [];
             updateMarioSize();
+
+            const isEndless = lvl === 'endless';
+            const theme = isEndless ? {
+                name: "Endless Progressive Quest",
+                stars: "★ ➔ ★★★★★",
+                tierLabel: "Progressive Difficulty",
+                tip: "♾️ Difficulty increases every 1,100px! Hit checkpoints & ? blocks!",
+                width: 5600, sky: '#0f172a', skyBottom: '#1e1b4b', top: '#22c55e', base: '#854d0e',
+                pit: 'lava', ice: false,
+                obstacles: ['spring', 'crumble_wood', 'updraft_wind', 'thwomp', 'firebar', 'lavabubble', 'bat', 'boss'],
+                enemySpeed: 1.1, fireSpeed: 0.022, gapSize: 82, qDensity: 0.88
+            } : (MARIO_WORLDS[lvl] || MARIO_WORLDS[1]);
+
+            document.getElementById('mario-level-subtitle').innerText = `${theme.name} (${theme.width}px)`;
+            document.getElementById('mario-diff-badge').innerText = `${theme.stars} ${theme.tierLabel}`;
+            document.getElementById('mario-obstacle-tip').innerText = theme.tip;
             updateMarioHUD();
 
-            let theme = marioThemes[lvl] || {
-                name: "Endless Adventure Quest",
-                width: 3400 + Math.random() * 2000,
-                sky: '#0f172a',
-                top: '#16a34a',
-                base: '#854d0e',
-                pit: 'lava'
-            };
-            document.getElementById('mario-level-subtitle').innerText = `${theme.name} (~${Math.round(theme.width)}px Length)`;
-
-            // Procedural Platforms & Gaps
-            marioPlatforms = [
-                { x: 0, y: 320, width: 320 + Math.random() * 100, height: 60 }
-            ];
-
-            let pX = marioPlatforms[0].width + 45 + Math.random() * 50;
-            while (pX < theme.width - 250) {
-                const pW = 200 + Math.random() * 260;
-                marioPlatforms.push({ x: pX, y: 320, width: pW, height: 60 });
-
-                if (Math.random() < 0.6) {
-                    const elevAxis = Math.random() < 0.5 ? 'y' : 'x';
-                    marioPlatforms.push({
-                        x: pX - 20 + Math.random() * pW,
-                        y: 170 + Math.random() * 50,
-                        width: 100 + Math.random() * 40,
-                        height: 18,
-                        moving: true,
-                        axis: elevAxis,
-                        min: elevAxis === 'y' ? 140 + Math.random() * 30 : pX - 30,
-                        max: elevAxis === 'y' ? 230 + Math.random() * 30 : pX + pW - 20,
-                        speed: 0.8 + Math.random() * 0.8,
-                        dir: Math.random() < 0.5 ? 1 : -1
-                    });
-                }
-                pX += pW + 45 + Math.random() * 55;
-            }
-
-            const isSolidGround = (x, w) => marioPlatforms.some(p => !p.moving && x >= p.x + 10 && (x + w) <= (p.x + p.width - 10));
-
-            // Green Pipes with Animated Piranha Plants
-            marioPipes = [];
-            for (let px = 260; px < theme.width - 350; px += 200 + Math.random() * 240) {
-                if (isSolidGround(px, 46)) {
-                    const pH = 35 + Math.floor(Math.random() * 3) * 12;
-                    marioPipes.push({
-                        x: px, y: 320 - pH, w: 46, h: pH,
-                        hasPlant: Math.random() < 0.5,
-                        plantY: 0,
-                        plantDir: Math.random() < 0.5 ? 1 : -1
-                    });
-                }
-            }
-
-            // Question Blocks (?) holding Vocabulary Items
+            // Clear all world entity arrays
+            marioPlatforms = [];
             marioBlocks = [];
-            for (let bx = 160; bx < theme.width - 300; bx += 90 + Math.random() * 130) {
-                if (Math.random() < 0.85) {
-                    const isHigh = Math.random() < 0.35;
-                    const blockY = isHigh ? 160 + Math.random() * 20 : 215 + Math.random() * 25;
-                    const count = Math.random() < 0.4 ? (Math.random() < 0.5 ? 2 : 3) : 1;
-                    for (let c = 0; c < count; c++) {
-                        marioBlocks.push({
-                            x: bx + c * 38, y: blockY, w: 36, h: 36,
-                            type: 'question', hit: false,
-                            wordObj: GAME_DATA[Math.floor(Math.random() * GAME_DATA.length)]
+            marioCoins = [];
+            marioMonsters = [];
+            marioPipes = [];
+            marioFireBars = [];
+            marioSprings = [];
+            marioSpikes = [];
+            marioCrumbleBridges = [];
+            marioThwomps = [];
+            marioUpdrafts = [];
+            marioLavaBubbles = [];
+            marioCheckpoint = null;
+            marioBoss = null;
+
+            const GROUND_Y = 320;
+            const GROUND_H = 60;
+            // Ergonomic ? block heights:
+            // Low row y=198 (bottom=234) -> 50px clearance for Small Mario, 38px clearance for Super Mario!
+            // High row y=118 (bottom=154) -> reachable via Springboard or elevated platform!
+            const LOW_BLOCK_Y = 198;
+            const HIGH_BLOCK_Y = 118;
+
+            const pickWord = () => GAME_DATA[Math.floor(Math.random() * GAME_DATA.length)];
+
+            // Helper to add a guaranteed-reachable Question Block row over solid ground
+            const addQuestionCluster = (startX, count, yPos = LOW_BLOCK_Y) => {
+                for (let c = 0; c < count; c++) {
+                    marioBlocks.push({
+                        x: startX + c * 38,
+                        y: yPos,
+                        w: 36,
+                        h: 36,
+                        type: 'question',
+                        hit: false,
+                        bounceOffset: 0,
+                        wordObj: pickWord()
+                    });
+                }
+            };
+
+            // Helper to add a coin arc
+            const addCoinArc = (startX, count, peakY, stepX = 34) => {
+                for (let i = 0; i < count; i++) {
+                    const norm = count > 1 ? (i / (count - 1)) * 2 - 1 : 0;
+                    const arcY = peakY + norm * norm * 32;
+                    marioCoins.push({
+                        x: startX + i * stepX,
+                        y: arcY,
+                        collected: false,
+                        bobPhase: i * 0.6
+                    });
+                }
+            };
+
+            // 1. Safe Starting Meadow/Platform (0 to 380)
+            marioPlatforms.push({ x: 0, y: GROUND_Y, width: 380, height: GROUND_H, safeRespawnX: 60 });
+            addQuestionCluster(185, lvl === 1 ? 2 : 1, LOW_BLOCK_Y);
+            addCoinArc(275, 3, 250, 28);
+
+            let cursorX = 380;
+            let segmentIndex = 0;
+            const goalBuffer = theme.obstacles.includes('boss') ? 540 : 280;
+            const checkpointTargetX = Math.floor(theme.width * 0.5);
+
+            // 2. Build Non-Overlapping Sequential Segments up to Goal/Boss Zone
+            while (cursorX < theme.width - goalBuffer) {
+                segmentIndex++;
+                const localDiffScale = isEndless ? Math.min(2.0, 1 + (cursorX / 2800)) : 1;
+
+                // Place Midway Checkpoint Flag around 50% progress on Worlds 2+ or Endless
+                if (!marioCheckpoint && (lvl >= 2 || isEndless) && cursorX >= checkpointTargetX) {
+                    const cpGroundW = 240;
+                    marioPlatforms.push({ x: cursorX, y: GROUND_Y, width: cpGroundW, height: GROUND_H, safeRespawnX: cursorX + 90 });
+                    marioCheckpoint = {
+                        x: cursorX + 110,
+                        y: GROUND_Y - 76,
+                        w: 14,
+                        h: 76,
+                        activated: false
+                    };
+                    addQuestionCluster(cursorX + 155, 1, LOW_BLOCK_Y);
+                    cursorX += cpGroundW;
+                    continue;
+                }
+
+                // Decide Gap / Bridge / Updraft Segment before next solid ground
+                const gapW = Math.round(theme.gapSize * (0.9 + Math.random() * 0.25));
+                const obsList = theme.obstacles;
+
+                if (segmentIndex % 2 === 1) {
+                    // Create a traversable gap with a clear, fair mechanic!
+                    if (obsList.includes('crumble_wood') || obsList.includes('crumble_cloud') || obsList.includes('crumble_sand')) {
+                        const bridgeStyle = obsList.includes('crumble_cloud') ? 'cloud' : (obsList.includes('crumble_sand') ? 'sand' : 'wood');
+                        const tileCount = 3 + (lvl >= 5 ? 1 : 0);
+                        const tileW = 42;
+                        const bridgeStart = cursorX + 16;
+                        for (let t = 0; t < tileCount; t++) {
+                            marioCrumbleBridges.push({
+                                x: bridgeStart + t * (tileW + 4),
+                                y: GROUND_Y,
+                                w: tileW,
+                                h: 18,
+                                style: bridgeStyle,
+                                triggered: false,
+                                timer: 0,
+                                fallen: false,
+                                respawnTimer: 0
+                            });
+                        }
+                        addCoinArc(bridgeStart + 12, tileCount, 240, 44);
+                        cursorX = bridgeStart + tileCount * (tileW + 4) + 16;
+                    } else if (obsList.includes('updraft_bubble') || obsList.includes('updraft_wind')) {
+                        const updraftStyle = obsList.includes('updraft_bubble') ? 'bubble' : 'wind';
+                        const wideGap = gapW + 55;
+                        marioUpdrafts.push({
+                            x: cursorX + 14,
+                            y: 95,
+                            w: wideGap - 28,
+                            h: 245,
+                            style: updraftStyle
                         });
+                        addCoinArc(cursorX + 24, 4, 155, Math.max(26, (wideGap - 48) / 3));
+                        cursorX += wideGap;
+                    } else if (obsList.includes('moving_plat') && Math.random() < 0.65) {
+                        const wideGap = gapW + 75;
+                        const travel = Math.max(45, wideGap - 110);
+                        marioPlatforms.push({
+                            x: cursorX + 15,
+                            y: 265,
+                            width: 92,
+                            height: 18,
+                            moving: true,
+                            axis: 'x',
+                            min: cursorX + 15,
+                            max: cursorX + 15 + travel,
+                            speed: 1.05 * localDiffScale,
+                            dir: 1,
+                            dx: 0,
+                            dy: 0
+                        });
+                        addCoinArc(cursorX + 35, 3, 205, 34);
+                        cursorX += wideGap;
+                    } else {
+                        // Standard clean gap (plus Jumping Lava Bubble in Lava worlds!)
+                        if (obsList.includes('lavabubble')) {
+                            marioLavaBubbles.push({
+                                x: cursorX + gapW / 2 - 12,
+                                baseY: 355,
+                                y: 355,
+                                vy: 0,
+                                waitTimer: 35 + (segmentIndex % 3) * 25,
+                                active: false
+                            });
+                        }
+                        cursorX += gapW;
                     }
                 }
-            }
 
-            // Rotating Fire Bars
-            marioFireBars = [];
-            for (let fbx = 420; fbx < theme.width - 400; fbx += 380 + Math.random() * 380) {
-                if (Math.random() < 0.45) {
-                    marioFireBars.push({
-                        cx: fbx,
-                        cy: 165 + Math.random() * 55,
-                        angle: Math.random() * Math.PI * 2,
-                        speed: (0.018 + Math.random() * 0.02) * (Math.random() < 0.5 ? 1 : -1)
+                // Now build a Solid Ground Segment (300px to 440px) with non-overlapping feature slots
+                const groundW = 320 + Math.floor(Math.random() * 110);
+                const segStart = cursorX;
+                const segEnd = segStart + groundW;
+                marioPlatforms.push({
+                    x: segStart,
+                    y: GROUND_Y,
+                    width: groundW,
+                    height: GROUND_H,
+                    safeRespawnX: segStart + 28
+                });
+
+                // Place a Springboard + High Question Block combo on segments with 'spring'
+                const chosenObs = obsList[segmentIndex % obsList.length];
+
+                if (chosenObs === 'spring' && groundW >= 320) {
+                    const springX = segStart + 65;
+                    marioSprings.push({ x: springX, y: GROUND_Y - 20, w: 30, h: 20, squash: 0 });
+                    // High ? block reachable directly from the springboard!
+                    addQuestionCluster(springX + 38, 1, HIGH_BLOCK_Y);
+                    addCoinArc(springX - 8, 4, 130, 30);
+                    // Low ? block further right
+                    addQuestionCluster(segStart + 215, 1, LOW_BLOCK_Y);
+                } else if (chosenObs === 'pipe_plant' && groundW >= 320) {
+                    const pipeX = segStart + 145;
+                    const pipeH = 44 + (segmentIndex % 2) * 12;
+                    marioPipes.push({
+                        x: pipeX,
+                        y: GROUND_Y - pipeH,
+                        w: 48,
+                        h: pipeH,
+                        hasPlant: true,
+                        plantOffset: 0, // 0 = hidden inside pipe, 26 = fully emerged
+                        plantTimer: (segmentIndex % 3) * 40
                     });
-                }
-            }
-
-            // Springboards
-            marioSprings = [];
-            for (let sx = 280; sx < theme.width - 450; sx += 380 + Math.random() * 380) {
-                if (isSolidGround(sx, 28) && Math.random() < 0.65) {
-                    marioSprings.push({ x: sx, y: 300, w: 28, h: 20 });
-                }
-            }
-
-            // Spikes
-            marioSpikes = [];
-            for (let spkx = 500; spkx < theme.width - 500; spkx += 380 + Math.random() * 380) {
-                if (isSolidGround(spkx, 32) && Math.random() < 0.4) {
-                    marioSpikes.push({ x: spkx, y: 305, w: 32, h: 15 });
-                }
-            }
-
-            // Coins
-            marioCoins = [];
-            for (let cx = 100; cx < theme.width - 200; cx += 65 + Math.random() * 55) {
-                marioCoins.push({ x: cx, y: 250 - Math.random() * 110, collected: false });
-            }
-
-            // Patrolling Enemies
-            marioMonsters = [];
-            const emojis = ['🍄', '🐢', '🦔', '🐲'];
-            for (let mx = 320; mx < theme.width - 350; mx += 220 + Math.random() * 220) {
-                if (isSolidGround(mx, 30)) {
-                    const em = emojis[Math.floor(Math.random() * emojis.length)];
+                    // Question block before pipe (clearly separated!)
+                    addQuestionCluster(segStart + 58, 1, LOW_BLOCK_Y);
+                    // Safe enemy patrolling ONLY after the pipe
+                    if (segEnd - (pipeX + 60) >= 95) {
+                        marioMonsters.push({
+                            x: pipeX + 64,
+                            y: GROUND_Y - 28,
+                            width: 30,
+                            height: 28,
+                            minX: pipeX + 56,
+                            maxX: segEnd - 36,
+                            speed: theme.enemySpeed * localDiffScale,
+                            dir: 1,
+                            kind: 'goomba',
+                            alive: true
+                        });
+                    }
+                } else if (chosenObs === 'thwomp' && groundW >= 320) {
+                    const thwompX = segStart + 140;
+                    marioThwomps.push({
+                        x: thwompX,
+                        homeY: 78,
+                        y: 78,
+                        w: 44,
+                        h: 48,
+                        floorY: GROUND_Y,
+                        state: 'idle', // idle -> warn -> slam -> rest -> rise
+                        timer: 0,
+                        shakeX: 0
+                    });
+                    // Question blocks on either side of the Thwomp drop pad
+                    addQuestionCluster(segStart + 52, 1, LOW_BLOCK_Y);
+                    addQuestionCluster(thwompX + 75, 1, LOW_BLOCK_Y);
+                } else if (chosenObs === 'firebar' && groundW >= 320) {
+                    // Anchored onto a solid stone pedestal block (32x32) sitting on the ground or low block row!
+                    const pedX = segStart + 155;
+                    const pedY = GROUND_Y - 32;
+                    marioFireBars.push({
+                        cx: pedX,
+                        cy: pedY,
+                        w: 32,
+                        h: 32,
+                        angle: (segmentIndex % 4) * (Math.PI / 2),
+                        speed: theme.fireSpeed * localDiffScale * (segmentIndex % 2 === 0 ? 1 : -1),
+                        radiusCount: lvl >= 7 ? 4 : 3
+                    });
+                    addQuestionCluster(segStart + 55, 1, LOW_BLOCK_Y);
+                    addQuestionCluster(pedX + 75, 1, LOW_BLOCK_Y);
+                } else if (chosenObs === 'spikes' && groundW >= 320) {
+                    const spikeX = segStart + 145;
+                    marioSpikes.push({ x: spikeX, y: GROUND_Y - 16, w: 36, h: 16 });
+                    // Place ? block to the left so Mario never bonks his head jumping over spikes!
+                    addQuestionCluster(segStart + 55, 1, LOW_BLOCK_Y);
+                    addCoinArc(spikeX - 10, 3, 232, 26);
+                } else {
+                    // Clean ground segment with 1-2 ? blocks and a bounded patrolling Goomba or Koopa
+                    const qCount = (lvl <= 3 && Math.random() < 0.45) ? 2 : 1;
+                    addQuestionCluster(segStart + 70, qCount, LOW_BLOCK_Y);
+                    const enemyKind = obsList.includes('koopa') ? 'koopa' : 'goomba';
                     marioMonsters.push({
-                        x: mx, y: 292, width: 30, height: 28,
-                        minX: mx - 45 - Math.random() * 25,
-                        maxX: mx + 45 + Math.random() * 35,
-                        speed: 0.7 + Math.random() * 0.9,
-                        dir: Math.random() < 0.5 ? 1 : -1,
-                        emoji: em,
+                        x: segStart + 185,
+                        y: GROUND_Y - (enemyKind === 'koopa' ? 34 : 28),
+                        width: 30,
+                        height: enemyKind === 'koopa' ? 34 : 28,
+                        minX: segStart + 24,
+                        maxX: segEnd - 36,
+                        speed: theme.enemySpeed * localDiffScale,
+                        dir: -1,
+                        kind: enemyKind,
                         alive: true
                     });
                 }
+
+                // Add hovering Flutter Bat in upper air for worlds that include 'bat'
+                if (obsList.includes('bat') && segmentIndex % 2 === 0) {
+                    marioMonsters.push({
+                        x: segStart + groundW * 0.5,
+                        y: 145,
+                        baseY: 145,
+                        width: 32,
+                        height: 24,
+                        minX: segStart + 20,
+                        maxX: segEnd - 40,
+                        speed: 1.15 * localDiffScale,
+                        dir: 1,
+                        kind: 'bat',
+                        bobPhase: segmentIndex,
+                        alive: true
+                    });
+                }
+
+                // Vertical Moving Elevator to high bonus coins on moving_plat levels
+                if (obsList.includes('moving_plat') && segmentIndex % 3 === 0) {
+                    marioPlatforms.push({
+                        x: segEnd - 95,
+                        y: 235,
+                        width: 82,
+                        height: 16,
+                        moving: true,
+                        axis: 'y',
+                        min: 145,
+                        max: 245,
+                        speed: 0.95,
+                        dir: -1,
+                        dx: 0,
+                        dy: 0
+                    });
+                    addCoinArc(segEnd - 85, 3, 105, 28);
+                }
+
+                cursorX = segEnd;
             }
 
-            marioFlag = { x: theme.width - 120, y: 150, width: 25, height: 160 };
+            // 3. Final Boss Arena (World 8-4 & Endless) + Victory Flagpole Platform
+            if (theme.obstacles.includes('boss')) {
+                const arenaStart = cursorX + 40;
+                const arenaW = 480;
+                marioPlatforms.push({
+                    x: arenaStart,
+                    y: GROUND_Y,
+                    width: arenaW,
+                    height: GROUND_H,
+                    safeRespawnX: arenaStart + 30
+                });
+                addQuestionCluster(arenaStart + 65, 1, LOW_BLOCK_Y);
+                marioBoss = {
+                    x: arenaStart + 310,
+                    y: GROUND_Y - 54,
+                    width: 48,
+                    height: 54,
+                    minX: arenaStart + 150,
+                    maxX: arenaStart + arenaW - 95,
+                    speed: 1.35,
+                    dir: -1,
+                    hp: 3,
+                    maxHp: 3,
+                    hurtTimer: 0,
+                    fireTimer: 90,
+                    jumpTimer: 130,
+                    vy: 0,
+                    alive: true
+                };
+                marioFlag = { x: arenaStart + arenaW - 42, y: 150, width: 25, height: 170 };
+            } else {
+                const goalStart = cursorX + 36;
+                const goalW = 240;
+                marioPlatforms.push({
+                    x: goalStart,
+                    y: GROUND_Y,
+                    width: goalW,
+                    height: GROUND_H,
+                    safeRespawnX: goalStart + 25
+                });
+                marioFlag = { x: goalStart + 150, y: 150, width: 25, height: 170 };
+            }
 
             setupMarioTouchControls();
             marioGameRunning = true;
@@ -2188,10 +2589,10 @@
             mario.attackCooldown = 16;
             marioProjectiles.push({
                 x: mario.facing === 'right' ? mario.x + mario.width + 2 : mario.x - 14,
-                y: mario.y + 16,
-                vx: (mario.facing === 'right' ? 1 : -1) * 7.5,
+                y: mario.y + 18,
+                vx: (mario.facing === 'right' ? 1 : -1) * 7.8,
                 vy: 1.5,
-                emoji: '🔥'
+                life: 95
             });
             playSFX('fireball');
         }
@@ -2203,12 +2604,13 @@
                 btn.onpointerdown = (e) => { e.preventDefault(); press(); };
                 btn.onpointerup = (e) => { e.preventDefault(); release(); };
                 btn.onpointerleave = (e) => { e.preventDefault(); release(); };
+                btn.onpointercancel = (e) => { e.preventDefault(); release(); };
             };
 
             bindTouch('btn-left', () => marioKeys.left = true, () => marioKeys.left = false);
             bindTouch('btn-right', () => marioKeys.right = true, () => marioKeys.right = false);
             bindTouch('btn-run', () => marioKeys.run = true, () => marioKeys.run = false);
-            bindTouch('btn-jump', () => triggerMarioJump(), () => {});
+            bindTouch('btn-jump', () => triggerMarioJump(), () => cutMarioJump());
             bindTouch('btn-attack', () => shootMarioFireball(), () => {});
         }
 
@@ -2220,7 +2622,7 @@
                 if (['Shift'].includes(e.key)) marioKeys.run = true;
                 if (['ArrowUp', ' ', 'w', 'W'].includes(e.key)) {
                     if (e.key === ' ' || e.key === 'ArrowUp') e.preventDefault();
-                    triggerMarioJump();
+                    if (!e.repeat) triggerMarioJump();
                 }
                 if (['f', 'F', 'x', 'X'].includes(e.key)) shootMarioFireball();
             } else if (currentTab === 'unscramble') {
@@ -2239,39 +2641,71 @@
                 if (['ArrowLeft', 'a', 'A'].includes(e.key)) marioKeys.left = false;
                 if (['ArrowRight', 'd', 'D'].includes(e.key)) marioKeys.right = false;
                 if (['Shift'].includes(e.key)) marioKeys.run = false;
+                if (['ArrowUp', ' ', 'w', 'W'].includes(e.key)) cutMarioJump();
             }
         });
 
         function marioLoop() {
             if (!marioGameRunning) return;
+            marioFrameTick++;
             updateMario();
             renderMario();
             marioAnimId = requestAnimationFrame(marioLoop);
         }
 
-        function takeMarioDamage() {
-            if (mario.invincibleTimer > 0) return;
-            if (mario.state !== 'small') {
-                mario.state = 'small';
-                updateMarioSize();
-                mario.invincibleTimer = 90;
-                updateMarioHUD();
-                playSFX('wrong');
-            } else {
-                mario.lives--;
-                updateMarioHUD();
-                playSFX('wrong');
-                if (mario.lives <= 0) {
-                    showPraiseModal("Game Over! 💔", "Out of lives! Restarting level.");
-                    mario.lives = 3;
+        function respawnMarioSafely(fromPit = false) {
+            // Find the nearest safe ground ledge behind Mario's current X (or checkpoint)
+            let safeX = mario.respawnX;
+            let safeY = mario.respawnY;
+            for (let i = 0; i < marioPlatforms.length; i++) {
+                const p = marioPlatforms[i];
+                if (!p.moving && p.x + 20 < mario.x && p.safeRespawnX >= safeX) {
+                    safeX = p.safeRespawnX;
+                    safeY = p.y - mario.height - 4;
                 }
-                mario.x = 40;
-                mario.y = 200;
-                mario.vx = 0;
-                mario.vy = 0;
+            }
+            mario.x = safeX;
+            mario.y = safeY;
+            mario.vx = 0;
+            mario.vy = 0;
+            mario.invincibleTimer = 85;
+            if (fromPit) {
+                addMarioPopup(mario.x, mario.y - 12, "SAFE LEDGE! 🛡️", "#38bdf8");
+            }
+        }
+
+        function takeMarioDamage(fromPit = false) {
+            if (mario.invincibleTimer > 0 && !fromPit) return;
+
+            if (mario.state !== 'small' && !fromPit) {
                 mario.state = 'small';
                 updateMarioSize();
+                mario.invincibleTimer = 95;
                 updateMarioHUD();
+                playSFX('wrong');
+                addMarioPopup(mario.x, mario.y - 10, "SHIELD SAVED! 🛡️", "#fbbf24");
+                return;
+            }
+
+            mario.lives--;
+            updateMarioHUD();
+            playSFX('wrong');
+            spawnMarioParticles(mario.x + mario.width / 2, mario.y + mario.height / 2, '#ef4444', 10);
+
+            if (mario.lives <= 0) {
+                marioGameRunning = false;
+                showPraiseModal("Try Again! 💪", "Out of hearts! Let's replay this world from the start.", () => {
+                    mario.lives = 3;
+                    initMarioGame(currentMarioLevel);
+                });
+                return;
+            }
+
+            if (fromPit) {
+                respawnMarioSafely(true);
+            } else {
+                mario.invincibleTimer = 95;
+                mario.vy = -6.5;
             }
         }
 
@@ -2279,37 +2713,25 @@
             if (mario.attackCooldown > 0) mario.attackCooldown--;
             if (mario.invincibleTimer > 0) mario.invincibleTimer--;
 
+            // Coyote Time & Jump Buffer counters
             if (mario.grounded) {
-                mario.coyoteTimer = 6;
+                mario.coyoteTimer = 8;
             } else if (mario.coyoteTimer > 0) {
                 mario.coyoteTimer--;
             }
 
-            const targetMaxSpeed = marioKeys.run ? mario.maxRunSpeed : mario.maxWalkSpeed;
-            if (marioKeys.left) {
-                mario.vx -= mario.accel;
-                if (mario.vx < -targetMaxSpeed) mario.vx = -targetMaxSpeed;
-                mario.facing = 'left';
-            } else if (marioKeys.right) {
-                mario.vx += mario.accel;
-                if (mario.vx > targetMaxSpeed) mario.vx = targetMaxSpeed;
-                mario.facing = 'right';
-            } else {
-                mario.vx *= mario.friction;
+            if (mario.jumpBufferTimer > 0) {
+                mario.jumpBufferTimer--;
+                if (mario.grounded || mario.coyoteTimer > 0) {
+                    executeMarioJump();
+                }
             }
 
-            mario.vy += mario.gravity;
-            mario.x += mario.vx;
-            mario.y += mario.vy;
-
-            if (mario.x < 0) {
-                mario.x = 0;
-                mario.vx = 0;
-            }
-
-            // Moving Platforms
+            // Update Moving Platforms first so they can carry Mario cleanly
             marioPlatforms.forEach(p => {
                 if (p.moving) {
+                    const prevX = p.x;
+                    const prevY = p.y;
                     if (p.axis === 'x') {
                         p.x += p.speed * p.dir;
                         if (p.x >= p.max || p.x <= p.min) p.dir *= -1;
@@ -2317,195 +2739,555 @@
                         p.y += p.speed * p.dir;
                         if (p.y >= p.max || p.y <= p.min) p.dir *= -1;
                     }
+                    p.dx = p.x - prevX;
+                    p.dy = p.y - prevY;
                 }
             });
 
-            // Fall into Pit Hazard
-            if (mario.y > 400) {
-                takeMarioDamage();
-                mario.x = 40;
-                mario.y = 200;
-                mario.vx = 0;
-                mario.vy = 0;
+            // Horizontal Acceleration & Friction (with gentle Ice Slide in World 5-1)
+            const targetMaxSpeed = marioKeys.run ? mario.maxRunSpeed : mario.maxWalkSpeed;
+            const currentAccel = mario.onIce ? 0.34 : mario.accel;
+            const currentFriction = mario.onIce ? 0.93 : mario.friction;
+
+            if (marioKeys.left) {
+                mario.vx -= currentAccel;
+                if (mario.vx < -targetMaxSpeed) mario.vx = -targetMaxSpeed;
+                mario.facing = 'left';
+            } else if (marioKeys.right) {
+                mario.vx += currentAccel;
+                if (mario.vx > targetMaxSpeed) mario.vx = targetMaxSpeed;
+                mario.facing = 'right';
+            } else {
+                mario.vx *= currentFriction;
+                if (Math.abs(mario.vx) < 0.08) mario.vx = 0;
             }
 
-            mario.grounded = false;
+            if (mario.onIce && Math.abs(mario.vx) > 2.2 && marioFrameTick % 6 === 0) {
+                spawnMarioParticles(mario.x + mario.width / 2, mario.y + mario.height, '#bae6fd', 1);
+            }
 
-            // Platform Collision
+            // --- STEP 1: AXIS-SEPARATED HORIZONTAL (X) MOVEMENT & COLLISION ---
+            mario.x += mario.vx;
+            if (mario.x < 0) {
+                mario.x = 0;
+                mario.vx = 0;
+            }
+
+            // Collect solid obstacles for horizontal resolution
+            const solidHorizObstacles = [];
             marioPlatforms.forEach(p => {
-                if (mario.x + mario.width > p.x && mario.x < p.x + p.width &&
-                    mario.y + mario.height >= p.y && mario.y + mario.height <= p.y + p.height + 8 && mario.vy >= 0) {
-                    mario.grounded = true;
-                    mario.vy = 0;
-                    mario.y = p.y - mario.height;
-                    if (p.moving) {
-                        if (p.axis === 'x') mario.x += p.speed * p.dir;
-                        if (p.axis === 'y') mario.y += p.speed * p.dir;
+                if (!p.moving) solidHorizObstacles.push({ x: p.x, y: p.y, w: p.width, h: p.height });
+            });
+            marioPipes.forEach(pipe => solidHorizObstacles.push({ x: pipe.x, y: pipe.y, w: pipe.w, h: pipe.h }));
+            marioBlocks.forEach(b => solidHorizObstacles.push({ x: b.x, y: b.y, w: b.w, h: b.h }));
+            marioFireBars.forEach(fb => solidHorizObstacles.push({ x: fb.cx, y: fb.cy, w: fb.w, h: fb.h }));
+            marioCrumbleBridges.forEach(cb => {
+                if (!cb.fallen) solidHorizObstacles.push({ x: cb.x, y: cb.y, w: cb.w, h: cb.h });
+            });
+
+            solidHorizObstacles.forEach(obs => {
+                if (rectsOverlap(mario, obs)) {
+                    if (mario.vx > 0) {
+                        mario.x = obs.x - mario.width;
+                        mario.vx = 0;
+                    } else if (mario.vx < 0) {
+                        mario.x = obs.x + obs.w;
+                        mario.vx = 0;
                     }
                 }
             });
 
-            // Pipe Collision & Piranha Plants
-            marioPipes.forEach(pipe => {
-                if (mario.x + mario.width > pipe.x && mario.x < pipe.x + pipe.w &&
-                    mario.y + mario.height > pipe.y && mario.y < pipe.y + pipe.h) {
-                    if (mario.vy >= 0 && (mario.y + mario.height - mario.vy) <= pipe.y + 12) {
-                        mario.grounded = true;
+            // --- STEP 2: AXIS-SEPARATED VERTICAL (Y) MOVEMENT & COLLISION ---
+            // Rising Bubble / Wind Gust Updrafts buoyancy
+            let inUpdraft = false;
+            marioUpdrafts.forEach(u => {
+                if (rectsOverlap(mario, u)) {
+                    inUpdraft = true;
+                    mario.vy -= 0.78;
+                    if (mario.vy < -5.8) mario.vy = -5.8;
+                    if (marioFrameTick % 5 === 0) {
+                        spawnMarioParticles(mario.x + mario.width / 2, mario.y + mario.height, u.style === 'bubble' ? '#7dd3fc' : '#e2e8f0', 1);
+                    }
+                }
+            });
+
+            if (!inUpdraft) {
+                mario.vy += mario.gravity;
+                if (mario.vy > 13.5) mario.vy = 13.5;
+            }
+
+            mario.y += mario.vy;
+            mario.grounded = false;
+            mario.onIce = false;
+
+            const theme = MARIO_WORLDS[currentMarioLevel] || { ice: false };
+
+            // 2A. Landing on surfaces (mario.vy >= 0)
+            if (mario.vy >= 0) {
+                // Ground & Moving Platforms
+                marioPlatforms.forEach(p => {
+                    const pBox = { x: p.x, y: p.y, w: p.width, h: p.height };
+                    if (rectsOverlap(mario, pBox) && (mario.y + mario.height - mario.vy) <= p.y + 14) {
+                        mario.y = p.y - mario.height;
                         mario.vy = 0;
+                        mario.grounded = true;
+                        if (!p.moving && theme.ice) mario.onIce = true;
+                        if (p.moving) {
+                            mario.x += p.dx || 0;
+                            mario.y += p.dy || 0;
+                        }
+                    }
+                });
+
+                // Crumbling Bridges
+                marioCrumbleBridges.forEach(cb => {
+                    if (!cb.fallen && rectsOverlap(mario, cb) && (mario.y + mario.height - mario.vy) <= cb.y + 12) {
+                        mario.y = cb.y - mario.height;
+                        mario.vy = 0;
+                        mario.grounded = true;
+                        if (!cb.triggered) {
+                            cb.triggered = true;
+                            cb.timer = 45; // 0.75s warning shake before dropping!
+                            playSFX('crumble');
+                        }
+                    }
+                });
+
+                // Pipes
+                marioPipes.forEach(pipe => {
+                    if (rectsOverlap(mario, pipe) && (mario.y + mario.height - mario.vy) <= pipe.y + 14) {
                         mario.y = pipe.y - mario.height;
-                    } else if (mario.x + mario.width / 2 < pipe.x + pipe.w / 2) {
-                        mario.x = pipe.x - mario.width;
-                        mario.vx = 0;
-                    } else {
-                        mario.x = pipe.x + pipe.w;
-                        mario.vx = 0;
+                        mario.vy = 0;
+                        mario.grounded = true;
                     }
-                }
+                });
 
-                if (pipe.hasPlant) {
-                    pipe.plantY += 0.3 * pipe.plantDir;
-                    if (pipe.plantY > 26 || pipe.plantY < -10) pipe.plantDir *= -1;
-                    const plantBoxY = pipe.y - 20 + pipe.plantY;
-                    if (mario.x + mario.width > pipe.x + 8 && mario.x < pipe.x + pipe.w - 8 &&
-                        mario.y + mario.height > plantBoxY && mario.y < plantBoxY + 24) {
-                        takeMarioDamage();
-                    }
-                }
-            });
-
-            // Question Blocks Landing & Headbutt Collision
-            marioBlocks.forEach(b => {
-                if (mario.x + mario.width > b.x && mario.x < b.x + b.w &&
-                    mario.y + mario.height > b.y && mario.y < b.y + b.h) {
-                    
-                    const prevBottom = mario.y + mario.height - mario.vy;
-                    if (mario.vy >= 0 && prevBottom <= b.y + 12) {
+                // Question Blocks (landing on top)
+                marioBlocks.forEach(b => {
+                    if (rectsOverlap(mario, b) && (mario.y + mario.height - mario.vy) <= b.y + 14) {
                         mario.y = b.y - mario.height;
                         mario.vy = 0;
                         mario.grounded = true;
-                    } else if (mario.vy < 0 && (mario.y - mario.vy) >= b.y + b.h - 10) {
+                    }
+                });
+
+                // Fire Bar Pedestals (landing on top)
+                marioFireBars.forEach(fb => {
+                    const ped = { x: fb.cx, y: fb.cy, w: fb.w, h: fb.h };
+                    if (rectsOverlap(mario, ped) && (mario.y + mario.height - mario.vy) <= ped.y + 14) {
+                        mario.y = ped.y - mario.height;
+                        mario.vy = 0;
+                        mario.grounded = true;
+                    }
+                });
+            }
+
+            // 2B. Jumping Upward (mario.vy < 0) — Question Block Headbutt & Corner Forgiveness!
+            if (mario.vy < 0) {
+                marioBlocks.forEach(b => {
+                    // Corner Forgiveness: if Mario's head is just reaching the bottom of a ? block
+                    // and clips within 10px of its outer edge, smoothly nudge him in so he hits it!
+                    if (mario.y <= b.y + b.h && mario.y >= b.y + b.h - 16) {
+                        const rightOverhang = (mario.x + mario.width) - b.x;
+                        const leftOverhang = (b.x + b.w) - mario.x;
+                        if (rightOverhang > -6 && rightOverhang < 10) {
+                            mario.x = b.x + 2;
+                        } else if (leftOverhang > -6 && leftOverhang < 10) {
+                            mario.x = b.x + b.w - mario.width - 2;
+                        }
+                    }
+
+                    if (rectsOverlap(mario, b)) {
                         mario.y = b.y + b.h;
-                        mario.vy = Math.max(1, mario.vy * -0.5);
+                        mario.vy = 2.2;
+                        b.bounceOffset = -9;
+                        spawnMarioParticles(b.x + b.w / 2, b.y, '#fbbf24', 6);
                         if (b.type === 'question' && !b.hit) {
                             b.hit = true;
                             playSFX('coin');
                             triggerMarioQuestion(b);
-                        }
-                    } else {
-                        let overlapX = (mario.x + mario.width / 2 < b.x + b.w / 2) ? (mario.x + mario.width - b.x) : (b.x + b.w - mario.x);
-                        let overlapY = (mario.y + mario.height / 2 < b.y + b.h / 2) ? (mario.y + mario.height - b.y) : (b.y + b.h - mario.y);
-
-                        if (overlapX < overlapY) {
-                            mario.x = (mario.x + mario.width / 2 < b.x + b.w / 2) ? (b.x - mario.width) : (b.x + b.w);
-                            mario.vx = 0;
-                        } else if (mario.y + mario.height / 2 < b.y + b.h / 2) {
-                            mario.y = b.y - mario.height;
-                            mario.vy = 0;
-                            mario.grounded = true;
                         } else {
-                            mario.y = b.y + b.h;
-                            mario.vy = Math.max(1, mario.vy * -0.5);
-                            if (b.type === 'question' && !b.hit) {
-                                b.hit = true;
-                                playSFX('coin');
-                                triggerMarioQuestion(b);
-                            }
+                            playSFX('coin');
                         }
+                    }
+                });
+
+                // Fire Bar Pedestal bottom bump
+                marioFireBars.forEach(fb => {
+                    const ped = { x: fb.cx, y: fb.cy, w: fb.w, h: fb.h };
+                    if (rectsOverlap(mario, ped)) {
+                        mario.y = ped.y + ped.h;
+                        mario.vy = 2.0;
+                    }
+                });
+            }
+
+            // Animate block bounce recovery
+            marioBlocks.forEach(b => {
+                if (b.bounceOffset < 0) {
+                    b.bounceOffset += 1.2;
+                    if (b.bounceOffset > 0) b.bounceOffset = 0;
+                }
+            });
+
+            // Pit Fall Hazard -> Safe Ledge Respawn!
+            if (mario.y > 400) {
+                takeMarioDamage(true);
+            }
+
+            // --- STEP 3: UPDATE INTERACTIVE OBSTACLES & ENEMIES ---
+
+            // Crumble Bridges Timer & Regeneration
+            marioCrumbleBridges.forEach(cb => {
+                if (cb.triggered && !cb.fallen) {
+                    cb.timer--;
+                    if (cb.timer <= 0) {
+                        cb.fallen = true;
+                        cb.respawnTimer = 135; // Regenerates in ~2.25s so student is never stuck
+                        spawnMarioParticles(cb.x + cb.w / 2, cb.y + 8, '#cbd5e1', 5);
+                    }
+                } else if (cb.fallen) {
+                    cb.respawnTimer--;
+                    if (cb.respawnTimer <= 0) {
+                        cb.fallen = false;
+                        cb.triggered = false;
                     }
                 }
             });
 
             // Springboards Bounce
             marioSprings.forEach(s => {
-                if (mario.x + mario.width > s.x && mario.x < s.x + s.w &&
-                    mario.y + mario.height >= s.y && mario.y + mario.height <= s.y + s.h + 8 && mario.vy >= 0) {
-                    mario.vy = -16.5;
+                if (s.squash > 0) s.squash -= 0.8;
+                if (rectsOverlap(mario, s) && mario.vy >= 0) {
+                    mario.y = s.y - mario.height;
+                    mario.vy = -16.8;
                     mario.grounded = false;
+                    mario.coyoteTimer = 0;
+                    s.squash = 8;
                     playSFX('spring');
+                    addMarioPopup(s.x, s.y - 16, "BOING! 🚀", "#38bdf8");
+                    spawnMarioParticles(s.x + s.w / 2, s.y, '#facc15', 8);
                 }
             });
 
-            // Rotating Fire Bars Collision
-            marioFireBars.forEach(fb => {
-                fb.angle += fb.speed;
-                for (let r = 14; r <= 65; r += 16) {
-                    const fx = fb.cx + 18 + Math.cos(fb.angle) * r;
-                    const fy = fb.cy + 18 + Math.sin(fb.angle) * r;
-                    if (Math.abs((mario.x + mario.width / 2) - fx) < 14 && Math.abs((mario.y + mario.height / 2) - fy) < 14) {
-                        takeMarioDamage();
-                    }
-                }
-            });
+            // Smart Piranha Plants on Pipes (stay tucked if Mario is right next to the pipe!)
+            marioPipes.forEach(pipe => {
+                if (pipe.hasPlant) {
+                    const marioCenter = mario.x + mario.width / 2;
+                    const pipeCenter = pipe.x + pipe.w / 2;
+                    const marioClose = Math.abs(marioCenter - pipeCenter) < 42;
 
-            // Spikes Hazard
-            marioSpikes.forEach(spk => {
-                if (mario.x + mario.width > spk.x && mario.x < spk.x + spk.w &&
-                    mario.y + mario.height > spk.y && mario.y < spk.y + spk.h) {
-                    takeMarioDamage();
-                }
-            });
+                    pipe.plantTimer = (pipe.plantTimer + 1) % 210;
+                    const wantsOut = pipe.plantTimer > 70 && pipe.plantTimer < 165 && !marioClose;
 
-            // Coins
-            marioCoins.forEach(c => {
-                if (!c.collected && Math.abs((mario.x + 15) - c.x) < 22 && Math.abs((mario.y + 20) - c.y) < 22) {
-                    c.collected = true;
-                    playSFX('coin');
-                    addStarScore(1);
-                }
-            });
+                    if (wantsOut && pipe.plantOffset < 26) pipe.plantOffset += 0.7;
+                    else if (!wantsOut && pipe.plantOffset > 0) pipe.plantOffset -= 0.8;
 
-            // Monsters & Stomp / Hurt
-            marioMonsters.forEach(m => {
-                if (m.alive) {
-                    m.x += m.speed * m.dir;
-                    if (m.x >= m.maxX || m.x <= m.minX) m.dir *= -1;
-
-                    if (mario.x + mario.width > m.x && mario.x < m.x + m.width &&
-                        mario.y + mario.height >= m.y && mario.y < m.y + m.height) {
-                        if (mario.vy > 0 && mario.y + mario.height - mario.vy <= m.y + 12) {
-                            m.alive = false;
-                            mario.vy = -8.5;
-                            playSFX('coin');
-                            addStarScore(2);
-                        } else {
-                            takeMarioDamage();
+                    if (pipe.plantOffset > 8) {
+                        const plantBox = {
+                            x: pipe.x + 11,
+                            y: pipe.y - pipe.plantOffset,
+                            w: pipe.w - 22,
+                            h: pipe.plantOffset
+                        };
+                        if (rectsOverlap(mario, plantBox)) {
+                            takeMarioDamage(false);
                         }
                     }
                 }
             });
 
-            // Fireball Projectiles
+            // Telegraphed Stone Thwomps
+            marioThwomps.forEach(th => {
+                const distX = Math.abs((mario.x + mario.width / 2) - (th.x + th.w / 2));
+                if (th.state === 'idle') {
+                    if (distX < 88 && mario.y > th.y) {
+                        th.state = 'warn';
+                        th.timer = 48; // 0.8s clear warning shake & '!' sign
+                    }
+                } else if (th.state === 'warn') {
+                    th.timer--;
+                    th.shakeX = (th.timer % 4 < 2) ? -3 : 3;
+                    if (th.timer <= 0) {
+                        th.shakeX = 0;
+                        th.state = 'slam';
+                    }
+                } else if (th.state === 'slam') {
+                    th.y += 9.5;
+                    if (th.y + th.h >= th.floorY) {
+                        th.y = th.floorY - th.h;
+                        th.state = 'rest';
+                        th.timer = 40;
+                        playSFX('thwomp');
+                        spawnMarioParticles(th.x + th.w / 2, th.floorY, '#94a3b8', 7);
+                    }
+                } else if (th.state === 'rest') {
+                    th.timer--;
+                    if (th.timer <= 0) th.state = 'rise';
+                } else if (th.state === 'rise') {
+                    th.y -= 2.2;
+                    if (th.y <= th.homeY) {
+                        th.y = th.homeY;
+                        th.state = 'idle';
+                    }
+                }
+
+                const thwompHitbox = { x: th.x + 3, y: th.y + 3, w: th.w - 6, h: th.h - 4 };
+                if (rectsOverlap(mario, thwompHitbox)) {
+                    takeMarioDamage(false);
+                }
+            });
+
+            // Anchored Rotating Fire Bars
+            marioFireBars.forEach(fb => {
+                fb.angle += fb.speed;
+                const count = fb.radiusCount || 3;
+                for (let idx = 1; idx <= count; idx++) {
+                    const r = idx * 18;
+                    const fx = fb.cx + fb.w / 2 + Math.cos(fb.angle) * r;
+                    const fy = fb.cy + fb.h / 2 + Math.sin(fb.angle) * r;
+                    if (Math.abs((mario.x + mario.width / 2) - fx) < 13 &&
+                        Math.abs((mario.y + mario.height / 2) - fy) < 13) {
+                        takeMarioDamage(false);
+                    }
+                }
+            });
+
+            // Jumping Lava Bubbles (Podoboos)
+            marioLavaBubbles.forEach(lb => {
+                if (!lb.active) {
+                    lb.waitTimer--;
+                    if (lb.waitTimer <= 0) {
+                        lb.active = true;
+                        lb.y = lb.baseY;
+                        lb.vy = -12.6;
+                    }
+                } else {
+                    lb.y += lb.vy;
+                    lb.vy += 0.34;
+                    if (lb.y > lb.baseY) {
+                        lb.y = lb.baseY;
+                        lb.active = false;
+                        lb.waitTimer = 65;
+                    }
+                    const lbBox = { x: lb.x + 3, y: lb.y + 3, w: 18, h: 18 };
+                    if (rectsOverlap(mario, lbBox)) {
+                        takeMarioDamage(false);
+                    }
+                }
+            });
+
+            // Floor Spikes
+            marioSpikes.forEach(spk => {
+                const spkBox = { x: spk.x + 4, y: spk.y + 4, w: spk.w - 8, h: spk.h - 4 };
+                if (rectsOverlap(mario, spkBox)) {
+                    takeMarioDamage(false);
+                }
+            });
+
+            // Coins
+            marioCoins.forEach(c => {
+                if (!c.collected &&
+                    Math.abs((mario.x + mario.width / 2) - c.x) < 22 &&
+                    Math.abs((mario.y + mario.height / 2) - c.y) < 24) {
+                    c.collected = true;
+                    playSFX('coin');
+                    addStarScore(1);
+                    addMarioPopup(c.x - 10, c.y - 12, "+1 ⭐", "#facc15");
+                }
+            });
+
+            // Bounded Patrol Enemies (Goombas, Koopas & Flutter Bats)
+            marioMonsters.forEach(m => {
+                if (!m.alive) return;
+                m.x += m.speed * m.dir;
+                if (m.x >= m.maxX) {
+                    m.x = m.maxX;
+                    m.dir = -1;
+                } else if (m.x <= m.minX) {
+                    m.x = m.minX;
+                    m.dir = 1;
+                }
+
+                if (m.kind === 'bat') {
+                    m.bobPhase += 0.08;
+                    m.y = m.baseY + Math.sin(m.bobPhase) * 18;
+                }
+
+                const mBox = { x: m.x, y: m.y, w: m.width, h: m.height };
+                if (rectsOverlap(mario, mBox)) {
+                    const prevBottom = mario.y + mario.height - mario.vy;
+                    if (mario.vy > 0 && prevBottom <= m.y + 16) {
+                        m.alive = false;
+                        mario.vy = -9.5;
+                        playSFX('coin');
+                        addStarScore(2);
+                        addMarioPopup(m.x, m.y - 12, "+2 ⭐ STOMP!", "#4ade80");
+                        spawnMarioParticles(m.x + m.width / 2, m.y + m.height / 2, '#facc15', 8);
+                    } else {
+                        takeMarioDamage(false);
+                    }
+                }
+            });
+
+            // Mini-Bowser Boss (World 8-4 & Endless)
+            if (marioBoss && marioBoss.alive) {
+                if (marioBoss.hurtTimer > 0) marioBoss.hurtTimer--;
+                marioBoss.x += marioBoss.speed * marioBoss.dir;
+                if (marioBoss.x <= marioBoss.minX) {
+                    marioBoss.x = marioBoss.minX;
+                    marioBoss.dir = 1;
+                } else if (marioBoss.x >= marioBoss.maxX) {
+                    marioBoss.x = marioBoss.maxX;
+                    marioBoss.dir = -1;
+                }
+
+                marioBoss.jumpTimer--;
+                if (marioBoss.jumpTimer <= 0 && marioBoss.y >= 320 - marioBoss.height) {
+                    marioBoss.vy = -8.5;
+                    marioBoss.jumpTimer = 140;
+                }
+                marioBoss.y += marioBoss.vy;
+                marioBoss.vy += 0.45;
+                if (marioBoss.y > 320 - marioBoss.height) {
+                    marioBoss.y = 320 - marioBoss.height;
+                    marioBoss.vy = 0;
+                }
+
+                // Boss throws slow, telegraphed fireballs toward Mario
+                marioBoss.fireTimer--;
+                if (marioBoss.fireTimer <= 0 && Math.abs(mario.x - marioBoss.x) < 480) {
+                    marioBoss.fireTimer = 135;
+                    const dirToMario = mario.x < marioBoss.x ? -1 : 1;
+                    marioProjectiles.push({
+                        x: dirToMario === -1 ? marioBoss.x - 14 : marioBoss.x + marioBoss.width + 4,
+                        y: marioBoss.y + 24,
+                        vx: dirToMario * 3.6,
+                        vy: 0,
+                        fromBoss: true,
+                        life: 130
+                    });
+                    playSFX('fireball');
+                }
+
+                const bossBox = { x: marioBoss.x, y: marioBoss.y, w: marioBoss.width, h: marioBoss.height };
+                if (rectsOverlap(mario, bossBox)) {
+                    const prevBottom = mario.y + mario.height - mario.vy;
+                    if (mario.vy > 0 && prevBottom <= marioBoss.y + 18 && marioBoss.hurtTimer === 0) {
+                        marioBoss.hp--;
+                        marioBoss.hurtTimer = 45;
+                        mario.vy = -11.5;
+                        playSFX('coin');
+                        spawnMarioParticles(marioBoss.x + 24, marioBoss.y, '#fbbf24', 12);
+                        if (marioBoss.hp <= 0) {
+                            marioBoss.alive = false;
+                            addStarScore(10);
+                            playSFX('fanfare');
+                            addMarioPopup(marioBoss.x, marioBoss.y - 20, "BOSS DEFEATED! +10 ⭐", "#facc15");
+                        } else {
+                            addMarioPopup(marioBoss.x, marioBoss.y - 16, `HIT! (${marioBoss.hp} HP LEFT)`, "#fb923c");
+                        }
+                    } else if (marioBoss.hurtTimer === 0) {
+                        takeMarioDamage(false);
+                    }
+                }
+            }
+
+            // Projectiles (Mario Fireballs & Boss Fireballs)
             for (let i = marioProjectiles.length - 1; i >= 0; i--) {
                 const proj = marioProjectiles[i];
                 proj.x += proj.vx;
                 proj.y += proj.vy;
-                proj.vy += 0.35;
-                if (proj.y > 310) {
-                    proj.y = 310;
-                    proj.vy = -4.5;
-                }
-                marioMonsters.forEach(m => {
-                    if (m.alive && Math.abs(proj.x - m.x) < 25 && Math.abs(proj.y - m.y) < 25) {
-                        m.alive = false;
-                        marioProjectiles.splice(i, 1);
-                        playSFX('coin');
-                        addStarScore(2);
+                proj.life--;
+
+                if (!proj.fromBoss) {
+                    proj.vy += 0.35;
+                    if (proj.y > 312) {
+                        proj.y = 312;
+                        proj.vy = -4.5;
                     }
-                });
+                    let hitSomething = false;
+                    marioMonsters.forEach(m => {
+                        if (m.alive && Math.abs(proj.x - (m.x + m.width / 2)) < 24 && Math.abs(proj.y - (m.y + m.height / 2)) < 24) {
+                            m.alive = false;
+                            hitSomething = true;
+                            playSFX('coin');
+                            addStarScore(2);
+                            addMarioPopup(m.x, m.y - 10, "+2 ⭐", "#fb923c");
+                        }
+                    });
+                    if (marioBoss && marioBoss.alive && marioBoss.hurtTimer === 0 &&
+                        proj.x > marioBoss.x && proj.x < marioBoss.x + marioBoss.width &&
+                        proj.y > marioBoss.y && proj.y < marioBoss.y + marioBoss.height) {
+                        marioBoss.hp--;
+                        marioBoss.hurtTimer = 25;
+                        hitSomething = true;
+                        playSFX('coin');
+                        if (marioBoss.hp <= 0) {
+                            marioBoss.alive = false;
+                            addStarScore(10);
+                            playSFX('fanfare');
+                            addMarioPopup(marioBoss.x, marioBoss.y - 20, "BOSS DEFEATED! +10 ⭐", "#facc15");
+                        } else {
+                            addMarioPopup(marioBoss.x, marioBoss.y - 14, `FIRE HIT! (${marioBoss.hp} HP)`, "#fb923c");
+                        }
+                    }
+                    if (hitSomething || proj.life <= 0) {
+                        marioProjectiles.splice(i, 1);
+                    }
+                } else {
+                    // Boss fireball hitting Mario
+                    if (Math.abs((mario.x + mario.width / 2) - proj.x) < 16 &&
+                        Math.abs((mario.y + mario.height / 2) - proj.y) < 18) {
+                        marioProjectiles.splice(i, 1);
+                        takeMarioDamage(false);
+                    } else if (proj.life <= 0) {
+                        marioProjectiles.splice(i, 1);
+                    }
+                }
+            }
+
+            // Midway Checkpoint Activation
+            if (marioCheckpoint && !marioCheckpoint.activated && rectsOverlap(mario, marioCheckpoint)) {
+                marioCheckpoint.activated = true;
+                mario.checkpointReached = true;
+                mario.respawnX = marioCheckpoint.x - 10;
+                mario.respawnY = 320 - mario.height - 4;
+                updateMarioHUD();
+                playSFX('checkpoint');
+                addStarScore(2);
+                addMarioPopup(marioCheckpoint.x - 25, marioCheckpoint.y - 16, "CHECKPOINT! 🚩 +2 ⭐", "#34d399");
+                spawnMarioParticles(marioCheckpoint.x + 7, marioCheckpoint.y + 15, '#34d399', 14);
+            }
+
+            // Update Popups & Particles
+            for (let i = marioPopups.length - 1; i >= 0; i--) {
+                marioPopups[i].y += marioPopups[i].vy;
+                marioPopups[i].life--;
+                if (marioPopups[i].life <= 0) marioPopups.splice(i, 1);
+            }
+            for (let i = marioParticles.length - 1; i >= 0; i--) {
+                const pt = marioParticles[i];
+                pt.x += pt.vx;
+                pt.y += pt.vy;
+                pt.vy += 0.18;
+                pt.life--;
+                if (pt.life <= 0) marioParticles.splice(i, 1);
             }
 
             // Flag Pole Victory
-            if (mario.x >= marioFlag.x) {
+            if (mario.x + mario.width >= marioFlag.x) {
                 marioGameRunning = false;
                 playSFX('fanfare');
-                addStarScore(3);
+                addStarScore(5);
                 if (typeof currentMarioLevel === 'number' && currentMarioLevel < 10) {
                     const nextLvl = currentMarioLevel + 1;
-                    showPraiseModal("World Clear! 🎉", `Completed stage! Advancing to World ${nextLvl}.`, () => {
+                    const nextWorldName = MARIO_WORLDS[nextLvl] ? MARIO_WORLDS[nextLvl].name : `World ${nextLvl}`;
+                    showPraiseModal("World Clear! 🎉 +5 ⭐", `Awesome job! Ready for ${nextWorldName}?`, () => {
                         selectMarioLevel(nextLvl);
                     });
                 } else {
-                    showPraiseModal("Stage Clear! 🎉", "Amazing victory! Starting a fresh challenge.", () => {
+                    showPraiseModal("Grand Champion! 🏆 +5 ⭐", "You conquered all worlds! Starting a fresh adventure.", () => {
                         initMarioGame(currentMarioLevel);
                     });
                 }
@@ -2514,6 +3296,7 @@
 
         function triggerMarioQuestion(block) {
             marioGameRunning = false;
+            marioKeys = { left: false, right: false, up: false, run: false };
             const modal = document.getElementById('mario-question-modal');
             const target = block.wordObj;
             document.getElementById('mario-q-svg').innerHTML = target.svg;
@@ -2530,14 +3313,24 @@
                     if (opt.id === target.id) {
                         playSFX('correct');
                         speakText(`Great job! ${opt.term}`);
-                        if (mario.state === 'small') mario.state = 'super';
-                        else if (mario.state === 'super') mario.state = 'fire';
+                        if (mario.state === 'small') {
+                            mario.state = 'super';
+                            addMarioPopup(mario.x, mario.y - 18, "SUPER MARIO! 🍄", "#4ade80");
+                        } else if (mario.state === 'super') {
+                            mario.state = 'fire';
+                            addMarioPopup(mario.x, mario.y - 18, "FIRE MARIO! 🔥", "#fb923c");
+                        } else {
+                            addStarScore(2);
+                            addMarioPopup(mario.x, mario.y - 18, "+4 ⭐ BONUS!", "#facc15");
+                        }
                         updateMarioSize();
                         updateMarioHUD();
                         addStarScore(2);
                     } else {
                         playSFX('wrong');
-                        speakText("Keep trying!");
+                        speakText(`Good try! The word is ${target.term}.`);
+                        addStarScore(1);
+                        addMarioPopup(mario.x, mario.y - 18, `${target.term.toUpperCase()} +1 ⭐`, "#38bdf8");
                     }
                     marioGameRunning = true;
                     marioLoop();
@@ -2553,10 +3346,10 @@
             ctx.translate(x + width / 2, y + height / 2);
             if (facing === 'left') ctx.scale(-1, 1);
 
-            const scale = state === 'small' ? 0.8 : 1.15;
+            const scale = state === 'small' ? 0.8 : 1.08;
             ctx.scale(scale, scale);
 
-            // 1. Hat (Red for Small/Super, White for Fire Mario)
+            // Hat
             ctx.fillStyle = state === 'fire' ? '#ffffff' : '#dc2626';
             ctx.fillRect(-12, -22, 24, 10);
             ctx.fillRect(-2, -14, 18, 5);
@@ -2571,7 +3364,7 @@
             ctx.textAlign = 'center';
             ctx.fillText('M', 1, -14);
 
-            // Brown Hair, Peach Face, Blue Eye, Dark Mustache
+            // Hair, Face, Eye, Mustache
             ctx.fillStyle = '#542610';
             ctx.fillRect(-13, -12, 5, 8);
             ctx.fillStyle = '#fed7aa';
@@ -2587,7 +3380,7 @@
             ctx.fillStyle = '#271206';
             ctx.fillRect(1, -4, 14, 5);
 
-            // Shirt, Overalls & Yellow Buttons
+            // Shirt, Overalls & Buttons
             ctx.fillStyle = state === 'fire' ? '#ffffff' : '#dc2626';
             ctx.fillRect(-11, -1, 22, 10);
             ctx.fillStyle = state === 'fire' ? '#dc2626' : '#1d4ed8';
@@ -2598,7 +3391,7 @@
             ctx.arc(4, 5, 1.5, 0, Math.PI * 2);
             ctx.fill();
 
-            // White Gloves & Brown Boots
+            // Gloves & Boots
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
             ctx.arc(-11, 5, 3, 0, Math.PI * 2);
@@ -2612,116 +3405,486 @@
         }
 
         function renderMario() {
-            let theme = marioThemes[currentMarioLevel] || { width: 3500, sky: '#0f172a', top: '#16a34a', base: '#854d0e' };
+            const theme = MARIO_WORLDS[currentMarioLevel] || {
+                width: 5600, sky: '#0f172a', skyBottom: '#1e1b4b', top: '#16a34a', base: '#854d0e', pit: 'lava'
+            };
             marioCtx.clearRect(0, 0, marioCanvas.width, marioCanvas.height);
-            let cameraX = Math.max(0, mario.x - 180);
+
+            const maxCam = Math.max(0, theme.width - marioCanvas.width + 60);
+            const cameraX = Math.min(maxCam, Math.max(0, mario.x - 200));
+
+            // Sky Gradient
+            const skyGrad = marioCtx.createLinearGradient(0, 0, 0, marioCanvas.height);
+            skyGrad.addColorStop(0, theme.sky);
+            skyGrad.addColorStop(1, theme.skyBottom || theme.sky);
+            marioCtx.fillStyle = skyGrad;
+            marioCtx.fillRect(0, 0, marioCanvas.width, marioCanvas.height);
+
+            // Parallax Decorative Clouds / Hills
+            marioCtx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+            for (let i = 0; i < 14; i++) {
+                const cloudX = ((i * 260 - cameraX * 0.35) % (marioCanvas.width + 200) + (marioCanvas.width + 200)) % (marioCanvas.width + 200) - 100;
+                const cloudY = 38 + (i % 3) * 28;
+                marioCtx.beginPath();
+                marioCtx.arc(cloudX, cloudY, 22, 0, Math.PI * 2);
+                marioCtx.arc(cloudX + 20, cloudY - 6, 26, 0, Math.PI * 2);
+                marioCtx.arc(cloudX + 42, cloudY, 20, 0, Math.PI * 2);
+                marioCtx.fill();
+            }
+
             marioCtx.save();
             marioCtx.translate(-cameraX, 0);
 
-            // Sky
-            marioCtx.fillStyle = theme.sky;
-            marioCtx.fillRect(cameraX, 0, marioCanvas.width, marioCanvas.height);
+            // Pit Hazard Base Visual (Water Waves / Bubbling Lava)
+            if (theme.pit === 'water') {
+                marioCtx.fillStyle = 'rgba(14, 165, 233, 0.55)';
+                marioCtx.fillRect(cameraX, 344, marioCanvas.width, 36);
+            } else if (theme.pit === 'lava') {
+                marioCtx.fillStyle = 'rgba(239, 68, 68, 0.72)';
+                marioCtx.fillRect(cameraX, 346, marioCanvas.width, 34);
+                marioCtx.fillStyle = '#facc15';
+                for (let lx = Math.floor(cameraX / 40) * 40; lx < cameraX + marioCanvas.width; lx += 40) {
+                    const waveY = 346 + Math.sin(marioFrameTick * 0.08 + lx * 0.05) * 3;
+                    marioCtx.fillRect(lx, waveY, 22, 4);
+                }
+            }
 
-            // Floors & Moving Platforms
-            marioPlatforms.forEach(p => {
-                marioCtx.fillStyle = p.moving ? '#f59e0b' : theme.top;
-                marioCtx.fillRect(p.x, p.y, p.width, 8);
-                marioCtx.fillStyle = p.moving ? '#b45309' : theme.base;
-                marioCtx.fillRect(p.x, p.y + 8, p.width, p.height - 8);
-            });
+            // Rising Bubble / Wind Gust Updraft Columns
+            marioUpdrafts.forEach(u => {
+                const grad = marioCtx.createLinearGradient(0, u.y + u.h, 0, u.y);
+                if (u.style === 'bubble') {
+                    grad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+                    grad.addColorStop(1, 'rgba(56, 189, 248, 0.04)');
+                } else {
+                    grad.addColorStop(0, 'rgba(226, 232, 240, 0.3)');
+                    grad.addColorStop(1, 'rgba(226, 232, 240, 0.03)');
+                }
+                marioCtx.fillStyle = grad;
+                marioCtx.fillRect(u.x, u.y, u.w, u.h);
 
-            // Pipes & Piranha Plants
-            marioPipes.forEach(p => {
-                marioCtx.fillStyle = '#16a34a';
-                marioCtx.fillRect(p.x, p.y, p.w, p.h);
-                marioCtx.fillStyle = '#22c55e';
-                marioCtx.fillRect(p.x - 3, p.y, p.w + 6, 12);
-                if (p.hasPlant) {
-                    marioCtx.font = '22px sans-serif';
-                    marioCtx.fillText('🪴', p.x + 8, p.y - 4 + p.plantY);
+                // Animated rising bubbles or wind streaks
+                for (let k = 0; k < 5; k++) {
+                    const bx = u.x + ((k + 0.5) / 5) * u.w;
+                    const by = u.y + u.h - ((marioFrameTick * 2.2 + k * 48) % u.h);
+                    if (u.style === 'bubble') {
+                        marioCtx.strokeStyle = 'rgba(186, 230, 253, 0.85)';
+                        marioCtx.lineWidth = 2;
+                        marioCtx.beginPath();
+                        marioCtx.arc(bx, by, 5 + (k % 3) * 2, 0, Math.PI * 2);
+                        marioCtx.stroke();
+                    } else {
+                        marioCtx.strokeStyle = 'rgba(248, 250, 252, 0.65)';
+                        marioCtx.lineWidth = 2;
+                        marioCtx.beginPath();
+                        marioCtx.moveTo(bx, by);
+                        marioCtx.lineTo(bx + Math.sin(by * 0.05) * 6, by - 18);
+                        marioCtx.stroke();
+                    }
                 }
             });
 
-            // Question Blocks
-            marioBlocks.forEach(b => {
-                marioCtx.fillStyle = b.hit ? '#94a3b8' : '#f59e0b';
-                marioCtx.fillRect(b.x, b.y, b.w, b.h);
-                marioCtx.strokeStyle = '#78350f';
-                marioCtx.lineWidth = 2;
-                marioCtx.strokeRect(b.x, b.y, b.w, b.h);
-                marioCtx.fillStyle = '#ffffff';
-                marioCtx.font = 'bold 20px Fredoka';
-                marioCtx.fillText('?', b.x + 12, b.y + 25);
-            });
-
-            // Springboards
-            marioSprings.forEach(s => {
-                marioCtx.fillStyle = '#38bdf8';
-                marioCtx.fillRect(s.x, s.y, s.w, s.h);
-                marioCtx.fillStyle = '#ffffff';
-                marioCtx.fillRect(s.x, s.y + 6, s.w, 4);
-            });
-
-            // Spikes
-            marioSpikes.forEach(sp => {
-                marioCtx.fillStyle = '#ef4444';
-                for (let i = 0; i < sp.w; i += 10) {
+            // Floors & Moving Platforms
+            marioPlatforms.forEach(p => {
+                if (p.moving) {
+                    // Dotted rail guide for moving platforms
+                    marioCtx.strokeStyle = 'rgba(251, 191, 36, 0.45)';
+                    marioCtx.setLineDash([4, 4]);
                     marioCtx.beginPath();
-                    marioCtx.moveTo(sp.x + i, sp.y + sp.h);
-                    marioCtx.lineTo(sp.x + i + 5, sp.y);
-                    marioCtx.lineTo(sp.x + i + 10, sp.y + sp.h);
+                    if (p.axis === 'x') {
+                        marioCtx.moveTo(p.min + p.width / 2, p.y + p.height / 2);
+                        marioCtx.lineTo(p.max + p.width / 2, p.y + p.height / 2);
+                    } else {
+                        marioCtx.moveTo(p.x + p.width / 2, p.min + p.height / 2);
+                        marioCtx.lineTo(p.x + p.width / 2, p.max + p.height / 2);
+                    }
+                    marioCtx.stroke();
+                    marioCtx.setLineDash([]);
+
+                    marioCtx.fillStyle = '#f59e0b';
+                    marioCtx.fillRect(p.x, p.y, p.width, p.height);
+                    marioCtx.strokeStyle = '#fef08a';
+                    marioCtx.lineWidth = 2;
+                    marioCtx.strokeRect(p.x, p.y, p.width, p.height);
+                } else {
+                    marioCtx.fillStyle = theme.top;
+                    marioCtx.fillRect(p.x, p.y, p.width, 10);
+                    marioCtx.fillStyle = theme.base;
+                    marioCtx.fillRect(p.x, p.y + 10, p.width, p.height - 10);
+                }
+            });
+
+            // Crumbling Bridges
+            marioCrumbleBridges.forEach(cb => {
+                if (cb.fallen) {
+                    marioCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+                    marioCtx.setLineDash([3, 3]);
+                    marioCtx.strokeRect(cb.x, cb.y, cb.w, cb.h);
+                    marioCtx.setLineDash([]);
+                    return;
+                }
+                const shakeOffset = cb.triggered ? ((cb.timer % 4 < 2) ? -2.5 : 2.5) : 0;
+                const drawX = cb.x + shakeOffset;
+
+                if (cb.style === 'cloud') {
+                    marioCtx.fillStyle = cb.triggered ? '#fde047' : '#ffffff';
+                    marioCtx.beginPath();
+                    marioCtx.roundRect(drawX, cb.y, cb.w, cb.h, 9);
+                    marioCtx.fill();
+                } else if (cb.style === 'sand') {
+                    marioCtx.fillStyle = cb.triggered ? '#fb923c' : '#fde047';
+                    marioCtx.fillRect(drawX, cb.y, cb.w, cb.h);
+                    marioCtx.strokeStyle = '#92400e';
+                    marioCtx.strokeRect(drawX, cb.y, cb.w, cb.h);
+                } else {
+                    marioCtx.fillStyle = cb.triggered ? '#f97316' : '#b45309';
+                    marioCtx.fillRect(drawX, cb.y, cb.w, cb.h);
+                    marioCtx.strokeStyle = '#fde68a';
+                    marioCtx.strokeRect(drawX, cb.y, cb.w, cb.h);
+                }
+
+                if (cb.triggered) {
+                    const pct = Math.max(0, cb.timer / 45);
+                    marioCtx.fillStyle = '#ef4444';
+                    marioCtx.fillRect(drawX, cb.y - 6, cb.w * pct, 3);
+                }
+            });
+
+            // Pipes & Custom Vector Piranha Plants
+            marioPipes.forEach(p => {
+                if (p.hasPlant && p.plantOffset > 2) {
+                    const headY = p.y - p.plantOffset;
+                    const cx = p.x + p.w / 2;
+                    // Green Stem
+                    marioCtx.fillStyle = '#15803d';
+                    marioCtx.fillRect(cx - 3, headY + 12, 6, p.plantOffset);
+                    // Red Spotted Piranha Head
+                    marioCtx.fillStyle = '#ef4444';
+                    marioCtx.beginPath();
+                    marioCtx.arc(cx, headY + 10, 11, 0, Math.PI * 2);
+                    marioCtx.fill();
+                    // White Spots & Chomp Mouth
+                    marioCtx.fillStyle = '#ffffff';
+                    marioCtx.beginPath();
+                    marioCtx.arc(cx - 5, headY + 11, 2, 0, Math.PI * 2);
+                    marioCtx.arc(cx + 5, headY + 11, 2, 0, Math.PI * 2);
+                    marioCtx.fill();
+                    const chomp = Math.abs(Math.sin(marioFrameTick * 0.16)) * 5;
+                    marioCtx.fillStyle = '#0f172a';
+                    marioCtx.beginPath();
+                    marioCtx.moveTo(cx, headY + 8);
+                    marioCtx.lineTo(cx - 8, headY + 1 - chomp);
+                    marioCtx.lineTo(cx + 8, headY + 1 - chomp);
+                    marioCtx.closePath();
+                    marioCtx.fill();
+                }
+
+                // Pipe Body & Lip
+                marioCtx.fillStyle = '#16a34a';
+                marioCtx.fillRect(p.x + 3, p.y + 12, p.w - 6, p.h - 12);
+                marioCtx.fillStyle = '#22c55e';
+                marioCtx.fillRect(p.x, p.y, p.w, 13);
+                marioCtx.strokeStyle = '#14532d';
+                marioCtx.lineWidth = 2;
+                marioCtx.strokeRect(p.x, p.y, p.w, 13);
+                marioCtx.strokeRect(p.x + 3, p.y + 13, p.w - 6, p.h - 13);
+            });
+
+            // Question Blocks (?)
+            marioBlocks.forEach(b => {
+                const drawY = b.y + (b.bounceOffset || 0);
+                marioCtx.fillStyle = b.hit ? '#64748b' : '#f59e0b';
+                marioCtx.beginPath();
+                marioCtx.roundRect(b.x, drawY, b.w, b.h, 5);
+                marioCtx.fill();
+                marioCtx.strokeStyle = b.hit ? '#334155' : '#fef08a';
+                marioCtx.lineWidth = 2.5;
+                marioCtx.stroke();
+
+                marioCtx.fillStyle = b.hit ? '#cbd5e1' : '#ffffff';
+                marioCtx.font = 'bold 21px Fredoka';
+                marioCtx.textAlign = 'center';
+                marioCtx.fillText(b.hit ? '✓' : '?', b.x + b.w / 2, drawY + 25);
+                marioCtx.textAlign = 'left';
+            });
+
+            // Bouncy Springboards
+            marioSprings.forEach(s => {
+                const sq = s.squash || 0;
+                const topY = s.y + sq;
+                const hNow = s.h - sq;
+                // Base
+                marioCtx.fillStyle = '#475569';
+                marioCtx.fillRect(s.x + 2, s.y + s.h - 5, s.w - 4, 5);
+                // Coils
+                marioCtx.strokeStyle = '#facc15';
+                marioCtx.lineWidth = 3;
+                marioCtx.beginPath();
+                marioCtx.moveTo(s.x + 6, topY + 5);
+                marioCtx.lineTo(s.x + s.w - 6, topY + hNow * 0.5);
+                marioCtx.lineTo(s.x + 6, s.y + s.h - 5);
+                marioCtx.stroke();
+                // Red Bounce Cap
+                marioCtx.fillStyle = '#ef4444';
+                marioCtx.beginPath();
+                marioCtx.roundRect(s.x, topY, s.w, 6, 3);
+                marioCtx.fill();
+            });
+
+            // Floor Spikes with Warning Base
+            marioSpikes.forEach(sp => {
+                marioCtx.fillStyle = '#334155';
+                marioCtx.fillRect(sp.x, sp.y + sp.h - 4, sp.w, 4);
+                marioCtx.fillStyle = '#ef4444';
+                for (let i = 0; i < sp.w; i += 9) {
+                    marioCtx.beginPath();
+                    marioCtx.moveTo(sp.x + i, sp.y + sp.h - 4);
+                    marioCtx.lineTo(sp.x + i + 4.5, sp.y);
+                    marioCtx.lineTo(sp.x + i + 9, sp.y + sp.h - 4);
                     marioCtx.fill();
                 }
             });
 
-            // Rotating Fire Bars
-            marioFireBars.forEach(fb => {
-                marioCtx.fillStyle = '#78350f';
-                marioCtx.fillRect(fb.cx, fb.cy, 36, 36);
-                for (let r = 14; r <= 65; r += 16) {
-                    const fx = fb.cx + 18 + Math.cos(fb.angle) * r;
-                    const fy = fb.cy + 18 + Math.sin(fb.angle) * r;
-                    marioCtx.font = '16px sans-serif';
-                    marioCtx.fillText('🔥', fx - 8, fy + 8);
+            // Telegraphed Stone Thwomps & Landing Pad Guide
+            marioThwomps.forEach(th => {
+                // Striped Landing Pad Indicator on ground
+                marioCtx.fillStyle = 'rgba(250, 204, 21, 0.35)';
+                marioCtx.fillRect(th.x, th.floorY - 4, th.w, 4);
+
+                const tx = th.x + (th.shakeX || 0);
+                marioCtx.fillStyle = th.state === 'warn' ? '#64748b' : '#475569';
+                marioCtx.beginPath();
+                marioCtx.roundRect(tx, th.y, th.w, th.h, 6);
+                marioCtx.fill();
+                marioCtx.strokeStyle = th.state === 'warn' ? '#facc15' : '#94a3b8';
+                marioCtx.lineWidth = 2.5;
+                marioCtx.stroke();
+
+                // Angry Stone Eyes
+                marioCtx.fillStyle = '#facc15';
+                marioCtx.fillRect(tx + 9, th.y + 15, 9, 7);
+                marioCtx.fillRect(tx + th.w - 18, th.y + 15, 9, 7);
+                marioCtx.fillStyle = '#0f172a';
+                marioCtx.fillRect(tx + 12, th.y + 17, 4, 4);
+                marioCtx.fillRect(tx + th.w - 15, th.y + 17, 4, 4);
+
+                if (th.state === 'warn') {
+                    marioCtx.fillStyle = '#facc15';
+                    marioCtx.font = 'bold 18px Fredoka';
+                    marioCtx.textAlign = 'center';
+                    marioCtx.fillText('!', tx + th.w / 2, th.y - 6);
+                    marioCtx.textAlign = 'left';
                 }
+            });
+
+            // Anchored Rotating Fire Bars
+            marioFireBars.forEach(fb => {
+                // Solid Stone Anchor Pedestal
+                marioCtx.fillStyle = '#334155';
+                marioCtx.fillRect(fb.cx, fb.cy, fb.w, fb.h);
+                marioCtx.strokeStyle = '#94a3b8';
+                marioCtx.lineWidth = 2;
+                marioCtx.strokeRect(fb.cx, fb.cy, fb.w, fb.h);
+                marioCtx.fillStyle = '#f59e0b';
+                marioCtx.beginPath();
+                marioCtx.arc(fb.cx + fb.w / 2, fb.cy + fb.h / 2, 5, 0, Math.PI * 2);
+                marioCtx.fill();
+
+                const count = fb.radiusCount || 3;
+                for (let idx = 1; idx <= count; idx++) {
+                    const r = idx * 18;
+                    const fx = fb.cx + fb.w / 2 + Math.cos(fb.angle) * r;
+                    const fy = fb.cy + fb.h / 2 + Math.sin(fb.angle) * r;
+                    marioCtx.fillStyle = '#ef4444';
+                    marioCtx.beginPath();
+                    marioCtx.arc(fx, fy, 8, 0, Math.PI * 2);
+                    marioCtx.fill();
+                    marioCtx.fillStyle = '#fde047';
+                    marioCtx.beginPath();
+                    marioCtx.arc(fx, fy, 4, 0, Math.PI * 2);
+                    marioCtx.fill();
+                }
+            });
+
+            // Jumping Lava Bubbles (Podoboos)
+            marioLavaBubbles.forEach(lb => {
+                if (!lb.active) return;
+                marioCtx.fillStyle = '#f97316';
+                marioCtx.beginPath();
+                marioCtx.arc(lb.x + 12, lb.y + 12, 11, 0, Math.PI * 2);
+                marioCtx.fill();
+                marioCtx.fillStyle = '#fef08a';
+                marioCtx.beginPath();
+                marioCtx.arc(lb.x + 12, lb.y + 12, 6, 0, Math.PI * 2);
+                marioCtx.fill();
             });
 
             // Coins
             marioCoins.forEach(c => {
                 if (!c.collected) {
+                    const bob = Math.sin(marioFrameTick * 0.1 + (c.bobPhase || 0)) * 3;
                     marioCtx.fillStyle = '#facc15';
                     marioCtx.beginPath();
-                    marioCtx.arc(c.x, c.y, 8, 0, Math.PI * 2);
+                    marioCtx.arc(c.x, c.y + bob, 8.5, 0, Math.PI * 2);
                     marioCtx.fill();
+                    marioCtx.strokeStyle = '#fef08a';
+                    marioCtx.lineWidth = 2;
+                    marioCtx.stroke();
                 }
             });
 
-            // Enemies
+            // Custom Vector Enemies (Goombas, Koopas, Flutter Bats)
             marioMonsters.forEach(m => {
-                if (m.alive) {
-                    marioCtx.font = '24px sans-serif';
-                    marioCtx.fillText(m.emoji, m.x, m.y + 24);
+                if (!m.alive) return;
+                if (m.kind === 'goomba') {
+                    // Mushroom Cap
+                    marioCtx.fillStyle = '#92400e';
+                    marioCtx.beginPath();
+                    marioCtx.arc(m.x + 15, m.y + 13, 14, Math.PI, 0);
+                    marioCtx.fill();
+                    // Stem & Eyes
+                    marioCtx.fillStyle = '#fed7aa';
+                    marioCtx.fillRect(m.x + 7, m.y + 13, 16, 10);
+                    marioCtx.fillStyle = '#0f172a';
+                    marioCtx.fillRect(m.x + 10, m.y + 14, 3, 5);
+                    marioCtx.fillRect(m.x + 17, m.y + 14, 3, 5);
+                    // Feet
+                    const step = Math.sin(marioFrameTick * 0.2) * 2;
+                    marioCtx.fillStyle = '#451a03';
+                    marioCtx.fillRect(m.x + 4, m.y + 23 + step, 9, 5);
+                    marioCtx.fillRect(m.x + 17, m.y + 23 - step, 9, 5);
+                } else if (m.kind === 'koopa') {
+                    // Green Shell
+                    marioCtx.fillStyle = '#16a34a';
+                    marioCtx.beginPath();
+                    marioCtx.arc(m.x + 15, m.y + 20, 13, Math.PI, 0);
+                    marioCtx.fill();
+                    marioCtx.fillStyle = '#fef08a';
+                    marioCtx.fillRect(m.x + 3, m.y + 20, 24, 5);
+                    // Head
+                    const headX = m.dir === 1 ? m.x + 22 : m.x + 2;
+                    marioCtx.fillStyle = '#facc15';
+                    marioCtx.beginPath();
+                    marioCtx.arc(headX + 3, m.y + 11, 6, 0, Math.PI * 2);
+                    marioCtx.fill();
+                    // Feet
+                    marioCtx.fillStyle = '#ea580c';
+                    marioCtx.fillRect(m.x + 6, m.y + 25, 7, 8);
+                    marioCtx.fillRect(m.x + 17, m.y + 25, 7, 8);
+                } else if (m.kind === 'bat') {
+                    const flap = Math.sin(marioFrameTick * 0.35) * 8;
+                    marioCtx.fillStyle = '#7e22ce';
+                    // Wings
+                    marioCtx.beginPath();
+                    marioCtx.moveTo(m.x + 16, m.y + 12);
+                    marioCtx.lineTo(m.x - 4, m.y + 4 + flap);
+                    marioCtx.lineTo(m.x + 6, m.y + 18);
+                    marioCtx.moveTo(m.x + 16, m.y + 12);
+                    marioCtx.lineTo(m.x + 36, m.y + 4 + flap);
+                    marioCtx.lineTo(m.x + 26, m.y + 18);
+                    marioCtx.fill();
+                    // Body & Glowing Eyes
+                    marioCtx.beginPath();
+                    marioCtx.arc(m.x + 16, m.y + 13, 9, 0, Math.PI * 2);
+                    marioCtx.fill();
+                    marioCtx.fillStyle = '#facc15';
+                    marioCtx.fillRect(m.x + 12, m.y + 10, 3, 3);
+                    marioCtx.fillRect(m.x + 18, m.y + 10, 3, 3);
                 }
             });
 
-            // Projectiles
+            // Mini-Bowser Boss (World 8-4 & Endless)
+            if (marioBoss && marioBoss.alive) {
+                if (marioBoss.hurtTimer % 4 < 2) {
+                    // Spiked Shell
+                    marioCtx.fillStyle = '#15803d';
+                    marioCtx.beginPath();
+                    marioCtx.arc(marioBoss.x + 26, marioBoss.y + 30, 22, 0, Math.PI * 2);
+                    marioCtx.fill();
+                    // Shell Spikes
+                    marioCtx.fillStyle = '#ffffff';
+                    marioCtx.beginPath();
+                    marioCtx.moveTo(marioBoss.x + 22, marioBoss.y + 10);
+                    marioCtx.lineTo(marioBoss.x + 27, marioBoss.y + 1);
+                    marioCtx.lineTo(marioBoss.x + 32, marioBoss.y + 10);
+                    marioCtx.fill();
+                    // Dragon Head & Horns
+                    const headX = marioBoss.dir === -1 ? marioBoss.x + 6 : marioBoss.x + 38;
+                    marioCtx.fillStyle = '#facc15';
+                    marioCtx.beginPath();
+                    marioCtx.arc(headX, marioBoss.y + 16, 13, 0, Math.PI * 2);
+                    marioCtx.fill();
+                    marioCtx.fillStyle = '#ef4444';
+                    marioCtx.fillRect(headX - 6, marioBoss.y + 2, 12, 5);
+                }
+                // Boss HP Bar
+                marioCtx.fillStyle = '#0f172a';
+                marioCtx.fillRect(marioBoss.x, marioBoss.y - 16, marioBoss.width, 7);
+                marioCtx.fillStyle = '#ef4444';
+                marioCtx.fillRect(marioBoss.x + 1, marioBoss.y - 15, (marioBoss.width - 2) * (marioBoss.hp / marioBoss.maxHp), 5);
+            }
+
+            // Fireball Projectiles
             marioProjectiles.forEach(p => {
-                marioCtx.font = '20px sans-serif';
-                marioCtx.fillText(p.emoji, p.x, p.y + 12);
+                marioCtx.fillStyle = p.fromBoss ? '#a855f7' : '#f97316';
+                marioCtx.beginPath();
+                marioCtx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+                marioCtx.fill();
+                marioCtx.fillStyle = '#fef08a';
+                marioCtx.beginPath();
+                marioCtx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+                marioCtx.fill();
             });
 
-            // End-of-level Flagpole
+            // Midway Checkpoint Flag
+            if (marioCheckpoint) {
+                marioCtx.fillStyle = '#cbd5e1';
+                marioCtx.fillRect(marioCheckpoint.x, marioCheckpoint.y, 5, marioCheckpoint.h);
+                marioCtx.fillStyle = marioCheckpoint.activated ? '#10b981' : '#64748b';
+                marioCtx.beginPath();
+                marioCtx.moveTo(marioCheckpoint.x + 5, marioCheckpoint.y + 4);
+                marioCtx.lineTo(marioCheckpoint.x + 30, marioCheckpoint.y + 14);
+                marioCtx.lineTo(marioCheckpoint.x + 5, marioCheckpoint.y + 24);
+                marioCtx.fill();
+            }
+
+            // End-of-level Victory Flagpole & Castle
             marioCtx.fillStyle = '#cbd5e1';
             marioCtx.fillRect(marioFlag.x, marioFlag.y, 6, marioFlag.height);
+            marioCtx.fillStyle = '#facc15';
+            marioCtx.beginPath();
+            marioCtx.arc(marioFlag.x + 3, marioFlag.y, 7, 0, Math.PI * 2);
+            marioCtx.fill();
             marioCtx.fillStyle = '#ef4444';
-            marioCtx.fillRect(marioFlag.x + 6, marioFlag.y, 30, 20);
+            marioCtx.fillRect(marioFlag.x + 6, marioFlag.y + 6, 32, 22);
+
+            // Particles
+            marioParticles.forEach(pt => {
+                marioCtx.fillStyle = pt.color;
+                marioCtx.fillRect(pt.x, pt.y, pt.size, pt.size);
+            });
 
             // Draw Mario Character Sprite
             if (mario.invincibleTimer % 4 < 2) {
                 drawMarioSprite(marioCtx, mario.x, mario.y, mario.width, mario.height, mario.facing, mario.grounded, mario.state);
             }
 
+            // Floating In-Canvas Feedback Popups
+            marioPopups.forEach(pop => {
+                marioCtx.font = 'bold 14px Fredoka';
+                marioCtx.fillStyle = '#0f172a';
+                marioCtx.fillText(pop.text, pop.x + 1, pop.y + 1);
+                marioCtx.fillStyle = pop.color;
+                marioCtx.fillText(pop.text, pop.x, pop.y);
+            });
+
             marioCtx.restore();
+
+            // Level Progress Bar at Top of Canvas
+            const progressPct = Math.min(1, Math.max(0, mario.x / marioFlag.x));
+            marioCtx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+            marioCtx.fillRect(14, 10, marioCanvas.width - 28, 7);
+            marioCtx.fillStyle = '#facc15';
+            marioCtx.fillRect(14, 10, (marioCanvas.width - 28) * progressPct, 7);
         }
 
         let praiseCallback = null;
@@ -3008,12 +4171,8 @@
                 tipEl.className = 'bg-violet-500/20 text-violet-200 border border-violet-400/50 text-xs sm:text-sm font-black px-3.5 py-1 rounded-full';
             }
 
-            // Build sentence with 2 interactive placement slots:
-            // Slot 'correct' is right after subject (before action verb OR after 'is')
-            // Slot 'wrong' is at the end of the sentence (or before 'is')
             const box = document.getElementById('freqorder-sentence-box');
             if (q.ruleType === 'tobe') {
-                // e.g., "He" [wrong slot] "is" [correct slot] "cheerful."
                 const parts = q.subject.split(' ');
                 const pronoun = parts[0];
                 const beVerb = parts.slice(1).join(' ');
@@ -3029,7 +4188,6 @@
                     <span>${q.verbOrRest}</span>
                 `;
             } else {
-                // e.g., "He" [correct slot] "shouts at others." [wrong slot]
                 box.innerHTML = `
                     <span>${q.subject}</span>
                     <button id="freqorder-correct-slot" onclick="handleFreqOrderSlot(true, this)" class="px-3 py-1 rounded-xl border-2 border-dashed border-violet-400 bg-violet-500/15 hover:bg-violet-500/30 text-violet-300 text-sm sm:text-base font-black transition active:scale-95">
