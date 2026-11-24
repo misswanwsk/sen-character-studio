@@ -139,9 +139,10 @@
             <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-extrabold">
                 <span class="hidden sm:inline text-slate-400 px-1">Topic:</span>
                 <select id="category-select" onchange="changeCategory(this.value)" class="bg-slate-900 text-amber-300 font-black px-2 py-0.5 rounded-lg border border-slate-700 focus:outline-none cursor-pointer">
-                    <option value="all">🌟 All Vocabulary (10)</option>
+                    <option value="all">🌟 All Vocabulary (13)</option>
                     <option value="caring">💖 Caring & Social (5)</option>
                     <option value="work">💼 Work & Smart (5)</option>
+                    <option value="frequency">📊 Adverbs of Frequency (3)</option>
                 </select>
             </div>
 
@@ -197,6 +198,12 @@
                 <button onclick="switchTab('mario')" id="tab-mario" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-amber-300 hover:text-white flex items-center gap-1">
                     🍄 10. super mario
                 </button>
+                <button onclick="switchTab('freqscale')" id="tab-freqscale" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-lime-300 hover:text-white flex items-center gap-1">
+                    📊 11. frequency scale
+                </button>
+                <button onclick="switchTab('freqorder')" id="tab-freqorder" class="tab-btn px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold text-violet-300 hover:text-white flex items-center gap-1">
+                    🎯 12. word order
+                </button>
             </div>
         </nav>
     </header>
@@ -213,6 +220,58 @@
                         <h2 class="text-base sm:text-lg font-black text-amber-300">Character & Personality Flashcards</h2>
                         <p class="text-xs text-slate-400">Tap any word card to enlarge, listen to pronunciation, and read example sentences!</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Interactive Adverbs of Frequency Grammar Banner (less -> more) -->
+            <div class="bg-slate-900 border-2 border-lime-500/40 p-3 sm:p-4 rounded-2xl shadow space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <h3 class="text-sm sm:text-base font-black text-lime-300 flex items-center gap-1.5">
+                            <span>📊 Adverbs of Frequency</span>
+                            <span class="text-[11px] bg-lime-400/20 text-lime-200 border border-lime-400/40 px-2 py-0.5 rounded-full">How often things happen</span>
+                        </h3>
+                        <p class="text-xs text-slate-300 font-bold">We use adverbs of frequency to talk about how often things happen. Tap a card to listen!</p>
+                    </div>
+                    <button onclick="speakText('We use adverbs of frequency to talk about how often things happen. Never, zero percent. Sometimes, fifty percent. Always, one hundred percent.')" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs shadow active:scale-95 transition">
+                        🔊 Listen Rule
+                    </button>
+                </div>
+
+                <!-- Visual Gradient Scale Bar: less -> more -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between text-xs font-black px-1">
+                        <span class="text-lime-200">◀ less (0%)</span>
+                        <span class="text-lime-300">more (100%) ▶</span>
+                    </div>
+                    <div class="h-3.5 w-full rounded-full bg-gradient-to-r from-lime-200 via-lime-400 to-emerald-600 border border-slate-700 shadow-inner"></div>
+                </div>
+
+                <!-- 3 Model Sentences from Textbook -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                    <button onclick="speakText('never. He never shouts at others.')" class="bg-lime-200/15 hover:bg-lime-200/25 border-2 border-lime-300/50 rounded-2xl p-2.5 text-left transition active:scale-95">
+                        <div class="flex items-center justify-between">
+                            <span class="text-base font-black text-lime-200">never</span>
+                            <span class="text-[11px] font-black bg-slate-950 text-lime-200 px-2 py-0.5 rounded-full">0% 🔊</span>
+                        </div>
+                        <p class="text-xs sm:text-sm font-extrabold text-slate-100 mt-1">He <span class="underline decoration-lime-300 decoration-2 text-lime-200">never</span> shouts at others.</p>
+                    </button>
+
+                    <button onclick="speakText('sometimes. He sometimes helps the teacher.')" class="bg-lime-400/15 hover:bg-lime-400/25 border-2 border-lime-400/60 rounded-2xl p-2.5 text-left transition active:scale-95">
+                        <div class="flex items-center justify-between">
+                            <span class="text-base font-black text-lime-300">sometimes</span>
+                            <span class="text-[11px] font-black bg-slate-950 text-lime-300 px-2 py-0.5 rounded-full">50% 🔊</span>
+                        </div>
+                        <p class="text-xs sm:text-sm font-extrabold text-slate-100 mt-1">He <span class="underline decoration-lime-400 decoration-2 text-lime-300">sometimes</span> helps the teacher.</p>
+                    </button>
+
+                    <button onclick="speakText('always. He is always cheerful.')" class="bg-emerald-500/20 hover:bg-emerald-500/30 border-2 border-emerald-400/70 rounded-2xl p-2.5 text-left transition active:scale-95">
+                        <div class="flex items-center justify-between">
+                            <span class="text-base font-black text-emerald-300">always</span>
+                            <span class="text-[11px] font-black bg-slate-950 text-emerald-300 px-2 py-0.5 rounded-full">100% 🔊</span>
+                        </div>
+                        <p class="text-xs sm:text-sm font-extrabold text-slate-100 mt-1">He is <span class="underline decoration-emerald-400 decoration-2 text-emerald-300">always</span> cheerful.</p>
+                    </button>
                 </div>
             </div>
 
@@ -474,6 +533,117 @@
                         <button id="btn-jump" class="bg-red-500 active:bg-red-600 text-white text-xs font-black px-4 py-3 rounded-full shadow border-2 border-red-300 flex items-center justify-center touch-btn">JUMP ⬆</button>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- MODULE 11: ADVERBS OF FREQUENCY SCALE GAME -->
+        <section id="view-freqscale" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-lime-500/40 p-3 rounded-2xl flex flex-wrap justify-between items-center gap-2">
+                <div>
+                    <h2 class="text-lg font-black text-lime-300">📊 11. Frequency Scale (never • sometimes • always)</h2>
+                    <p class="text-xs text-slate-400">Look at how often the character does each action, then tap the matching adverb on the scale!</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="freqscale-counter" class="text-xs font-black text-lime-300 bg-slate-950 px-2.5 py-1 rounded-xl border border-slate-800">1/9</span>
+                    <button onclick="nextFreqScaleQuestion()" class="bg-lime-500 hover:bg-lime-400 text-slate-950 font-black px-3 py-1 rounded-xl text-xs shadow">↻ Next Habit</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border-4 border-slate-800 p-4 sm:p-6 rounded-3xl shadow-lg space-y-4">
+                <!-- Visual Character Habit Card & Weekly Frequency Meter -->
+                <div class="bg-slate-950 border-2 border-slate-800 p-4 rounded-2xl flex flex-col sm:flex-row items-center gap-4">
+                    <div id="freqscale-svg" class="w-28 h-28 shrink-0 flex items-center justify-center"></div>
+
+                    <div class="flex-1 text-center sm:text-left space-y-2.5 w-full">
+                        <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2">
+                            <span id="freqscale-clue-badge" class="bg-lime-400/20 text-lime-300 border border-lime-400/40 text-xs font-black px-3 py-1 rounded-full">
+                                7 out of 7 days (Every time!)
+                            </span>
+                            <button onclick="speakFreqScalePrompt()" class="bg-sky-600 hover:bg-sky-500 text-white font-black text-xs px-3 py-1 rounded-xl shadow">
+                                🔊 Listen Clue
+                            </button>
+                        </div>
+
+                        <!-- 7-Day Visual Dots Tracker (Hidden in Hard Mode for extra challenge) -->
+                        <div id="freqscale-dots-row" class="flex items-center justify-center sm:justify-start gap-1.5"></div>
+
+                        <!-- Target Sentence with Blank -->
+                        <div id="freqscale-sentence" class="text-lg sm:text-2xl font-black text-slate-100 leading-snug">
+                            He <span class="inline-block border-b-4 border-lime-400 text-lime-300 px-3">_____</span> helps the teacher.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive less -> more Frequency Scale Selector -->
+                <div class="bg-slate-950/90 border-2 border-slate-800 p-4 rounded-2xl space-y-3">
+                    <div class="flex items-center justify-between text-xs font-black px-1">
+                        <span class="text-lime-200">◀ less (0%)</span>
+                        <span class="text-slate-400">Tap the correct adverb of frequency</span>
+                        <span class="text-emerald-300">more (100%) ▶</span>
+                    </div>
+
+                    <div class="h-3 w-full rounded-full bg-gradient-to-r from-lime-200 via-lime-400 to-emerald-600"></div>
+
+                    <div id="freqscale-options" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                        <button onclick="handleFreqScaleAnswer('never', this)" class="bg-slate-900 hover:bg-lime-200/20 border-2 border-lime-300/60 text-lime-200 font-black py-3.5 px-4 rounded-2xl shadow transition active:scale-95 flex flex-col items-center gap-1">
+                            <span class="text-xl sm:text-2xl">never</span>
+                            <span class="text-[11px] font-bold text-slate-400">0% • Not at all</span>
+                        </button>
+
+                        <button onclick="handleFreqScaleAnswer('sometimes', this)" class="bg-slate-900 hover:bg-lime-400/20 border-2 border-lime-400/70 text-lime-300 font-black py-3.5 px-4 rounded-2xl shadow transition active:scale-95 flex flex-col items-center gap-1">
+                            <span class="text-xl sm:text-2xl">sometimes</span>
+                            <span class="text-[11px] font-bold text-slate-400">50% • On some days</span>
+                        </button>
+
+                        <button onclick="handleFreqScaleAnswer('always', this)" class="bg-slate-900 hover:bg-emerald-500/20 border-2 border-emerald-400/80 text-emerald-300 font-black py-3.5 px-4 rounded-2xl shadow transition active:scale-95 flex flex-col items-center gap-1">
+                            <span class="text-xl sm:text-2xl">always</span>
+                            <span class="text-[11px] font-bold text-slate-400">100% • Every time</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 12: ADVERBS OF FREQUENCY WORD ORDER BUILDER -->
+        <section id="view-freqorder" class="tab-view hidden space-y-3">
+            <div class="bg-slate-900 border-2 border-violet-500/40 p-3 rounded-2xl flex flex-wrap justify-between items-center gap-2">
+                <div>
+                    <h2 class="text-lg font-black text-violet-300">🎯 12. Adverbs of Frequency Word Order</h2>
+                    <p class="text-xs text-slate-400">Put the adverb <strong>BEFORE</strong> action verbs (<em>He never shouts</em>) and <strong>AFTER</strong> <em>is / am / are</em> (<em>He is always cheerful</em>)!</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="freqorder-counter" class="text-xs font-black text-violet-300 bg-slate-950 px-2.5 py-1 rounded-xl border border-slate-800">1/10</span>
+                    <button onclick="nextFreqOrderQuestion()" class="bg-violet-500 hover:bg-violet-400 text-slate-950 font-black px-3 py-1 rounded-xl text-xs shadow">↻ Next Sentence</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border-4 border-slate-800 p-4 sm:p-6 rounded-3xl shadow-lg space-y-5 text-center">
+                <!-- Grammar Rule Tip Pill -->
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <span id="freqorder-grammar-tip" class="bg-violet-500/20 text-violet-200 border border-violet-400/50 text-xs sm:text-sm font-black px-3.5 py-1 rounded-full">
+                        💡 Rule: Put BEFORE the action verb!
+                    </span>
+                    <button onclick="speakFreqOrderSentence()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-3 py-1 rounded-xl shadow">
+                        🔊 Hear Target Sentence
+                    </button>
+                </div>
+
+                <!-- Illustration + Target Adverb Tile -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <div id="freqorder-svg" class="w-24 h-24 shrink-0 flex items-center justify-center"></div>
+
+                    <div class="bg-slate-950 border-2 border-amber-400/60 px-5 py-3 rounded-2xl shadow-inner">
+                        <span class="text-[11px] font-bold text-slate-400 block uppercase tracking-wider">Place this adverb in the right spot:</span>
+                        <span id="freqorder-target-adverb" class="text-2xl sm:text-3xl font-black text-amber-300 tracking-wide">always</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Sentence with 2 Clickable Position Slots -->
+                <div id="freqorder-sentence-box" class="bg-slate-950 border-2 border-slate-800 p-4 sm:p-5 rounded-2xl flex flex-wrap items-center justify-center gap-2 text-lg sm:text-2xl font-black text-slate-100">
+                    <!-- Dynamic words and position buttons -->
+                </div>
+
+                <p class="text-xs text-slate-400 font-bold">Tap the glowing <span class="text-violet-300">[ + place here ]</span> box in the correct position!</p>
             </div>
         </section>
 
@@ -777,6 +947,68 @@
                     <circle cx="50" cy="74" r="5" fill="#38bdf8"/>
                     <rect x="52" y="64" width="24" height="20" rx="3" fill="#22c55e"/>
                     <circle cx="50" cy="74" r="4.5" fill="#38bdf8"/>
+                </svg>`
+            },
+            {
+                id: 'never',
+                term: 'never',
+                category: 'frequency',
+                sentence: 'He never shouts at others.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#0f172a"/>
+                    <!-- 0% Frequency Gauge -->
+                    <rect x="16" y="18" width="68" height="14" rx="7" fill="#1e293b" stroke="#bef264" stroke-width="2.5"/>
+                    <circle cx="24" cy="25" r="5" fill="#d9f99d"/>
+                    <text x="54" y="29" font-size="11" font-weight="900" fill="#d9f99d" text-anchor="middle">0% • LESS</text>
+                    <!-- Calm Polite Student -->
+                    <circle cx="42" cy="58" r="16" fill="#fed7aa"/>
+                    <path d="M27 54 C28 42, 56 42, 57 54 Z" fill="#78350f"/>
+                    <circle cx="37" cy="57" r="2" fill="#1e293b"/>
+                    <circle cx="47" cy="57" r="2" fill="#1e293b"/>
+                    <path d="M37 64 Q42 68 47 64" stroke="#1e293b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                    <!-- No-Shouting Badge -->
+                    <circle cx="72" cy="64" r="14" fill="#1e293b" stroke="#ef4444" stroke-width="3.5"/>
+                    <line x1="63" y1="55" x2="81" y2="73" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>`
+            },
+            {
+                id: 'sometimes',
+                term: 'sometimes',
+                category: 'frequency',
+                sentence: 'He sometimes helps the teacher.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#0f172a"/>
+                    <!-- 50% Half-Filled Frequency Gauge -->
+                    <rect x="16" y="18" width="68" height="14" rx="7" fill="#1e293b" stroke="#a3e635" stroke-width="2.5"/>
+                    <rect x="18" y="20" width="32" height="10" rx="5" fill="#a3e635"/>
+                    <text x="66" y="29" font-size="10" font-weight="900" fill="#bef264" text-anchor="middle">50%</text>
+                    <!-- 4-Day Mini Calendar (2 Checked, 2 Unchecked) -->
+                    <rect x="20" y="42" width="26" height="20" rx="4" fill="#22c55e"/>
+                    <path d="M28 52 L32 56 L39 48" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect x="54" y="42" width="26" height="20" rx="4" fill="#334155" stroke="#64748b" stroke-width="2"/>
+                    <rect x="20" y="67" width="26" height="20" rx="4" fill="#334155" stroke="#64748b" stroke-width="2"/>
+                    <rect x="54" y="67" width="26" height="20" rx="4" fill="#22c55e"/>
+                    <path d="M62 77 L66 81 L73 73" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>`
+            },
+            {
+                id: 'always',
+                term: 'always',
+                category: 'frequency',
+                sentence: 'He is always cheerful.',
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="46" fill="#0f172a"/>
+                    <!-- 100% Full Green Frequency Gauge -->
+                    <rect x="16" y="18" width="68" height="14" rx="7" fill="#10b981" stroke="#6ee7b7" stroke-width="2.5"/>
+                    <text x="50" y="29" font-size="10.5" font-weight="900" fill="#ffffff" text-anchor="middle">100% • MORE</text>
+                    <!-- Bright Smiling Sun Face -->
+                    <circle cx="50" cy="60" r="22" fill="#fde047" stroke="#f59e0b" stroke-width="3"/>
+                    <path d="M39 55 Q43 50 47 55" stroke="#78350f" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+                    <path d="M53 55 Q57 50 61 55" stroke="#78350f" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+                    <path d="M40 64 Q50 75 60 64 Z" fill="#ef4444" stroke="#78350f" stroke-width="2"/>
+                    <!-- Sparkle Stars -->
+                    <polygon points="22,42 24,47 29,47 25,50 26,55 22,52 18,55 19,50 15,47 20,47" fill="#34d399"/>
+                    <polygon points="78,42 80,47 85,47 81,50 82,55 78,52 74,55 75,50 71,47 76,47" fill="#34d399"/>
                 </svg>`
             }
         ];
@@ -1099,7 +1331,7 @@
 
         function switchTab(tabId) {
             currentTab = tabId;
-            const tabs = ['learn', 'match', 'blanks', 'unscramble', 'listen', 'seq', 'dialfill', 'arcade', 'conveyor', 'mario'];
+            const tabs = ['learn', 'match', 'blanks', 'unscramble', 'listen', 'seq', 'dialfill', 'arcade', 'conveyor', 'mario', 'freqscale', 'freqorder'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
                 const view = document.getElementById(`view-${t}`);
@@ -1119,6 +1351,8 @@
             else if (tabId === 'seq') initDialogueSeqGame();
             else if (tabId === 'dialfill') initDialogueFillGame();
             else if (tabId === 'mario') setTimeout(() => initMarioGame(currentMarioLevel), 100);
+            else if (tabId === 'freqscale') initFreqScaleGame();
+            else if (tabId === 'freqorder') initFreqOrderGame();
             else loadCurrentQuestion();
         }
 
@@ -2509,6 +2743,332 @@
                 cb();
             } else {
                 loadCurrentQuestion();
+            }
+        }
+
+        /* -------------------------------------------------------------
+           9. MODULE 11 & 12: ADVERBS OF FREQUENCY GAMES
+        ------------------------------------------------------------- */
+        const FREQ_SCALE_QUESTIONS = [
+            {
+                adverb: 'never',
+                days: 0,
+                clue: '0 out of 7 days (Not even once!)',
+                beforeBlank: 'He',
+                afterBlank: 'shouts at others.',
+                spokenClue: 'Zero days a week. He blank shouts at others.',
+                vocabId: 'never'
+            },
+            {
+                adverb: 'sometimes',
+                days: 3,
+                clue: '3 out of 7 days (On some days)',
+                beforeBlank: 'He',
+                afterBlank: 'helps the teacher.',
+                spokenClue: 'Three days a week. He blank helps the teacher.',
+                vocabId: 'sometimes'
+            },
+            {
+                adverb: 'always',
+                days: 7,
+                clue: '7 out of 7 days (Every single day!)',
+                beforeBlank: 'He is',
+                afterBlank: 'cheerful.',
+                spokenClue: 'Seven days a week. He is blank cheerful.',
+                vocabId: 'always'
+            },
+            {
+                adverb: 'always',
+                days: 7,
+                clue: '7 out of 7 days (Every morning before the bell!)',
+                beforeBlank: 'Sarah is',
+                afterBlank: 'punctual for school.',
+                spokenClue: 'Seven days a week. Sarah is blank punctual for school.',
+                vocabId: 'punctual'
+            },
+            {
+                adverb: 'never',
+                days: 0,
+                clue: '0 out of 7 days (She keeps every promise!)',
+                beforeBlank: 'A loyal friend',
+                afterBlank: 'breaks a promise.',
+                spokenClue: 'Zero days a week. A loyal friend blank breaks a promise.',
+                vocabId: 'loyal'
+            },
+            {
+                adverb: 'sometimes',
+                days: 4,
+                clue: '4 out of 7 days (Half of the week)',
+                beforeBlank: 'Maya',
+                afterBlank: 'shares her snacks with classmates.',
+                spokenClue: 'Four days a week. Maya blank shares her snacks with classmates.',
+                vocabId: 'generous'
+            },
+            {
+                adverb: 'always',
+                days: 7,
+                clue: '7 out of 7 days (Every evening!)',
+                beforeBlank: 'Ken',
+                afterBlank: 'practices his reading every evening.',
+                spokenClue: 'Seven days a week. Ken blank practices his reading every evening.',
+                vocabId: 'hardworking'
+            },
+            {
+                adverb: 'never',
+                days: 0,
+                clue: '0 out of 7 days (He stays modest and thanks his team!)',
+                beforeBlank: 'Sam is humble and',
+                afterBlank: 'boasts about winning.',
+                spokenClue: 'Zero days a week. Sam is humble and blank boasts about winning.',
+                vocabId: 'humble'
+            },
+            {
+                adverb: 'sometimes',
+                days: 3,
+                clue: '3 out of 7 days (When puzzles are extra tricky)',
+                beforeBlank: 'Leo',
+                afterBlank: 'helps friends solve tricky puzzles.',
+                spokenClue: 'Three days a week. Leo blank helps friends solve tricky puzzles.',
+                vocabId: 'clever'
+            }
+        ];
+
+        let freqScaleIndex = 0;
+        let freqScaleLocked = false;
+
+        function nextFreqScaleQuestion() {
+            freqScaleIndex = (freqScaleIndex + 1) % FREQ_SCALE_QUESTIONS.length;
+            initFreqScaleGame();
+        }
+
+        function initFreqScaleGame() {
+            freqScaleLocked = false;
+            const q = FREQ_SCALE_QUESTIONS[freqScaleIndex];
+            const item = GAME_DATA.find(w => w.id === q.vocabId) || GAME_DATA[0];
+
+            document.getElementById('freqscale-counter').innerText = `${freqScaleIndex + 1}/${FREQ_SCALE_QUESTIONS.length}`;
+            document.getElementById('freqscale-svg').innerHTML = item.svg;
+            document.getElementById('freqscale-clue-badge').innerText = q.clue;
+
+            // Render 7-day visual dots (shown on Easy & Medium, hidden on Hard)
+            const dotsRow = document.getElementById('freqscale-dots-row');
+            if (currentDifficulty === 3) {
+                dotsRow.innerHTML = `<span class="text-xs font-extrabold text-amber-300">⭐⭐⭐ Hard Mode: Read the sentence clue carefully!</span>`;
+            } else {
+                const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                dotsRow.innerHTML = dayNames.map((d, idx) => {
+                    const active = idx < q.days;
+                    return `<span class="px-2 py-0.5 rounded-lg text-[11px] font-black border ${active ? 'bg-emerald-500 text-slate-950 border-emerald-300' : 'bg-slate-900 text-slate-500 border-slate-700'}">${d} ${active ? '✓' : '·'}</span>`;
+                }).join('');
+            }
+
+            document.getElementById('freqscale-sentence').innerHTML =
+                `${q.beforeBlank} <span id="freqscale-blank-word" class="inline-block border-b-4 border-lime-400 text-lime-300 px-3 min-w-[110px] text-center">_____</span> ${q.afterBlank}`;
+        }
+
+        function speakFreqScalePrompt() {
+            const q = FREQ_SCALE_QUESTIONS[freqScaleIndex];
+            if (q) speakText(q.spokenClue);
+        }
+
+        function handleFreqScaleAnswer(chosen, btnEl) {
+            if (freqScaleLocked) return;
+            const q = FREQ_SCALE_QUESTIONS[freqScaleIndex];
+
+            if (chosen === q.adverb) {
+                freqScaleLocked = true;
+                playSFX('correct');
+                addStarScore(2);
+
+                const slot = document.getElementById('freqscale-blank-word');
+                if (slot) {
+                    slot.innerText = chosen;
+                    slot.className = "inline-block bg-emerald-500 text-slate-950 rounded-xl px-3 py-0.5 font-black";
+                }
+
+                const fullSentence = `${q.beforeBlank} ${chosen} ${q.afterBlank}`;
+                speakText(`Well done! ${fullSentence}`);
+                showPraiseModal("Frequency Master! 📊", fullSentence, () => {
+                    nextFreqScaleQuestion();
+                });
+            } else {
+                playSFX('wrong');
+                btnEl.classList.add('animate-shake', 'border-red-500');
+                setTimeout(() => btnEl.classList.remove('animate-shake', 'border-red-500'), 450);
+                speakText("Try again! Check how often it happens.");
+            }
+        }
+
+        const FREQ_ORDER_QUESTIONS = [
+            {
+                adverb: 'never',
+                ruleType: 'action',
+                subject: 'He',
+                verbOrRest: 'shouts at others.',
+                fullSentence: 'He never shouts at others.',
+                vocabId: 'never'
+            },
+            {
+                adverb: 'sometimes',
+                ruleType: 'action',
+                subject: 'He',
+                verbOrRest: 'helps the teacher.',
+                fullSentence: 'He sometimes helps the teacher.',
+                vocabId: 'sometimes'
+            },
+            {
+                adverb: 'always',
+                ruleType: 'tobe',
+                subject: 'He is',
+                verbOrRest: 'cheerful.',
+                fullSentence: 'He is always cheerful.',
+                vocabId: 'always'
+            },
+            {
+                adverb: 'always',
+                ruleType: 'tobe',
+                subject: 'Sarah is',
+                verbOrRest: 'punctual.',
+                fullSentence: 'Sarah is always punctual.',
+                vocabId: 'punctual'
+            },
+            {
+                adverb: 'never',
+                ruleType: 'action',
+                subject: 'Tom',
+                verbOrRest: 'forgets his class duties.',
+                fullSentence: 'Tom never forgets his class duties.',
+                vocabId: 'responsible'
+            },
+            {
+                adverb: 'sometimes',
+                ruleType: 'action',
+                subject: 'Maya',
+                verbOrRest: 'shares her snacks.',
+                fullSentence: 'Maya sometimes shares her snacks.',
+                vocabId: 'generous'
+            },
+            {
+                adverb: 'always',
+                ruleType: 'tobe',
+                subject: 'Sam is',
+                verbOrRest: 'humble and kind.',
+                fullSentence: 'Sam is always humble and kind.',
+                vocabId: 'humble'
+            },
+            {
+                adverb: 'always',
+                ruleType: 'action',
+                subject: 'Ken',
+                verbOrRest: 'checks his homework carefully.',
+                fullSentence: 'Ken always checks his homework carefully.',
+                vocabId: 'diligent'
+            },
+            {
+                adverb: 'never',
+                ruleType: 'tobe',
+                subject: 'A loyal friend is',
+                verbOrRest: 'unkind to you.',
+                fullSentence: 'A loyal friend is never unkind to you.',
+                vocabId: 'loyal'
+            },
+            {
+                adverb: 'sometimes',
+                ruleType: 'action',
+                subject: 'Leo',
+                verbOrRest: 'solves tricky puzzles quickly.',
+                fullSentence: 'Leo sometimes solves tricky puzzles quickly.',
+                vocabId: 'clever'
+            }
+        ];
+
+        let freqOrderIndex = 0;
+        let freqOrderLocked = false;
+
+        function nextFreqOrderQuestion() {
+            freqOrderIndex = (freqOrderIndex + 1) % FREQ_ORDER_QUESTIONS.length;
+            initFreqOrderGame();
+        }
+
+        function initFreqOrderGame() {
+            freqOrderLocked = false;
+            const q = FREQ_ORDER_QUESTIONS[freqOrderIndex];
+            const item = GAME_DATA.find(w => w.id === q.vocabId) || GAME_DATA[0];
+
+            document.getElementById('freqorder-counter').innerText = `${freqOrderIndex + 1}/${FREQ_ORDER_QUESTIONS.length}`;
+            document.getElementById('freqorder-svg').innerHTML = item.svg;
+            document.getElementById('freqorder-target-adverb').innerText = q.adverb;
+
+            const tipEl = document.getElementById('freqorder-grammar-tip');
+            if (q.ruleType === 'tobe') {
+                tipEl.innerText = '💡 Grammar Rule: Put AFTER verb "to be" (is / am / are)!';
+                tipEl.className = 'bg-sky-500/20 text-sky-200 border border-sky-400/50 text-xs sm:text-sm font-black px-3.5 py-1 rounded-full';
+            } else {
+                tipEl.innerText = '💡 Grammar Rule: Put BEFORE the action verb!';
+                tipEl.className = 'bg-violet-500/20 text-violet-200 border border-violet-400/50 text-xs sm:text-sm font-black px-3.5 py-1 rounded-full';
+            }
+
+            // Build sentence with 2 interactive placement slots:
+            // Slot 'correct' is right after subject (before action verb OR after 'is')
+            // Slot 'wrong' is at the end of the sentence (or before 'is')
+            const box = document.getElementById('freqorder-sentence-box');
+            if (q.ruleType === 'tobe') {
+                // e.g., "He" [wrong slot] "is" [correct slot] "cheerful."
+                const parts = q.subject.split(' ');
+                const pronoun = parts[0];
+                const beVerb = parts.slice(1).join(' ');
+                box.innerHTML = `
+                    <span>${pronoun}</span>
+                    <button onclick="handleFreqOrderSlot(false, this)" class="px-3 py-1 rounded-xl border-2 border-dashed border-violet-400 bg-violet-500/15 hover:bg-violet-500/30 text-violet-300 text-sm sm:text-base font-black transition active:scale-95">
+                        + place here
+                    </button>
+                    <span class="text-sky-300 underline decoration-sky-400">${beVerb}</span>
+                    <button id="freqorder-correct-slot" onclick="handleFreqOrderSlot(true, this)" class="px-3 py-1 rounded-xl border-2 border-dashed border-violet-400 bg-violet-500/15 hover:bg-violet-500/30 text-violet-300 text-sm sm:text-base font-black transition active:scale-95">
+                        + place here
+                    </button>
+                    <span>${q.verbOrRest}</span>
+                `;
+            } else {
+                // e.g., "He" [correct slot] "shouts at others." [wrong slot]
+                box.innerHTML = `
+                    <span>${q.subject}</span>
+                    <button id="freqorder-correct-slot" onclick="handleFreqOrderSlot(true, this)" class="px-3 py-1 rounded-xl border-2 border-dashed border-violet-400 bg-violet-500/15 hover:bg-violet-500/30 text-violet-300 text-sm sm:text-base font-black transition active:scale-95">
+                        + place here
+                    </button>
+                    <span class="text-amber-200">${q.verbOrRest}</span>
+                    <button onclick="handleFreqOrderSlot(false, this)" class="px-3 py-1 rounded-xl border-2 border-dashed border-violet-400 bg-violet-500/15 hover:bg-violet-500/30 text-violet-300 text-sm sm:text-base font-black transition active:scale-95">
+                        + place here
+                    </button>
+                `;
+            }
+        }
+
+        function speakFreqOrderSentence() {
+            const q = FREQ_ORDER_QUESTIONS[freqOrderIndex];
+            if (q) speakText(q.fullSentence);
+        }
+
+        function handleFreqOrderSlot(isCorrect, btnEl) {
+            if (freqOrderLocked) return;
+            const q = FREQ_ORDER_QUESTIONS[freqOrderIndex];
+
+            if (isCorrect) {
+                freqOrderLocked = true;
+                playSFX('correct');
+                addStarScore(2);
+
+                btnEl.outerHTML = `<span class="bg-emerald-500 text-slate-950 px-3 py-0.5 rounded-xl font-black shadow">${q.adverb}</span>`;
+                speakText(`Excellent! ${q.fullSentence}`);
+                showPraiseModal("Word Order Star! 🎯", q.fullSentence, () => {
+                    nextFreqOrderQuestion();
+                });
+            } else {
+                playSFX('wrong');
+                btnEl.classList.add('animate-shake', 'border-red-500', 'text-red-300');
+                setTimeout(() => btnEl.classList.remove('animate-shake', 'border-red-500', 'text-red-300'), 450);
+                speakText(q.ruleType === 'tobe'
+                    ? "Try again! Put the adverb after is."
+                    : "Try again! Put the adverb before the action verb.");
             }
         }
 
